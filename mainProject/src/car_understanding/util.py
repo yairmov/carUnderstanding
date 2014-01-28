@@ -60,13 +60,22 @@ if __name__ == '__main__':
   xmin_s, xmax_s, ymin_s, ymax_s = change_bb_loc(scaler, xmin, xmax, ymin, ymax)
   
   fig = plt.figure()
-  ax = fig.add_subplot(111)
+  ax = fig.add_subplot(121)
   ax.imshow(img)
   ax.axis('off')
   r = plt.Rectangle((xmin, ymin),
                    xmax-xmin, ymax-ymin,
                      edgecolor='red', facecolor='none')
   ax.add_patch(r)
+  
+  fig.add_subplot(122)
+  ax.imshow(img_s)
+  ax.axis('off')
+  r = plt.Rectangle((xmin_s, ymin_s),
+                   xmax_s-xmin_s, ymax_s-ymin_s,
+                     edgecolor='red', facecolor='none')
+  ax.add_patch(r)
+  
   plt.show()
   
   
