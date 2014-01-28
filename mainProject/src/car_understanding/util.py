@@ -78,8 +78,8 @@ if __name__ == '__main__':
   img_s, scaler = set_width_to_normalize_bb(img, xmin, xmax, 200)
   xmin_s, xmax_s, ymin_s, ymax_s = change_bb_loc(scaler, xmin, xmax, ymin, ymax)
   
-  showboxes(img, (xmin, ymin, xmax, ymax))
+  showboxes(img, ((xmin, ymin, xmax, ymax)))
   plt.figure()
-  showboxes(img_s, (xmin_s, ymin_s, xmax_s, ymax_s))  
+  showboxes(img_s, ((xmin_s, ymin_s, xmax_s, ymax_s)))  
   
   
