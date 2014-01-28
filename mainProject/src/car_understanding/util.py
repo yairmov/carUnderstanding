@@ -67,7 +67,7 @@ def showboxes(img_cv, boxes):
                      edgecolor='red', facecolor='none')
     ax.add_patch(r)
   
-  ax.draw()
+  plt.draw()
   plt.show()
   
     
