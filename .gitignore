@@ -39,6 +39,6 @@ nosetests.xml
 SIFT/
 
 # Data files
-.dat
-.npy
-.mat
+*.dat
+*.npy
+*.mat
