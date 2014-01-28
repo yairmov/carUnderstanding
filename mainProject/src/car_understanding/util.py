@@ -49,6 +49,13 @@ def normalize_dataset(dataset, config):
     cv.imwrite(img, img_file)
     
     # change xmin, xmax, ymin, ymax to the new size
+    (xmin, xmax, ymin, ymax) = change_bb_loc(scaler, xmin, xmax, ymin, ymax)
+    dataset.xmin.loc[row_tuple[1]] = xmin
+    dataset.xmax.loc[row_tuple[1]] = xmax
+    dataset.ymin.loc[row_tuple[1]] = ymin
+    dataset.ymax.loc[row_tuple[1]] = ymax
+    
+    # HOW TO SAVE BACK TO FILE???
     
 
 def showboxes(img_cv, boxes):

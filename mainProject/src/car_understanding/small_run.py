@@ -24,17 +24,17 @@ def preprocess():
   config.dataset.class_ids.neg = [188, 190, 196, 207, 213] # not SUV
   config.dataset.class_ids.pos = [184, 220, 231, 235, 303] # SUV
 
-  (dataset, class_meta, domain_meta) = fgu.get_all_metadata(config)
+  (train_annos, class_meta, domain_meta) = fgu.get_all_metadata(config)
 
   # Filter the class meta and train annotations according to the small use
   # case definitions
   class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
-  dataset = dataset[
-                            dataset.class_index.isin(
+  train_annos = train_annos[
+                            train_annos.class_index.isin(
                             config.dataset.class_ids.pos +
                             config.dataset.class_ids.neg)
                             ]
-  return ({'dataset': dataset,
+  return ({'train_annos': train_annos,
              'class_meta': class_meta,
              'domain_meta': domain_meta},
           config)
@@ -43,8 +43,8 @@ def preprocess():
 
 
 def calc_dense_SIFT_on_dataset(dataset, config):
-  dataset = dataset['dataset']
-  for row_tuple in dataset.iterrows():
+  train_annos = dataset['train_annos']
+  for row_tuple in train_annos.iterrows():
     # row_tuple[0]=index row_tuple[1]=data
     row = row_tuple[1]
     rel_path = row['rel_path']
@@ -92,16 +92,16 @@ def load_SIFT_from_files(dir_path):
 
 
 
-def create_feature_matrix(dataset, config):
-  dataset = dataset['dataset']
+def create_feature_matrix(train_annos, config):
+  train_annos = train_annos['train_annos']
 
   # Preallocate feature matrix
-  features = np.empty(shape=[len(dataset), config.SIFT.BoW.num_clusters])
+  features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
 
   # Load histograms from disk into a matrix
   print 'Loading histograms from disk'
-  for ii in range(len(dataset)):
-    img_name = dataset.iloc[ii]['basename']
+  for ii in range(len(train_annos)):
+    img_name = train_annos.iloc[ii]['basename']
     img_name = os.path.splitext(img_name)[0]
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir, img_name) + '_hist.dat'
     hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
@@ -113,7 +113,7 @@ def create_feature_matrix(dataset, config):
 
   # create pos/neg labels
   print 'Creating pos/neg labels'
-  labels = dataset.class_index.isin(
+  labels = train_annos.class_index.isin(
                     config.dataset.class_ids.pos).values
 
   return (features, labels)
@@ -123,7 +123,7 @@ def evaluate(features, labels):
   from sklearn.grid_search import GridSearchCV
   from sklearn.metrics import classification_report
 
-  # Split the dataset in two equal parts
+  # Split the train_annos in two equal parts
   X_train, X_test, y_train, y_test = train_test_split(
     features, labels, test_size=0.3, random_state=0)
 
@@ -181,7 +181,7 @@ if __name__ == '__main__':
     (dataset, config) = preprocess()
 
     #  RUN dense SIFT on alll images
-#     calc_dense_SIFT_on_dataset(dataset, config)
+#     calc_dense_SIFT_on_dataset(train_annos, config)
 
     # Create BoW model
 #     features = load_SIFT_from_files(config.SIFT.raw_dir)
