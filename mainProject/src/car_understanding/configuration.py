@@ -31,8 +31,16 @@ def get_config():
 
 
   # dataset params
-  config.dataset.name = 'fgcomp2013'
-  config.dataset.main_path = '/usr0/home/ymovshov/Documents/Research/Data/fgcomp2013/release'
+#   config.dataset.name = 'fgcomp2013'
+  # location of dataset (original one)
+#   config.dataset.main_path = '/usr0/home/ymovshov/Documents/Research/Data/fgcomp2013/release'
+  
+  # location of dataset (after it was copied and normalized)
+  config.dataset.name = 'fgcomp2013_normed'
+  config.dataset.main_path = os.path.join(config.main_path, 'fgcomp2013_normed')
+  
+  
+  
   config.dataset.class_meta_file =  os.path.join(config.dataset.main_path, 
                                                  'class_meta.txt')
   config.dataset.domain_meta_file =  os.path.join(config.dataset.main_path,
