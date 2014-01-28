@@ -34,3 +34,10 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Data/Result folders
+SIFT/
+
+# Data files
+.dat
+.npy
