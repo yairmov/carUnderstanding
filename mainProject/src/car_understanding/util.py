@@ -50,7 +50,26 @@ def normalize_dataset(dataset, config):
     
     # change xmin, xmax, ymin, ymax to the new size
     
-    
+
+def showboxes(img_cv, boxes):
+  
+  img = cv.cvtColor(img_cv, cv.COLOR_BGR2RGB)
+  
+  ax = plt.axes()
+  ax.imshow(img)
+  ax.axis('off')
+  
+  for box in boxes:
+    xmin, xmax = box[0], box[2]
+    ymin, ymax = box[1], box[3]
+    r = plt.Rectangle((xmin, ymin),
+                   xmax-xmin, ymax-ymin,
+                     edgecolor='red', facecolor='none')
+    ax.add_patch(r)
+  
+  ax.draw()
+  plt.show()
+  
     
 if __name__ == '__main__':
   img = cv.imread('/usr0/home/ymovshov/Documents/Research/Code/carUnderstanding/fgcomp2013_normed/release/train_images/0010/FGCOMP_0010819.jpg')
@@ -59,24 +78,8 @@ if __name__ == '__main__':
   img_s, scaler = set_width_to_normalize_bb(img, xmin, xmax, 200)
   xmin_s, xmax_s, ymin_s, ymax_s = change_bb_loc(scaler, xmin, xmax, ymin, ymax)
   
-  fig = plt.figure()
-  ax = fig.add_subplot(121)
-  ax.imshow(img)
-  ax.axis('off')
-  r = plt.Rectangle((xmin, ymin),
-                   xmax-xmin, ymax-ymin,
-                     edgecolor='red', facecolor='none')
-  ax.add_patch(r)
-  
-  ax = fig.add_subplot(122)
-  ax.imshow(img_s)
-  ax.axis('off')
-  r = plt.Rectangle((xmin_s, ymin_s),
-                   xmax_s-xmin_s, ymax_s-ymin_s,
-                     edgecolor='red', facecolor='none')
-  ax.add_patch(r)
-  
-  plt.show()
-  
+  showboxes(img, (xmin, ymin, xmax, ymax))
+  plt.figure()
+  showboxes(img_s, (xmin_s, ymin_s, xmax_s, ymax_s))  
   
   
