@@ -41,3 +41,4 @@ SIFT/
 # Data files
 .dat
 .npy
+.mat
