@@ -11,7 +11,6 @@ from sklearn import cross_validation
 from sklearn import svm
 from sklearn import preprocessing
 import cv2 as cv
-import scipy.misc
 
 from configuration import get_config
 import fgcomp_dataset_utils as fgu
@@ -25,32 +24,27 @@ def preprocess():
   config.dataset.class_ids.neg = [188, 190, 196, 207, 213] # not SUV
   config.dataset.class_ids.pos = [184, 220, 231, 235, 303] # SUV
 
-  (train_annos, class_meta, domain_meta) = fgu.get_all_metadata(config)
+  (dataset, class_meta, domain_meta) = fgu.get_all_metadata(config)
 
   # Filter the class meta and train annotations according to the small use
   # case definitions
   class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
-  train_annos = train_annos[
-                            train_annos.class_index.isin(
+  dataset = dataset[
+                            dataset.class_index.isin(
                             config.dataset.class_ids.pos +
                             config.dataset.class_ids.neg)
                             ]
-  return ({'train_annos': train_annos,
+  return ({'dataset': dataset,
              'class_meta': class_meta,
              'domain_meta': domain_meta},
           config)
 
 
 
-def set_bb_width(img, xmin, xmax, to_width):
-  w = xmax - xmin
-  s = to_width / w
-  return scipy.misc.imresize(img, s)
-
 
 def calc_dense_SIFT_on_dataset(dataset, config):
-  train_annos = dataset['train_annos']
-  for row_tuple in train_annos.iterrows():
+  dataset = dataset['dataset']
+  for row_tuple in dataset.iterrows():
     # row_tuple[0]=index row_tuple[1]=data
     row = row_tuple[1]
     rel_path = row['rel_path']
@@ -59,7 +53,8 @@ def calc_dense_SIFT_on_dataset(dataset, config):
     # Read image and resize such that bounding box is of specific size
     print 'Resize img such that BB is of width = ' + str(config.bb_width)
     img = cv.imread(img_file)
-    img = set_bb_width(img, row['xmin'], row['xmax'], config.bb_width)
+    img = set_width_to_normalize_bb(img, row['xmin'], 
+                                    row['xmax'], config.bb_width)
 
     print 'Extracting dense-SIFT from image:', img_file, '...',
     (kp, desc) = dense_SIFT(img, grid_spacing=config.SIFT.grid_spacing)
@@ -98,15 +93,15 @@ def load_SIFT_from_files(dir_path):
 
 
 def create_feature_matrix(dataset, config):
-  train_annos = dataset['train_annos']
+  dataset = dataset['dataset']
 
   # Preallocate feature matrix
-  features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
+  features = np.empty(shape=[len(dataset), config.SIFT.BoW.num_clusters])
 
   # Load histograms from disk into a matrix
   print 'Loading histograms from disk'
-  for ii in range(len(train_annos)):
-    img_name = train_annos.iloc[ii]['basename']
+  for ii in range(len(dataset)):
+    img_name = dataset.iloc[ii]['basename']
     img_name = os.path.splitext(img_name)[0]
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir, img_name) + '_hist.dat'
     hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
@@ -118,7 +113,7 @@ def create_feature_matrix(dataset, config):
 
   # create pos/neg labels
   print 'Creating pos/neg labels'
-  labels = train_annos.class_index.isin(
+  labels = dataset.class_index.isin(
                     config.dataset.class_ids.pos).values
 
   return (features, labels)

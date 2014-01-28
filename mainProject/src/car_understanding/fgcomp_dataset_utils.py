@@ -58,21 +58,21 @@ def read_training_data(infilename):
            'xmax':np.float64,
            'ymin':np.float64,
            'ymax':np.float64}
-  train_annos =  pd.read_csv(infilename, header=None, names=names, dtype=types,
+  dataset =  pd.read_csv(infilename, header=None, names=names, dtype=types,
                      index_col=0)
 
-  train_annos['basename'] = train_annos.rel_path.apply(os.path.basename)
+  dataset['basename'] = dataset.rel_path.apply(os.path.basename)
 
-  return train_annos
+  return dataset
 
 
 def get_all_metadata(config):
   class_meta  = read_class_meta(config.dataset.class_meta_file)
-  train_annos = read_training_data(config.dataset.train_annos_file)
+  dataset = read_training_data(config.dataset.train_annos_file)
   domain_meta = read_domain_meta(config.dataset.domain_meta_file)
-  train_annos = pd.merge(train_annos, class_meta.iloc[:,0:2], on='class_index')
-  train_annos.index.name = 'image_index'
+  dataset = pd.merge(dataset, class_meta.iloc[:,0:2], on='class_index')
+  dataset.index.name = 'image_index'
 
-  return (train_annos, class_meta, domain_meta)
+  return (dataset, class_meta, domain_meta)
 
 
