@@ -68,7 +68,7 @@ if __name__ == '__main__':
                      edgecolor='red', facecolor='none')
   ax.add_patch(r)
   
-  fig.add_subplot(122)
+  ax = fig.add_subplot(122)
   ax.imshow(img_s)
   ax.axis('off')
   r = plt.Rectangle((xmin_s, ymin_s),
