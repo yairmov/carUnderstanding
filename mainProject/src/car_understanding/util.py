@@ -14,7 +14,8 @@ import matplotlib.pyplot as plt
 def set_width_to_normalize_bb(img, xmin, xmax, to_width):
   w = xmax - xmin
   s = to_width / w
-  return scipy.misc.imresize(img, s), s
+  img = scipy.misc.imresize(img, s)
+  return img, s
 
 def change_bb_loc(scaler, xmin, xmax, ymin, ymax):
   w, h = (xmax - xmin, ymax - ymin)
@@ -52,9 +53,9 @@ def normalize_dataset(dataset, config):
     
     
 if __name__ == '__main__':
-  img = cv.imread('/usr0/home/ymovshov/Documents/Research/Code/carUnderstanding/fgcomp2013_normed/release/train_images/0010/FGCOMP_0010999.jpg')
-  xmin, xmax = 45, 247
-  ymin, ymax = 62, 190
+  img = cv.imread('/usr0/home/ymovshov/Documents/Research/Code/carUnderstanding/fgcomp2013_normed/release/train_images/0010/FGCOMP_0010819.jpg')
+  xmin, xmax = 48.0, 441.0
+  ymin, ymax = 24.0, 202.0
   img_s, scaler = set_width_to_normalize_bb(img, xmin, xmax, 200)
   xmin_s, xmax_s, ymin_s, ymax_s = change_bb_loc(scaler, xmin, xmax, ymin, ymax)
   
