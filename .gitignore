@@ -32,9 +32,9 @@ nosetests.xml
 
 # Mr Developer
 .mr.developer.cfg
-.project
-.pydevproject
-.metadata
+#.project
+#.pydevproject
+#.metadata
 
 # Data/Result folders
 SIFT/
