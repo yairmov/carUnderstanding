@@ -1,8 +1,0 @@
-INSTUPcar_understanding.fgcomp_dataset_utils
-/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/fgcomp_dataset_utils.py
-INFOS:&&2|1|2|0&&2|3|2|0&&2|4|2|0&&2|5|2|0
-get_all_metadata=5
-car_understanding.fgcomp_dataset_utils=2
-read_training_data=4
-read_domain_meta=3
-read_class_meta=1

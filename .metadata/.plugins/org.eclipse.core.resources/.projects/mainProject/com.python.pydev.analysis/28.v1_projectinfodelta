@@ -1,9 +1,0 @@
-INSTUPcar_understanding.small_run
-/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/small_run.py
-INFOS:&&2|1|2|0&&2|3|2|0&&2|4|2|0&&2|5|2|0&&2|6|2|0
-evaluate=6
-load_SIFT_from_files=4
-calc_dense_SIFT_on_dataset=3
-create_feature_matrix=5
-preprocess=1
-car_understanding.small_run=2
