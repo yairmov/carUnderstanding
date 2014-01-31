@@ -1,0 +1,76 @@
+-- VERSION_4
+-- START DISKCACHE
+/Users/yair/Documents/Research/Code/carUnderstanding/.metadata/.plugins/org.eclipse.core.resources/.projects/mainProject/com.python.pydev.analysis/v2_indexcache
+car_understanding.fgcomp_dataset_utils|0|/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/fgcomp_dataset_utils.py
+car_understanding.configuration|0|/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/configuration.py
+car_understanding.experiments|0|/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/experiments.py
+car_understanding.autoreload|0|/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/autoreload.py
+car_understanding.small_run|0|/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/small_run.py
+car_understanding.__init__|0|/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/__init__.py
+car_understanding.Bow|0|/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/Bow.py
+car_understanding.dense_SIFT|0|/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/dense_SIFT.py
+-- END DISKCACHE
+-- START DICTIONARY
+9
+6=car_understanding.fgcomp_dataset_utils
+7=car_understanding.configuration
+4=car_understanding.experiments
+5=car_understanding.autoreload
+8=CLIError
+2=car_understanding.small_run
+9=CLIError.__init__
+3=car_understanding.Bow
+1=car_understanding.dense_SIFT
+-- END DICTIONARY
+-- START TREE 1
+42
+__a|1|__all__!11@
+__d|1|__date__!11@
+__u|1|__updated__!11@
+__v|1|__version__!11@
+ax|0|
+cal|1|calc_dense_SIFT_on_dataset!18@
+cha|0|
+cli|1|CLIError!9@
+clu|1|cluster_to_words!26@
+con|0|
+cre|3|create_word_histograms_on_dir!26@create_feature_matrix!18@create_BoW_model!26@
+dat|0|
+dbg|1|dbg_clustering!34@
+deb|1|DEBUG!11@
+den|1|dense_SIFT!10@
+ena|1|enable!42@
+eva|1|evaluate!18@
+fea|0|
+fig|0|
+get|2|get_all_metadata!50@get_config!58@
+img|0|
+ipy|1|ipython_autoreload_hook!42@
+lab|0|
+loa|4|load!26@load_hist_from_files!34@load_from_disk!10@load_SIFT_from_files!18@
+mai|1|main!10@
+met|0|
+nor|1|normalize_features!26@
+pre|1|preprocess!18@
+pro|1|PROFILE!11@
+r|0|
+rea|3|read_training_data!50@read_class_meta!50@read_domain_meta!50@
+rel|2|reload_all!42@relative_module!42@
+sav|2|save_to_disk!10@save!26@
+sca|0|
+set|0|
+sho|0|
+tes|3|test_work_remote!34@test_fg_utils!34@TESTRUN!11@
+wor|1|word_histogram!26@
+xma|0|
+xmi|0|
+yma|0|
+ymi|0|
+-- END TREE
+-- START TREE 2
+4
+__i|1|__init__!8&10@
+__s|1|__str__!8&10@
+__u|1|__unicode__!8&10@
+msg|1|msg!9&11@
+-- END TREE

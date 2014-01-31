@@ -1,0 +1,13 @@
+INSTUPcar_understanding.small_run
+/Users/yair/Documents/Research/Code/carUnderstanding/mainProject/src/car_understanding/small_run.py
+INFOS:&&2|1|2|0&&2|3|2|0&&2|4|2|0&&2|5|2|0&&2|6|2|0&&3|7|2|0&&3|8|2|0&&3|9|2|0&&3|10|2|0
+train_annos=7
+evaluate=6
+load_SIFT_from_files=4
+calc_dense_SIFT_on_dataset=3
+create_feature_matrix=5
+preprocess=1
+car_understanding.small_run=2
+labels=10
+features=9
+config=8
