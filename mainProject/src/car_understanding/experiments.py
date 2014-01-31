@@ -65,12 +65,20 @@ def dbg_clustering():
 
 
 
-def test_work_remote():
-    print "working remotely, la la la"
-    print "lu lu lu"
+def my_f(x):
+  return x*x
+
+def multi_test():
+  from multiprocessing import Pool
+  p = Pool(12)
+  a = p.map(my_f, range(100))
+  print a
+  p.terminate()
+
 
 
 if __name__ == '__main__':
 #   test_fg_utils()
 #   dbg_clustering()
-    test_work_remote
+#     test_work_remote
+  multi_test()

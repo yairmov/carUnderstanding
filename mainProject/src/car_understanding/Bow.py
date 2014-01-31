@@ -29,18 +29,18 @@ def cluster_to_words(features, config=None):
     # Create clustering estimator
 
     # KMEANS
-#     estimator = KMeans(init='k-means++',
-#                           n_clusters=config.SIFT.BoW.num_clusters,
-#                           n_init=3*config.SIFT.BoW.num_clusters, verbose=True)
+    estimator = KMeans(init='k-means++',
+                          n_clusters=config.SIFT.BoW.num_clusters,
+                          n_init=10, verbose=True)
 
 
     # Mini batch KMEANS
-    batch_size = int(np.round(float(config.SIFT.BoW.num_clusters) / 10))
-    estimator = MiniBatchKMeans(init='k-means++',
-                            n_clusters=config.SIFT.BoW.num_clusters,
-                            batch_size=batch_size,
-                            max_no_improvement=10,
-                            verbose=True)
+#     batch_size = int(np.round(float(config.SIFT.BoW.num_clusters) / 10))
+#     estimator = MiniBatchKMeans(init='k-means++',
+#                             n_clusters=config.SIFT.BoW.num_clusters,
+#                             batch_size=batch_size,
+#                             max_no_improvement=10,
+#                             verbose=True)
 
 
     # DBSCAN
