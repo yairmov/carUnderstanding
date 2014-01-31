@@ -39,6 +39,9 @@ nosetests.xml
 # Data/Result folders
 SIFT/
 
+# Temp folders
+RemoteSystemsTempFiles/
+
 # Data files
 *.dat
 *.npy
