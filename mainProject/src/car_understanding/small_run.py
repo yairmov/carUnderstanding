@@ -21,11 +21,6 @@ from boto import config
 
 def preprocess():
   config = get_config()
-
-  # Adding pos/neg class definitions to the config
-  config.dataset.class_ids.neg = [188, 190, 196, 207, 213] # not SUV
-  config.dataset.class_ids.pos = [184, 220, 231, 235, 303] # SUV
-
   (train_annos, class_meta, domain_meta) = fgu.get_all_metadata(config)
 
   # Filter the class meta and train annotations according to the small use
@@ -44,26 +39,24 @@ def preprocess():
 
 
 
+def calc_dense_SIFT_one_img(annotation, config):
+  rel_path = annotation['rel_path']
+  img_file = os.path.join(config.dataset.main_path, rel_path)
+  img = cv.imread(img_file)
+  (kp, desc) = dense_SIFT(img, grid_spacing=config.SIFT.grid_spacing)
+  save_to_disk(kp, desc, img_file, config.SIFT.raw_dir)
+
+
 def calc_dense_SIFT_on_dataset(dataset, config):
+  '''
+  Just calles calc_dense_SIFT_one_img on all images in dataset using a
+  parallel wrapper.
+  '''
   train_annos = dataset['train_annos']
-  for row_tuple in train_annos.iterrows():
-    # row_tuple[0]=index row_tuple[1]=data
-    row = row_tuple[1]
-    rel_path = row['rel_path']
-    img_file = os.path.join(config.dataset.main_path, rel_path)
 
-    # Read image and resize such that bounding box is of specific size
-    img = cv.imread(img_file)
-#     img = set_width_to_normalize_bb(img, row['xmin'],
-#                                     row['xmax'], config.bb_width)
-
-    print 'Extracting dense-SIFT from image:', img_file, '...',
-    (kp, desc) = dense_SIFT(img, grid_spacing=config.SIFT.grid_spacing)
-    print 'Done.'
-    print 'Saving dense-SIFT to folder: "', config.SIFT.raw_dir, '" ...',
-    save_to_disk(kp, desc, img_file, config.SIFT.raw_dir)
-    print 'Done.'
-
+  Parallel(n_jobs=-1, verbose=2)(
+                 delayed(calc_dense_SIFT_one_img)(train_annos.iloc[ii], config)
+                 for ii in range(len(train_annos)))
 
 def contains(box, point):
   '''
@@ -104,7 +97,7 @@ def load_SIFT_from_files(dataset, config):
 
   nfiles = len(train_annos)
   print 'Loading dense SIFT for %d training images ' % nfiles
-  features = Parallel(n_jobs=-1)(
+  features = Parallel(n_jobs=-1, verbose=2)(
                  delayed(load_SIFT_from_a_file)(train_annos.iloc[ii], config)
                  for ii in range(nfiles))
 
@@ -205,20 +198,25 @@ if __name__ == '__main__':
     (dataset, config) = preprocess()
 
     #  RUN dense SIFT on alll images
-#     calc_dense_SIFT_on_dataset(dataset, config)
+    print "Saving Dense SIFT to disk"
+    calc_dense_SIFT_on_dataset(dataset, config)
 
     # Create BoW model
     features = load_SIFT_from_files(dataset, config)
-    print "Loaded %d features from disk" % features.shape[0]
+    print "Loaded %d SIFT features from disk" % features.shape[0]
+    print "K-Means CLustering"
     Bow.create_BoW_model(features, config.SIFT.BoW.model_file)
 
     # Assign cluster labels to all images
-    Bow.create_word_histograms_on_dir(config)
+    print "Assigning to histograms"
+    Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
 
     # Extract final features
+    print "Building training matrix for classifier"
     (features, labels) = create_feature_matrix(dataset, config)
 
     # Evaluate
+    print "Cross Validation on classifier"
     evaluate(features, labels)
 
 

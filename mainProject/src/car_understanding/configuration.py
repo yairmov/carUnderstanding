@@ -51,6 +51,21 @@ def get_config():
                                                   'train_annos.txt')
   config.dataset.domains = [3] # cars
 
+  # Adding pos/neg class definitions to the config
+
+#   # SUV VS Sedan
+#   config.dataset.class_ids.pos = [184,215,216,220,231,233,235,241,245,259]# SUV
+#   config.dataset.class_ids.neg = [185,186,188,199,200,203,206,207,209,212]#not SUV
+# #   config.dataset.class_ids.neg = [188, 190, 196, 207, 213] # not SUV
+# #   config.dataset.class_ids.pos = [184, 220, 231, 235, 303] # Sedan
+
+
+  # Audi VS BMW
+  config.dataset.class_ids.pos = [195, 196, 197, 198, 199, 200,
+                                  201, 202, 203, 204, 205, 206, 207, 208] # Audi
+  config.dataset.class_ids.neg = [209, 210, 211, 212, 213, 214, 215, 216, 217,
+                                  218, 219, 220, 221] # BMW
+
   return config
 
 
