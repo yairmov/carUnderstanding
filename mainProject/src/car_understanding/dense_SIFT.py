@@ -66,14 +66,7 @@ def dense_SIFT(filename, grid_spacing=4):
   return (kp, desc)
 
 
-def save_to_disk(kp, desc, filename, out_path):
-  # If out_path does not exist, create it (not thread safe)
-  if not os.path.isdir(out_path):
-    os.makedirs(out_path)
-
-  # Replace extension to .dat and place in out_path
-  (name, ext) = os.path.splitext(os.path.split(filename)[1])
-  save_name = os.path.join(out_path, name + '.dat')
+def save_to_disk(kp, desc, out_filename):
 
   # create a dictionary with the saved data
   # You can't just pickle cv2.Keypoint (cause opencv sucks) so I need to
@@ -90,8 +83,7 @@ def save_to_disk(kp, desc, filename, out_path):
 
   saved_data = dict(keypoints_as_dict=keypoints_as_dict, desc=desc)
 
-#     np.savez(save_name, kp=np.array(kp), desc=desc)
-  with open(save_name, 'wb') as outfile:
+  with open(out_filename, 'wb') as outfile:
     pickle.dump(saved_data, outfile, protocol=pickle.HIGHEST_PROTOCOL)
 
 def load_from_disk(infilename):
@@ -149,18 +141,24 @@ USAGE dense_SIFT <input image names>
     paths = args.paths
     verbose = args.verbose
     out_path = args.out
+    
+    # If out_path does not exist, create it (not thread safe)
+    if not os.path.isdir(out_path):
+      os.makedirs(out_path)
 
     if verbose > 0:
       print("Verbose mode on")
 
 
     for inpath in paths:
-      ### do something with inpath ###
       print 'Extracting dense-SIFT from image:', inpath, '...',
       (kp, desc) = dense_SIFT(inpath)
       print 'Done.'
-      print 'Saving dense-SIFT to folder: "', out_path, '" ...',
-      save_to_disk(kp, desc, inpath, out_path)
+      # Replace extension to .dat and place in out_path
+      (name, ext) = os.path.splitext(os.path.split(inpath)[1])
+      save_name = os.path.join(out_path, name + '.dat')
+      print 'Saving dense-SIFT to file: "', save_name, '" ...',
+      save_to_disk(kp, desc, save_name)
       print 'Done.'
     return 0
 
