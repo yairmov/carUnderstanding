@@ -12,20 +12,23 @@ from sklearn import svm
 from sklearn import preprocessing
 from sklearn.externals.joblib import Parallel, delayed
 import cv2 as cv
+import sys
 
 from configuration import get_config
 import fgcomp_dataset_utils as fgu
 from dense_SIFT import dense_SIFT, save_to_disk, load_from_disk
 import Bow
-from boto import config
 
-def preprocess():
-  config = get_config()
+def preprocess(args):
+  config = get_config(args)
   (train_annos, class_meta, domain_meta) = fgu.get_all_metadata(config)
 
   # Filter the class meta and train annotations according to the small use
   # case definitions
   class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
+  
+  config = load_classes_from_atrib_names(config, class_meta)
+  
   train_annos = train_annos[
                             train_annos.class_index.isin(
                             config.dataset.class_ids.pos +
@@ -37,14 +40,45 @@ def preprocess():
           config)
 
 
+def load_classes_from_atrib_names(config, class_meta):
+  pos_ids = []
+  neg_ids = []
+  pos_name = str.lower(config.attribute.pos_name)
+  neg_name = str.lower(config.attribute.neg_name)
+  print pos_name
+  print neg_name
+  for ii in range(len(class_meta)):
+    class_name = str.lower(class_meta['class_name'].iloc[ii])
+    if str.find(class_name, pos_name) != -1:
+      pos_ids.append(class_meta['class_index'].iloc[ii])
+    elif str.find(class_name, neg_name) != -1:
+      neg_ids.append(class_meta['class_index'].iloc[ii])
+  
+  num_classes = min(len(pos_ids), len(neg_ids), 10)
+  config.dataset.class_ids.pos = pos_ids[:num_classes]
+  config.dataset.class_ids.neg = neg_ids[:num_classes]
+  
+  print "num_classes: {}".format(num_classes)
+  print "ids_pos: {}".format(config.dataset.class_ids.pos)
+  print "ids_neg: {}".format(config.dataset.class_ids.neg) 
+  
+  return config
 
 
 def calc_dense_SIFT_one_img(annotation, config):
   rel_path = annotation['rel_path']
   img_file = os.path.join(config.dataset.main_path, rel_path)
-  img = cv.imread(img_file)
+  
+  # Replace extension to .dat and location in config.SIFT.raw_dir
+  (name, ext) = os.path.splitext(os.path.split(img_file)[1])
+  save_name = os.path.join(config.SIFT.raw_dir, name + '.dat')
+  
+  if os.path.exists(save_name):
+    return
+  
+  img = cv.imread(img_file)  
   (kp, desc) = dense_SIFT(img, grid_spacing=config.SIFT.grid_spacing)
-  save_to_disk(kp, desc, img_file, config.SIFT.raw_dir)
+  save_to_disk(kp, desc, save_name)
 
 
 def calc_dense_SIFT_on_dataset(dataset, config):
@@ -105,15 +139,12 @@ def load_SIFT_from_files(dataset, config):
   features = np.concatenate(features)
   return features
 
-
-
-
 def create_feature_matrix(dataset, config):
   train_annos = dataset['train_annos']
-
+ 
   # Preallocate feature matrix
   features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
-
+ 
   # Load histograms from disk into a matrix
   print 'Loading histograms from disk'
   for ii in range(len(train_annos)):
@@ -122,16 +153,16 @@ def create_feature_matrix(dataset, config):
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir, img_name) + '_hist.dat'
     hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
     features[ii, :] = hist[0]
-
-
+ 
+ 
   # preprocess features
   features = preprocessing.scale(features)
-
+ 
   # create pos/neg labels
   print 'Creating pos/neg labels'
   labels = train_annos.class_index.isin(
                     config.dataset.class_ids.pos).values
-
+ 
   return (features, labels)
 
 def evaluate(features, labels):
@@ -183,40 +214,87 @@ def evaluate(features, labels):
 
   # SVM params
   print 'setting classifier parameters'
-#   clf = svm.SVC(kernel='linear', C=0.0005)
-  clf = svm.SVC(kernel='rbf', C=10, gamma=0.0001)
+#   clf = svm.SVC(kernel='linear', C=0.0005, class_weight='auto')
+#   clf = svm.SVC(kernel='rbf', C=10, gamma=0.0001, class_weight='auto')
 #   from sklearn.ensemble import AdaBoostClassifier
 #   clf = AdaBoostClassifier(svm.SVC(kernel='linear', C=0.005),
 #                            algorithm="SAMME",
 #                          n_estimators=10)
+
+  from sklearn.ensemble import RandomForestClassifier
+  clf = RandomForestClassifier(n_estimators=100, n_jobs=-1)
   scores = cross_validation.cross_val_score(clf, features, labels, cv=5)
 
   # Report results
   print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+  return (clf, scores)
+
+
+def print_output(clf, scores, config):
+  if not os.path.isdir(config.output_dir):
+    os.makedirs(config.output_dir)
+  
+  out_name = os.path.join(config.output_dir, 
+                          'classification_results_{}_{}.txt'.format(
+                          config.attribute.pos_name, config.attribute.neg_name))
+  
+  with open(out_name, 'w') as f:
+    f.write("Config:\n")
+    f.write("----------\n")
+    f.write(config.makeReport() + "\n")
+    f.write("----------\n\n")
+    
+    
+    f.write("{}\n".format(clf))
+    f.write("Accuracy: %0.2f (+/- %0.2f)\n" % (scores.mean(), scores.std() * 2))
+    
+
+def main(args):
+  (dataset, config) = preprocess(args)
+
+  #  RUN dense SIFT on alll images
+  print "Saving Dense SIFT to disk"
+  calc_dense_SIFT_on_dataset(dataset, config)
+
+  # Create BoW model
+  features = load_SIFT_from_files(dataset, config)
+  print "Loaded %d SIFT features from disk" % features.shape[0]
+  print "K-Means CLustering"
+  bow_model = Bow.create_BoW_model(features, config)
+  Bow.save(bow_model, config.SIFT.BoW.model_file)
+
+  # Assign cluster labels to all images
+  print "Assigning to histograms"
+  Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
+
+  # Extract final features
+  print "Building training matrix for classifier"
+  (features, labels) = create_feature_matrix(dataset, config)
+
+  # Evaluate
+  print "Cross Validation on classifier"
+  (clf, scores) = evaluate(features, labels)
+  print_output(clf, scores, config)
 
 if __name__ == '__main__':
-    (dataset, config) = preprocess()
-
-    #  RUN dense SIFT on alll images
-    print "Saving Dense SIFT to disk"
-    calc_dense_SIFT_on_dataset(dataset, config)
-
-    # Create BoW model
-    features = load_SIFT_from_files(dataset, config)
-    print "Loaded %d SIFT features from disk" % features.shape[0]
-    print "K-Means CLustering"
-    Bow.create_BoW_model(features, config.SIFT.BoW.model_file)
-
-    # Assign cluster labels to all images
-    print "Assigning to histograms"
-    Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
-
-    # Extract final features
-    print "Building training matrix for classifier"
-    (features, labels) = create_feature_matrix(dataset, config)
-
-    # Evaluate
-    print "Cross Validation on classifier"
-    evaluate(features, labels)
-
-
+  
+  args = [(None, '2012', '2007'),
+          (None, 'sedan', 'hatchback'),
+          (None, 'sedan', 'coupe'),
+          (None, 'sedan', 'convertible'),
+          (None, 'suv', 'convertible'),
+          (None, 'chevrolet', 'dodge'),
+          (None, 'bmw', 'ford'),
+          (None, 'ford', 'hyundai'),
+          (None, 'audi', 'bmw'),
+          (None, 'ford', 'dodge')]
+  
+  for arg in args:
+    print "Running args: {}".format(arg)
+    main(arg) 
+  
+  
+  
+  
+  
+  
