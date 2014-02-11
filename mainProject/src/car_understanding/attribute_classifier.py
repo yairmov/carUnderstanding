@@ -9,10 +9,13 @@ car_understanding.attribute_classifier -- a single attribute classifier
 @contact:    yair@cs.cmu.edu
 '''
 
-from sklearn.externals.joblib import Parallel, delayed, Memory
+from sklearn.externals.joblib import Parallel, delayed, Memory, dump, load
 import sklearn as sk
+import numpy as np
+import os
 
 import Bow
+from docutils.languages.af import labels
 
 class AttributeClassifier:
   """A module for classifying attributes."""
@@ -29,68 +32,19 @@ class AttributeClassifier:
           desc     - Longer string description of attribute (optional)
           
     """
-    self.config   = config
-    self.name     = name
-    self.pos_inds = pos_inds
-    self.dataset  = dataset.copy()
-    self.desc     = desc
-    self.memory   = Memory(cachedir=config.SIFT.BoW.hist_dir.format(name), 
-                           verbose=0)
-    self.clf      = None
+    self.config       = config
+    self.name         = name
+    self.pos_img_inds = pos_inds
+    self.dataset      = dataset.copy()
+    self.desc         = desc
+    self.clf          = sk.svm.SVC(kernel='linear', C=0.0005, class_weight='auto')
+#     self.memory   = Memory(cachedir=config.SIFT.BoW.hist_dir.format(name), 
+#                            verbose=0)
+    
     
     # Creating memoiztion for functions
 #     self.calc_raw_feature = self.memory.cache(self.calc_raw_feature) 
     
-#   def calc_raw_feature(self, annotation):
-#     rel_path = annotation['rel_path']
-#     img_file = os.path.join(self.config.dataset.main_path, rel_path)
-#     
-#     # Replace extension to .dat and location in config.SIFT.raw_dir
-#     (name, ext) = os.path.splitext(os.path.split(img_file)[1])
-#     save_name = os.path.join(self.config.SIFT.raw_dir, name + '.dat')
-#     
-#     if os.path.exists(save_name):
-#       return
-#     
-#     img = cv.imread(img_file)  
-#     (kp, desc) = dense_SIFT(img, grid_spacing=self.config.SIFT.grid_spacing)
-#     save_to_disk(kp, desc, save_name)
-#     
-#     
-#   def calc_raw_feature_on_dataset(self):
-#     '''
-#     Just calles calc_dense_SIFT_one_img on all images in dataset using a
-#     parallel wrapper.
-#     '''
-#     Parallel(n_jobs=-1, verbose=self.config.logging.verbose)(
-#                    delayed(self.calc_raw_feature)(dataset.iloc[ii])
-#                    for ii in range(len(dataset)))
-#     
-#   def load_raw_from_a_file(self, curr_anno):
-#     curr_file = os.path.splitext(curr_anno['basename'])[0] + '.dat'
-#     (kp, desc) = load_from_disk(os.path.join(self.config.SIFT.raw_dir, 
-#                                              curr_file))
-#   
-#     # Only keep points that are inside the bounding box
-#     box = (curr_anno['xmin'], curr_anno['xmax'],
-#            curr_anno['ymin'], curr_anno['ymax'])
-#   
-#     inds = np.zeros(shape=[len(kp),], dtype=bool)
-#     for jj in range(len(kp)):
-#       inds[jj] = contains(box, kp[jj].pt)
-#   
-#     desc = desc[inds, :]
-#     kp = np.asarray(kp)[inds].tolist()
-#   
-#     # Random selection of a subset of the keypojnts/descriptors
-#     inds  = np.random.permutation(desc.shape[0])
-#     desc = desc[inds, :]
-#     desc = desc[:self.config.SIFT.BoW.max_desc_per_img, :]
-#   #   kp    = [kp[i] for i in inds]
-#   #   kp    = kp[:self.config.SIFT.BoW.max_desc_per_img]
-#   
-#     return desc
-  
   
   def create_feature_matrix(self):
     
@@ -112,37 +66,62 @@ class AttributeClassifier:
     features = sk.preprocessing.scale(features)
   
     # create pos/neg labels
-    labels = self.dataset.class_index.isin(self.pos_inds).values
+    labels = self.dataset.index.isin(self.pos_img_inds)
   
     return (features, labels)
   
   
   def fit(self, features, labels):
-    self.clf = sk.svm.SVC(kernel='linear', C=0.0005, class_weight='auto')
     self.clf.fit(features, labels)
     
-  def my_print(self, str):
-    print self.name + ":" + str
     
-  def run_training_pipeline(self):
+  def cross_validate(self, features, labels):
+    scores = sk.cross_validation.cross_val_score(self.clf, 
+                                                 features, 
+                                                 labels, 
+                                                 cv=5,
+                                                 scoring='accuracy')
+    
+    # Report results
+    self.my_print("Accuracy: %0.2f (+/- %0.2f)" % 
+                  (scores.mean(), scores.std() * 2))
+    
+  def my_print(self, str):
+    print "AttributeCLassifier(" + self.name + "):" + str
+    
+  def run_training_pipeline(self, cv=False):
     """ The full sequence of operations that trains an attribute classifier"""
     
     self.my_print("Loading feature-word histograms from disk, and creating " + 
                   "matrix for attribute classification.")
     (features, labels) = self.create_feature_matrix()
     
-    self.my_print("Training classifier")
-    self.fit(features, labels)
+    
+    if cv:
+      self.my_print("Training classifier [Cross Validations]")
+      self.cross_validate(features, labels)
+    else:
+      self.my_print("Training classifier")
+      self.fit(features, labels)
     
     
     
-# "Static" functions
-def contains(box, point):
-  '''
-  box = (xmin, xmax, ymin, ymax)
-  point = (x, y)
-  '''
-  return (box[0] <= point[0] and box[1] >= point[0] and
-          box[2] <= point[1] and box[3] >= point[1])
+  # Static" functions
+  # -----------------
+  @staticmethod
+  def contains(box, point):
+    '''
+    box = (xmin, xmax, ymin, ymax)
+    point = (x, y)
+    '''
+    return (box[0] <= point[0] and box[1] >= point[0] and
+            box[2] <= point[1] and box[3] >= point[1])
     
+  @staticmethod  
+  def save(attrib_classifier, filename):
+    dump(attrib_classifier, filename)
+      
+  @staticmethod    
+  def load(filename):
+    return load(filename)
     

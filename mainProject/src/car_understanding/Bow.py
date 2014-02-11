@@ -68,7 +68,7 @@ def load(filename):
 
 def create_BoW_model(features, config):
   bow_model = cluster_to_words(features, config)
-#   save(bow_model, model_file)
+  return bow_model 
 
 
 # Assign each features vector in features (row) to a cluster center from
@@ -103,10 +103,12 @@ def create_word_histograms_on_dataset(train_annos, config):
   bow_model = load(config.SIFT.BoW.model_file)
 
   dir_path = config.SIFT.raw_dir
-#   sift_files = os.listdir(dir_path)
   n_files = len(train_annos)
 
-  Parallel(n_jobs=-1, verbose=2)(
+  if not os.path.isdir(config.SIFT.BoW.hist_dir):
+    os.makedirs(config.SIFT.BoW.hist_dir)
+
+  Parallel(n_jobs=-1, verbose=config.logging.verbose)(
                  delayed(create_word_histogram_on_file)(
                  os.path.join(dir_path,
                               os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),

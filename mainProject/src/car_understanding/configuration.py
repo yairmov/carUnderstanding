@@ -21,12 +21,12 @@ def get_config(args):
   config.output_dir = os.path.join(config.main_path, 'output')
 
   # SIFT
-  config.SIFT.dir = os.path.join(config.main_path, 'SIFT')
-  config.SIFT.raw_dir = os.path.join(config.SIFT.dir, 'raw')
+  config.SIFT.dir = assign_dir(os.path.join(config.main_path, 'SIFT'))
+  config.SIFT.raw_dir = assign_dir(os.path.join(config.SIFT.dir, 'raw'))
   config.SIFT.grid_spacing = 4
-  config.SIFT.BoW.model_file = os.path.join(config.SIFT.dir,
-                                            'BoW_model.dat')
-  config.SIFT.BoW.hist_dir = os.path.join(config.main_path, '{}', 'word_hist')
+  config.SIFT.BoW.model_file = os.path.join(config.SIFT.dir, 'BoW_model.dat')
+  config.SIFT.BoW.hist_dir = assign_dir(os.path.join(config.SIFT.dir, 
+                                                     'word_hist'))
   config.SIFT.BoW.num_clusters = 1024
   config.SIFT.BoW.max_desc_per_img = 1000
   config.SIFT.BoW.max_desc_total = 4e6
@@ -56,27 +56,23 @@ def get_config(args):
 
 
   # Attribute Params
-  config.attribute.pos_name = args[1]
-  config.attribute.neg_name = args[2]
+#   config.attribute.pos_name = args[1]
+#   config.attribute.neg_name = args[2]
 
-
-  config.dataset.class_ids.pos = []
-  config.dataset.class_ids.neg = []
-
-#   config = init(config)
+  config.attribute.names = args
+  config.attribute.dir = assign_dir(os.path.join(config.main_path, 
+                                      'attribute_classifiers'))
+  
   
   return config
 
-# 
-# def read_class_ids_for_attribs(config):
-#   with open(config.dataset.class_meta_file) as f:
-#     lines = f.readlines()
-#   
-#   
-# 
-# def init(config):
-#   read_class_ids_for_attribs(config)
+
+
+def assign_dir(dir_name):
+  if not os.path.isdir(dir_name):
+    os.makedirs(dir_name)
   
+  return dir_name
 
 if __name__ == '__main__':
     config = get_config()

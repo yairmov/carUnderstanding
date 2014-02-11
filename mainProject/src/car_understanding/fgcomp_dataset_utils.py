@@ -37,6 +37,8 @@ def read_class_meta(infilename):
                              columns=['class_index', 'class_name', 'domain_index'])
   class_meta['class_index'] = class_meta['class_index'].astype(np.int32)
   class_meta['domain_index'] = class_meta['domain_index'].astype(np.int32)
+  
+  class_meta = class_meta.set_index('class_index', drop=False) 
 
   return class_meta
 

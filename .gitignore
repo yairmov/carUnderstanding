@@ -39,6 +39,7 @@ nosetests.xml
 # Data/Result folders
 SIFT/
 fgcomp2013_normed
+output/
 
 # Temp folders
 RemoteSystemsTempFiles/
