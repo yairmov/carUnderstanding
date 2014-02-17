@@ -1,2 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/car_understanding/attribute_classifier.py=utf-8
+encoding//src/car_understanding/attribute_selector.py=utf-8
+encoding//src/car_understanding/bayes_net.py=utf-8
 encoding//src/car_understanding/dense_SIFT.py=utf-8

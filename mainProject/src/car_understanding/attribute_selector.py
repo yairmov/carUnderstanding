@@ -9,13 +9,7 @@ car_understanding.attribute_selector -- A convinience class for selecting attrib
 @contact:    yair@cs.cmu.edu
 '''
 
-from sklearn.externals.joblib import Parallel, delayed, Memory, dump, load
-import sklearn as sk
 import numpy as np
-import os
-
-import Bow
-from docutils.languages.af import labels
 
 class AttributeSelector:
   """A class that provides easy selection of images based on a n attribute."""
@@ -40,9 +34,9 @@ class AttributeSelector:
     class_ids = []
     attrib_name = str.lower(attrib_name)
     for ii in range(len(self.class_meta)):
-      class_name = str.lower(class_meta['class_name'].iloc[ii])
-      if has_attribute_by_name(class_name, attrib_name):
-        class_ids.append(class_meta['class_index'].iloc[ii])
+      class_name = str.lower(self.class_meta['class_name'].iloc[ii])
+      if AttributeSelector.has_attribute_by_name(class_name, attrib_name):
+        class_ids.append(self.class_meta['class_index'].iloc[ii])
   
     return class_ids
   
@@ -51,15 +45,28 @@ class AttributeSelector:
     '''
     Does class:class_index has the attribute list atrrib_names?
     '''
-    return has_list_attributes_by_name(self.class_meta[class_id].class_name, 
-                                 attrib_names)
+    return AttributeSelector.has_list_attributes_by_name(
+                                      self.class_meta[class_id].class_name, 
+                                      attrib_names)
     
-  def has_attribute_by_index(self, class_id, attrib_name):
+  def has_attribute_by_index(self, class_index, attrib_name):
     '''
     Does class:class_index has the attribute atrrib_name?
     '''
-    return has_attribute_by_name(self.class_meta[class_id].class_name, 
+    return AttributeSelector.has_attribute_by_name(
+                                 self.class_meta[class_index].class_name, 
                                  attrib_name)
+    
+  def prune_attributes(self, class_index, attrib_names):
+    '''
+    From the list of attributes, return only the ones that this class has.
+    '''
+    has_attrib = [self.has_attribute_by_index(class_index, n) for
+                n in attrib_names]
+
+    new_attrib_names = np.array(attrib_names)
+    return new_attrib_names[np.array(has_attrib)]
+
   
   # Static" functions
   # -----------------
@@ -78,10 +85,13 @@ class AttributeSelector:
     '''
     Does class:class_name has all attributes in attrib_names?
     '''
-    has_attrib = [has_attribute_by_name(class_name, a_name) for
+    has_attrib = [AttributeSelector.has_attribute_by_name(class_name, a_name) for
                   a_name in attrib_names]
     
     return np.array(has_attrib).all()
-    
-    
+  
+
+
+
+
       

@@ -7,18 +7,19 @@ Created on Jan 16, 2014
 
 from treedict import TreeDict
 import os
+import socket
 
 def get_config(args):
   config = TreeDict()
 
   # main params
-  # maybe use os.environ['RESEARCH_DIR'] ?
-  config.main_path = '../../../'
-  config.cache_dir = os.path.join(config.main_path, 'cache')
+  config.hostname = socket.gethostname()
+  config.main_path = get_main_path(config.hostname)
+  config.cache_dir = assign_dir(os.path.join(config.main_path, 'cache'))
   config.bb_width = 200
   config.logging.verbose = 3
   
-  config.output_dir = os.path.join(config.main_path, 'output')
+  config.output_dir = assign_dir(os.path.join(config.main_path, 'output'))
 
   # SIFT
   config.SIFT.dir = assign_dir(os.path.join(config.main_path, 'SIFT'))
@@ -57,9 +58,6 @@ def get_config(args):
 
 
   # Attribute Params
-#   config.attribute.pos_name = args[1]
-#   config.attribute.neg_name = args[2]
-
   config.attribute.names = args
   config.attribute.dir = assign_dir(os.path.join(config.main_path, 
                                       'attribute_classifiers'))
@@ -69,6 +67,16 @@ def get_config(args):
   return config
 
 
+
+def get_main_path(hostname):
+  if hostname == 'palfrey.vasc.ri.cmu.edu':
+    main_path = '../../../'
+  elif hostname == 'gs10245.sp.cs.cmu.edu':
+    main_path = '/Volumes/palfrey/Documents/Research/Code/carUnderstanding'
+  else:
+    raise Exception("Unknown hostname! please define config.main_path")
+  
+  return main_path 
 
 def assign_dir(dir_name):
   if not os.path.isdir(dir_name):

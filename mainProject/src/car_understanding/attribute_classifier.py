@@ -9,13 +9,12 @@ car_understanding.attribute_classifier -- a single attribute classifier
 @contact:    yair@cs.cmu.edu
 '''
 
-from sklearn.externals.joblib import Parallel, delayed, Memory, dump, load
+from sklearn.externals.joblib import dump, load
 import sklearn as sk
 import numpy as np
 import os
 
 import Bow
-from docutils.languages.af import labels
 
 class AttributeClassifier:
   """A module for classifying attributes."""
@@ -39,7 +38,8 @@ class AttributeClassifier:
     self.desc         = desc
     self.clf          = sk.svm.SVC(kernel='linear', 
                                    class_weight='auto',
-                                   C=0.005)
+#                                    C=0.005,
+                                   probability=True)
 #     self.memory   = Memory(cachedir=config.SIFT.BoW.hist_dir.format(name), 
 #                            verbose=0)
     

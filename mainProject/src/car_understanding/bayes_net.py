@@ -86,9 +86,10 @@ class BayesNet:
   
   
   def cpt_for_attrib(self, attrib_name, attrib_selector):
+    clf_names = self.clf_names
     # Create all tuples of True/False classifier score
     rows = list(itertools.product(*[(1, 0) for 
-                                    ii in range(len(names))]))
+                                    ii in range(len(clf_names))]))
     
     clf_names = self.clf_names
     clf_res = self.clf_res
@@ -110,8 +111,8 @@ class BayesNet:
       for jj, name in enumerate(clf_names):
         tmp = tmp[(tmp[name] == row[jj])]
       
-      cpt.iloc[jj][0] += tmp.class_index.isin(attrib_class_ids).sum()
-      cpt.iloc[jj][1] += tmp.shape[0] - cpt.iloc[jj][0]
+      cpt.iloc[ii][0] += tmp.class_index.isin(attrib_class_ids).sum()
+      cpt.iloc[ii][1] += tmp.shape[0] - cpt.iloc[ii][0]
         
     # normalize all the rows, to create a probability function
     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
@@ -119,18 +120,11 @@ class BayesNet:
     
   
   
-  def cpt_for_class(self, class_index, attribute_selector):    
-    # figure out which attributes does this class have
-    attrib_names = self.clf_names
-    has_attrib = [attribute_selector.has_attribute_by_index(class_index, n) for
-                n in attrib_names]
-    
-    attrib_names = np.array(attrib_names)
-    attrib_names = attrib_names[np.array(has_attrib)]
-    
+  def cpt_for_class(self, class_index, attrib_list, attribute_selector):    
+
     # Create all tuples of True/False for indicator variable
-    rows = list(itertools.product(*[('1', '0') for 
-                                    ii in range(len(attrib_names))]))
+    rows = list(itertools.product(*[(1, 0) for 
+                                    ii in range(len(attrib_list))]))
     
     cpt = pd.DataFrame(np.zeros([len(rows), 2]), 
                        index=rows, columns=['True', 'False'])
@@ -142,15 +136,14 @@ class BayesNet:
     
     num_classes_with_attrib = 0
     for k, class_index in self.class_meta.iterkv():
-       if attribute_selector.has_list_attributes_by_index(class_index, 
-                                                          attrib_names):
-         num_classes_with_attrib += 1
+      if attribute_selector.has_list_attributes_by_index(class_index, 
+                                                      attrib_list):
+        num_classes_with_attrib += 1
          
-    cpt.ix[[tuple(*ones(shape=[1, len(attrib_names)], 
+    cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
                         dtype=str))], 'True'] = 1 / num_classes_with_attrib
     
-    
-    
+      
       
     
   def init_CPT(self):
@@ -169,15 +162,31 @@ class BayesNet:
     # P(class | attributes)
     #----------------------
     for class_index in class_inds:
-      self.CPT['p({} | atrr)'.format(class_index)] = \
-        self.cpt_for_class(class_index, attribute_selector)
+      # figure out which attributes does this class have
+      attrib_list = attrib_selector.prune_attributes(class_index, attrib_names)
+      
+      self.CPT['p({} | {})'.format(class_index, 
+                                   BayesNet.format_attribute_list(attrib_list))] = \
+        self.cpt_for_class(class_index, attrib_list, attrib_selector)
     
     
     # P(attribute | res of attrib classifiers)
     #-----------------------------------------
-    for attrib_name in names:
+    for attrib_name in attrib_names:
       self.CPT['p({}|theta)'.format(attrib_name)] = \
         self.cpt_for_attrib(attrib_name, attrib_selector)
+        
+  
+  @staticmethod      
+  def format_attribute_list(attrib_list):
+    '''
+    Returns a string representation of the list of attributes (comma seperated).
+    The attributes are sorted such that the representation is dependant only on
+    the contents of attrib_list, not the order of it.
+    '''
+    l = list(np.sort(attrib_list))
+    return ','.join(l)
+    
     
     
     
