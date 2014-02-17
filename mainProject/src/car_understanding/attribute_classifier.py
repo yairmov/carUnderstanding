@@ -37,7 +37,9 @@ class AttributeClassifier:
     self.pos_img_inds = pos_inds
     self.dataset      = dataset.copy()
     self.desc         = desc
-    self.clf          = sk.svm.SVC(kernel='linear', C=0.0005, class_weight='auto')
+    self.clf          = sk.svm.SVC(kernel='linear', 
+                                   class_weight='auto',
+                                   C=0.005)
 #     self.memory   = Memory(cachedir=config.SIFT.BoW.hist_dir.format(name), 
 #                            verbose=0)
     
@@ -46,20 +48,19 @@ class AttributeClassifier:
 #     self.calc_raw_feature = self.memory.cache(self.calc_raw_feature) 
     
   
-  def create_feature_matrix(self):
-    
-    # Preallocate feature matrix
-    features = np.empty(shape=[len(self.dataset), 
-                               self.config.SIFT.BoW.num_clusters])
-  
+  def create_feature_matrix(self, features=None):
     # Load histograms from disk into a matrix
-    for ii in range(len(self.dataset)):
-      img_name = self.dataset.iloc[ii]['basename']
-      img_name = os.path.splitext(img_name)[0]
-      hist_filename = os.path.join(self.config.SIFT.BoW.hist_dir, 
-                                   img_name) + '_hist.dat'
-      hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
-      features[ii, :] = hist[0]
+    if features == None:
+      # Preallocate feature matrix
+      features = np.empty(shape=[len(self.dataset), 
+                                 self.config.SIFT.BoW.num_clusters])
+      for ii in range(len(self.dataset)):
+        img_name = self.dataset.iloc[ii]['basename']
+        img_name = os.path.splitext(img_name)[0]
+        hist_filename = os.path.join(self.config.SIFT.BoW.hist_dir, 
+                                     img_name) + '_hist.dat'
+        hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
+        features[ii, :] = hist[0]
   
   
     # preprocess features
@@ -67,24 +68,37 @@ class AttributeClassifier:
   
     # create pos/neg labels
     labels = self.dataset.index.isin(self.pos_img_inds)
+    
+#     dump([features, labels], 'features.tmp')
   
     return (features, labels)
-  
+    
   
   def fit(self, features, labels):
     self.clf.fit(features, labels)
     
     
   def cross_validate(self, features, labels):
+    self.my_print("Num pos examples: {}".format(np.sum(labels)))
+    cv = 5
+    score_method = 'precision'
+#     score_method = 'accuracy'
+#     cv = sk.cross_validation.StratifiedKFold(labels, 3)
     scores = sk.cross_validation.cross_val_score(self.clf, 
                                                  features, 
-                                                 labels, 
-                                                 cv=5,
-                                                 scoring='accuracy')
+                                                 labels,
+                                                 n_jobs=min(cv, 12), 
+                                                 verbose=1,
+                                                 cv=cv,
+                                                 scoring=score_method)
     
     # Report results
-    self.my_print("Accuracy: %0.2f (+/- %0.2f)" % 
+    self.my_print("scores: {}".format(scores))
+    self.my_print(score_method + ": %0.2f (+/- %0.2f)" % 
                   (scores.mean(), scores.std() * 2))
+    rand_pred = np.random.choice([True, False], size=labels.shape)
+    self.my_print("Random (precision): {}".format(
+                               sk.metrics.precision_score(labels, rand_pred)))
     
   def my_print(self, str):
     print "AttributeCLassifier(" + self.name + "):" + str
@@ -98,11 +112,11 @@ class AttributeClassifier:
     
     
     if cv:
-      self.my_print("Training classifier [Cross Validations]")
+      self.my_print("Training classifier [Cross Validation]")
       self.cross_validate(features, labels)
-    else:
-      self.my_print("Training classifier")
-      self.fit(features, labels)
+#     else:
+    self.my_print("Training classifier")
+    self.fit(features, labels)
     
     
     

@@ -41,9 +41,10 @@ SIFT/
 fgcomp2013_normed
 output/
 
-# Temp folders
+# Temp folders / files
 RemoteSystemsTempFiles/
 .DS_Store
+*.tmp
 
 # Data files
 *.dat

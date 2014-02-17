@@ -94,11 +94,6 @@ def create_word_histogram_on_file(raw_feature_file, bow_model, config):
   hist_file_name = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
   save(hist, hist_file_name)
 
-# def create_word_histograms_on_dir(config=None):
-#   bow_model = load(config.SIFT.BoW.model_file)
-#   dir_path = config.SIFT.raw_dir
-#   sift_files = os.listdir(dir_path)
-
 def create_word_histograms_on_dataset(train_annos, config):
   bow_model = load(config.SIFT.BoW.model_file)
 

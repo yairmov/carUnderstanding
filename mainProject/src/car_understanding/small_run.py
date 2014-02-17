@@ -20,20 +20,20 @@ from configuration import get_config
 import fgcomp_dataset_utils as fgu
 from dense_SIFT import dense_SIFT, save_to_disk, load_from_disk
 import Bow
-
 from attribute_classifier import AttributeClassifier
+from bayes_net import BayesNet
 
 def preprocess(args):
   config = get_config(args)
   (train_annos, class_meta, domain_meta) = fgu.get_all_metadata(config)
-  
+
   # Filter the class meta and train annotations according to the small use
   # case definitions
   class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
   train_annos = train_annos[train_annos.class_index.isin(class_meta.class_index)]
-  
+
 #   config = load_classes_from_atrib_names(config, class_meta)
-  
+
   return ({'train_annos': train_annos,
              'class_meta': class_meta,
              'domain_meta': domain_meta},
@@ -47,34 +47,34 @@ def class_ids_from_name(name, class_meta):
     class_name = str.lower(class_meta['class_name'].iloc[ii])
     if str.find(class_name, pos_name) != -1:
       pos_ids.append(class_meta['class_index'].iloc[ii])
-  
+
   return pos_ids
-      
-      
+
+
 def img_ids_for_classes(class_ids, train_annos):
   return train_annos[train_annos.class_index.isin(class_ids)].index
-  
+
 
 
 def calc_dense_SIFT_one_img(annotation, config):
   rel_path = annotation['rel_path']
   img_file = os.path.join(config.dataset.main_path, rel_path)
-  
+
   # Replace extension to .dat and location in config.SIFT.raw_dir
   (name, ext) = os.path.splitext(os.path.split(img_file)[1])
   save_name = os.path.join(config.SIFT.raw_dir, name + '.dat')
-  
+
   if os.path.exists(save_name):
     return
-  
-  img = cv.imread(img_file)  
+
+  img = cv.imread(img_file)
   (kp, desc) = dense_SIFT(img, grid_spacing=config.SIFT.grid_spacing)
   save_to_disk(kp, desc, save_name)
 
 
 def calc_dense_SIFT_on_dataset(dataset, config):
   '''
-  Just calles calc_dense_SIFT_one_img on all images in dataset using a
+  Just calls calc_dense_SIFT_one_img on all images in dataset using a
   parallel wrapper.
   '''
   train_annos = dataset['train_annos']
@@ -128,20 +128,20 @@ def load_SIFT_from_files(dataset, config):
 
   # convert to numy arry
   features = np.concatenate(features)
-  
+
   # sample max_desc features
   inds  = np.random.permutation(features.shape[0])
   features = features[inds, :]
   features = features[:config.SIFT.BoW.max_desc_total, :]
-  
+
   return features
 
 def create_feature_matrix(dataset, config):
   train_annos = dataset['train_annos']
- 
+
   # Preallocate feature matrix
   features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
- 
+
   # Load histograms from disk into a matrix
   print 'Loading histograms from disk'
   for ii in range(len(train_annos)):
@@ -150,16 +150,16 @@ def create_feature_matrix(dataset, config):
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir, img_name) + '_hist.dat'
     hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
     features[ii, :] = hist[0]
- 
- 
+
+
   # preprocess features
   features = preprocessing.scale(features)
- 
+
   # create pos/neg labels
   print 'Creating pos/neg labels'
   labels = train_annos.class_index.isin(
                     config.dataset.class_ids.pos).values
- 
+
   return (features, labels)
 
 def evaluate(features, labels):
@@ -230,39 +230,39 @@ def evaluate(features, labels):
 def print_output(clf, scores, config):
   if not os.path.isdir(config.output_dir):
     os.makedirs(config.output_dir)
-  
-  out_name = os.path.join(config.output_dir, 
+
+  out_name = os.path.join(config.output_dir,
                           'classification_results_{}_{}.txt'.format(
                           config.attribute.pos_name, config.attribute.neg_name))
-  
+
   with open(out_name, 'w') as f:
     f.write("Config:\n")
     f.write("----------\n")
     f.write(config.makeReport() + "\n")
     f.write("----------\n\n")
-    
-    
+
+
     f.write("{}\n".format(clf))
     f.write("Accuracy: %0.2f (+/- %0.2f)\n" % (scores.mean(), scores.std() * 2))
-    
 
-def run_attrib_training(args):
+
+def run_attrib_training(args, cross_validation=False):
   (dataset, config) = preprocess(args)
 
   #  RUN dense SIFT on alll images
   print "Saving Dense SIFT to disk"
-  calc_dense_SIFT_on_dataset(dataset, config)
+#   calc_dense_SIFT_on_dataset(dataset, config)
 
   # Create BoW model
-  features = load_SIFT_from_files(dataset, config)
-  print "Loaded %d SIFT features from disk" % features.shape[0]
+#   features = load_SIFT_from_files(dataset, config)
+#   print "Loaded %d SIFT features from disk" % features.shape[0]
   print "K-Means CLustering"
-  bow_model = Bow.create_BoW_model(features, config)
-  Bow.save(bow_model, config.SIFT.BoW.model_file)
+#   bow_model = Bow.create_BoW_model(features, config)
+#   Bow.save(bow_model, config.SIFT.BoW.model_file)
 
   # Assign cluster labels to all images
   print "Assigning to histograms"
-  Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
+#   Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
 
   # Train attribute classifiers
   print "Training attribute classifiers"
@@ -270,64 +270,63 @@ def run_attrib_training(args):
   for attrib_name in config.attribute.names:
     print attrib_name
     pos_class_ids = class_ids_from_name(attrib_name, dataset['class_meta'])
-    pos_img_ids   = img_ids_for_classes(pos_class_ids, 
+    pos_img_ids   = img_ids_for_classes(pos_class_ids,
                                                 dataset['train_annos'])
-    attrib_clf = AttributeClassifier(config, 
-                                     dataset['train_annos'], 
-                                     pos_img_ids, 
+    attrib_clf = AttributeClassifier(config,
+                                     dataset['train_annos'],
+                                     pos_img_ids,
                                      attrib_name,
-                                      desc=attrib_name)
-    
-#     attrib_clf.run_training_pipeline(cv=True)
-    attrib_clf.run_training_pipeline()
-    AttributeClassifier.save(attrib_clf, os.path.join(config.attribute.dir, 
+                                     desc=attrib_name)
+
+    attrib_clf.run_training_pipeline(cross_validation)
+    AttributeClassifier.save(attrib_clf, os.path.join(config.attribute.dir,
                                                       attrib_clf.name + '.dat'))
-    
+
     print "-------------------------------------"
     print "-------------------------------------"
- 
+
 
 
 
 def select_small_set_for_bayes_net(dataset, makes, types):
   classes = dataset['class_meta']
-  
+
   make_ids = set([])
-  for make in makes: 
+  for make in makes:
     ids = class_ids_from_name(make, classes)
     make_ids.update(ids)
 
   c2 = classes[np.array(classes.class_index.isin(list(make_ids)))]
   final_ids = set([])
-  for type in types: 
+  for type in types:
     ids = class_ids_from_name(type, c2)
     final_ids.update(ids)
-  
+
   c2 = c2[np.array(c2.class_index.isin(list(final_ids)))]
   return c2.copy()
-  
 
 
-def create_attrib_res_on_images(train_annos, attrib_classifiers):
+
+def create_attrib_res_on_images(train_annos, attrib_classifiers, config):
   print "Load image Bow histograms from disk"
   features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
   for ii in range(len(train_annos)):
     img_name = train_annos.iloc[ii]['basename']
     img_name = os.path.splitext(img_name)[0]
-    hist_filename = os.path.join(config.SIFT.BoW.hist_dir, 
+    hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
                                  img_name) + '_hist.dat'
     hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
     features[ii, :] = hist[0]
-  
-  print "Apply attribute classifiers on images"  
+
+  print "Apply attribute classifiers on images"
   res = {}
   for attrib_clf in attrib_classifiers:
     curr_res = attrib_clf.clf.decision_function(features)
     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
-    
+
   res = pd.DataFrame(data=res, index=train_annos.index)
-  
-  
+
+
   res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
   return res
 
@@ -339,25 +338,25 @@ def calc_stats(clf_res):
   for c in np.unique(clf_res.class_index):
     mu[c]  = clf_res[clf_res.class_index == c].mean().iloc[:4]
     sig[c] = clf_res[clf_res.class_index == c].std().iloc[:4]
-   
-   
+
+
   prob_c = collections.Counter(clf_res.class_index)
   s = sum(prob_c.values())
   for c in prob_c.keys():
-    prob_c[c] /= float(s) 
+    prob_c[c] /= float(s)
   return {'mu': mu, 'sig': sig, 'prob_c': prob_c}
-    
-  
+
+
 def predict_using_bayes(clf_res, prob_c, mu, sig, dataset, config):
   attrib_names = mu[mu.keys()[0]].index
   class_names = dataset['class_meta'].class_name[prob_c.keys()]
-  posteriors = pd.DataFrame(data=np.zeros(shape=[clf_res.shape[0], 
-                                                 len(prob_c.keys())]), 
-                            index=clf_res.index, 
+  posteriors = pd.DataFrame(data=np.zeros(shape=[clf_res.shape[0],
+                                                 len(prob_c.keys())]),
+                            index=clf_res.index,
                             columns=class_names)
-  
+
   gauss_norm = 1 / (np.sqrt(2 * np.pi))
-  
+
   for ii in range(len(clf_res)):
     curr_res = clf_res.iloc[ii]
     for c in prob_c.keys():
@@ -372,76 +371,100 @@ def predict_using_bayes(clf_res, prob_c, mu, sig, dataset, config):
                                                 curr_res[a_name] - mu_ac, 2)
         p_c *= (1/sig_ac)*gauss_norm * np.exp(gauss_exp)
         posteriors.iloc[ii][class_names[c]] = p_c
-      
-  
-  
+
+
+
   # add true class as last column
   train_annos = dataset['train_annos']
   t = train_annos[train_annos.index.isin(clf_res.index)]
-  posteriors = pd.concat([posteriors, 
-                          t.ix[:, ['class_name']]], 
+  posteriors = pd.concat([posteriors,
+                          t.ix[:, ['class_name']]],
                          axis=1)
   posteriors.rename(columns={'class_name': 'true_class'}, inplace=True)
-  
+
   posteriors['predicted'] = posteriors.ix[:,:-1].idxmax(axis=1)
-  
+
   # shorten col names
-  posteriors.rename(columns=lambda x: x[:-5], inplace=True)    
+  posteriors.rename(columns=lambda x: x[:-5], inplace=True)
   posteriors.rename(columns={'true_':'tr', 'pred':'pr'}, inplace=True)
-  posteriors['success'] = posteriors.tr == posteriors.pr 
-  
+  posteriors['success'] = posteriors.tr == posteriors.pr
+
   return posteriors
-    
-    
-if __name__ == '__main__':
 
-#   args = ["sedan", "SUV", "2012", "Audi", "bmw", "ford",
-#           "chevrolet", "coupe", "hatchback", "dodge", "hyundai"]
-
-#   args = ["sedan", "SUV", "bmw", "ford"]
-#    
-#   run_attrib_training(args)
-
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'SUV']
-  args = makes + types
+def bayes_net_generic():
+  args = ["sedan", "SUV", "bmw", "ford"]
   (dataset, config) = preprocess(args)
-
-  # Select only images from the args "world"   
+  attrib_classifiers = []
+  for name in args:
+    filename = os.path.join(config.attribute.dir, name + '.dat')
+    attrib_classifiers.append(AttributeClassifier.load(filename))
+    
+  (dataset, config) = preprocess(args)
+  # Select only images from the args "world"
   classes = select_small_set_for_bayes_net(dataset, makes, types)
   train_annos = dataset['train_annos']
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
   
-  attrib_classifiers = []
-  for name in args:
-    filename = os.path.join(config.attribute.dir, name + '.dat')
-    attrib_classifiers.append(AttributeClassifier.load(filename))
+  bnet = BayesNet(config, train_annos, 
+                  classes, attrib_classifiers, desc=str(args))
+  bnet.init_CPT()
   
-  clf_res = create_attrib_res_on_images(train_annos, attrib_classifiers)
-  
-  
-  print "clf_res\n-------"
-  print clf_res.head()
-  
-  stats = calc_stats(clf_res)
-  
-  dump({'clf_res': clf_res, 'stats':stats}, 'tmp.dat')
-  
-  post = predict_using_bayes(clf_res, stats['prob_c'], stats['mu'], stats['sig'], 
-                      dataset, config)
-  
-  print "Accuracy = {}".format(sum(post.success) / float(len(post)))
 
 
-    
+if __name__ == '__main__':
+
+#   args = ["sedan", "SUV", "2012", "Audi", "bmw", "ford",
+#           "chevrolet", "coupe", "hatchback", "dodge", "hyundai"]
   
+#   args = ["sedan", "SUV", "bmw", "ford"]
+#   args = ["sedan"]
+#
+#   run_attrib_training(args, cross_validation=True) 
+
+#   # Small Bayes net (naive bayes...)
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'SUV']
+#   args = makes + types
+#   (dataset, config) = preprocess(args)
+# 
+#   # Select only images from the args "world"
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   train_annos = dataset['train_annos']
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
+# 
+#   attrib_classifiers = []
+#   for name in args:
+#     filename = os.path.join(config.attribute.dir, name + '.dat')
+#     attrib_classifiers.append(AttributeClassifier.load(filename))
+# 
+#   clf_res = create_attrib_res_on_images(train_annos, attrib_classifiers, config)
+# 
+# 
+#   print "clf_res\n-------"
+#   print clf_res.head()
+# 
+#   stats = calc_stats(clf_res)
+# 
+#   dump({'clf_res': clf_res, 'stats':stats}, 'tmp.dat')
+# 
+#   post = predict_using_bayes(clf_res, stats['prob_c'], stats['mu'], stats['sig'],
+#                       dataset, config)
+# 
+#   print "Accuracy = {}".format(sum(post.success) / float(len(post)))
+
   
+  # Using the more generic BayesNet class
+  #-------------------------------------
   
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+

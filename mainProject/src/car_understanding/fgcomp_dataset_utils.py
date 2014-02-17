@@ -9,6 +9,7 @@ Created on Jan 16, 2014
 import pandas as pd
 import numpy as np
 import os
+from numpy import nper
 
 # Use this function to create a pandas array for the classes.
 # You can't just use pd.read_csv cause the file has names with commas in them...
@@ -70,11 +71,14 @@ def read_training_data(infilename):
 
 def get_all_metadata(config):
   class_meta  = read_class_meta(config.dataset.class_meta_file)
-  dataset = read_training_data(config.dataset.train_annos_file)
+  train_annos = read_training_data(config.dataset.train_annos_file)
   domain_meta = read_domain_meta(config.dataset.domain_meta_file)
-  dataset = pd.merge(dataset, class_meta.iloc[:,0:2], on='class_index')
-  dataset.index.name = 'image_index'
+#   train_annos = pd.merge(train_annos, class_meta.iloc[:,0:2], on='class_index') # probably produces WRONG mapping
+#   train_annos.index.name = 'image_index'
+  train_annos['class_name'] = np.array([class_meta.class_name[class_index] for 
+                                         class_index in 
+                                         train_annos.class_index])
 
-  return (dataset, class_meta, domain_meta)
+  return (train_annos, class_meta, domain_meta)
 
 
