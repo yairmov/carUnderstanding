@@ -4,14 +4,16 @@ Created on Jan 13, 2014
 @author: ymovshov
 '''
 
-import cv2 as cv
+# import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
+import pymc as mc
+import time
 
-import fgcomp_dataset_utils as fgu
-from configuration import get_config
-import small_run
-import Bow
+# import fgcomp_dataset_utils as fgu
+# from configuration import get_config
+# import small_run
+# import Bow
 
 
 def test_fg_utils():
@@ -75,10 +77,107 @@ def multi_test():
   print a
   p.terminate()
 
+# Define the Alarm node, which has B/E as parents
+@mc.deterministic(dtype=int)
+def Alarm(value=0, B=1, E=1):
+    """Probability of alarm given B/E"""
+    p = -np.Inf
+    if B and E:
+      p = 0.95
+    if B and not E:
+      p = 0.94
+    if E and not B:
+      p = 0.29
+    if not B and not E:
+      p = 0.001
+      
+    return -np.log(p)
+
+def bayes_net_test():
+  # trying the earthquake example from norvig
+  
+  # define the head nodes B and E
+  B = mc.Bernoulli('B', p=0.001)
+  E = mc.Bernoulli('E', p=0.002)
+  
+  
+  # define the probability function for alaram
+  def f_alarm(value=0, B=B, E=E):
+    """Probability of alarm given B/E"""
+    p = -np.Inf
+    if B and E:
+      p = 0.95
+    if B and not E:
+      p = 0.94
+    if E and not B:
+      p = 0.29
+    if not B and not E:
+      p = 0.001
+      
+    return p
+  
+  # define the alaram node (using the probability function)
+  p_a = mc.Lambda('p_a', f_alarm)
+  A = mc.Bernoulli('A', p_a)
+  
+  
+  
+  def f_john(value=0, A=A):
+    """Probability of john given A"""
+    if A:
+      return 0.9
+    return 0.05
+  
+  def f_mary(value=0, A=A):
+    """Probability of john given A"""
+    if A:
+      return 0.7
+    return 0.01
+  
+  p_j = mc.Lambda('p_j', f_john)
+  J = mc.Bernoulli('J', p_j, value=True, observed=True)
+  p_m = mc.Lambda('p_m', f_mary)
+  M = mc.Bernoulli('M', p_m, value=True, observed=True)
+  
+  
+  
+  model = mc.Model([A, B, E, J, M])
+  mc.graph.dag(model).write_pdf('tmp.pdf')
+
+  MAP = mc.MAP(model)
+  MAP.fit() # first do MAP estimation
+  
+  
+  mcmc = mc.MCMC(model)
+  mcmc.sample(10000, 3000)
+  
+  
+  b_samples = mcmc.trace('B')[:]
+  print b_samples.shape
+  print b_samples.mean()
+
+  # plot stuff
+#   plt.hist(b_samples, histtype='stepfilled', bins=10, alpha=0.85,
+#          label="posterior of $B$", color="#A60628", normed=True)
+#   plt.show()
+#    
+#    
+#    
+#   raw_input('press return when done')
+  
+  
+  
+  
+  
+#   print A.get_parents()
+    
+    
+  
 
 
 if __name__ == '__main__':
 #   test_fg_utils()
 #   dbg_clustering()
 #     test_work_remote
-  multi_test()
+#   multi_test()
+  bayes_net_test()

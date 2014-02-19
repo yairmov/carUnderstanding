@@ -396,7 +396,9 @@ def bayes_net_generic():
   args = makes + types
   (dataset, config) = preprocess(args)
   
+  print "training attrib classifiers"
   run_attrib_training(args, cross_validation=True)
+  print "Returning after training attrib classifiers"
   return
   
   attrib_classifiers = []

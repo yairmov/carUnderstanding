@@ -17,6 +17,7 @@ import os
 import itertools
 from clint.textui import progress
 import pandas as pd
+import pymc as mc
 
 import Bow
 from attribute_selector import AttributeSelector
@@ -45,6 +46,12 @@ class BayesNet:
     self.CPT          = {}
     self.clf_names    = [self.attrib_clfs[ii].name for 
                                   ii in range(len(self.attrib_clfs))]
+    
+    # sort by attrib name (keep the attributs sorted at all times!)
+    inds = np.argsort(self.clf_names)
+    self.clf_names = list(np.array(self.clf_names)[inds])
+    self.attrib_clfs = list(np.array(self.attrib_clfs)[inds]) 
+     
     
   
   
@@ -165,9 +172,12 @@ class BayesNet:
       # figure out which attributes does this class have
       attrib_list = attrib_selector.prune_attributes(class_index, attrib_names)
       
-      self.CPT['p({} | {})'.format(class_index, 
-                                   BayesNet.format_attribute_list(attrib_list))] = \
-        self.cpt_for_class(class_index, attrib_list, attrib_selector)
+      class_key = 'p({} | {})'.format(class_index, 
+                                   BayesNet.format_attribute_list(attrib_list))
+      
+      self.CPT[class_key] = self.cpt_for_class(class_index, 
+                                               attrib_list, 
+                                               attrib_selector)
     
     
     # P(attribute | res of attrib classifiers)
@@ -176,6 +186,53 @@ class BayesNet:
       self.CPT['p({}|theta)'.format(attrib_name)] = \
         self.cpt_for_attrib(attrib_name, attrib_selector)
         
+  
+  def predict_one(self, clf_res):
+    # building model
+    # first start with observed variables - the results of all the classifiers 
+    # on the image
+    clf_res_descrete = clf_res.copy()
+    clf_res_descrete[self.clf_names] = \
+        clf_res[self.clf_names] > self.config.attribute.high_thresh
+    
+    # the actual distrobution used is not important as these are 
+    # *observed* variables. We set the value to be the result of the classifiers              
+    theta = mc.DiscreteUniform('theta', 0, 1,
+                               size=len(self.clf_names),
+                               observed=True,
+                               value=clf_res_descrete[self.clf_names])
+    
+    # The hidden layer. Each attriute is connected to all attribute classifiers
+    # as its parents.
+    attrib_names = self.clf_names
+    attrib_bnet_nodes = []
+    for attrib_name in attrib_names:
+      identifier = 'p({}|theta)'.format(attrib_name)
+      cpt = self.CPT[identifier]
+      p_function = mc.Lambda(identifier, 
+                             self.prob_function_builder_for_mid_layer(cpt, 
+                                                                      theta))
+      attrib_bnet_nodes.append(mc.Bernoull(attrib_name, p_function))
+      
+   
+    class_inds = self.train_annos.class_index.unique() 
+    for class_index in class_inds:
+      attrib_list = attrib_selector.prune_attributes(class_index, attrib_names)
+      class_key = 'p({} | {})'.format(class_index, 
+                                   BayesNet.format_attribute_list(attrib_list))
+      cpt = self.CPT[class_key]
+      
+      
+  
+  
+  def prob_function_builder_for_class_layer(self, cpt, attrib_values):
+    return lambda attrib_values=attrib_values: float(cpt.ix[[tuple(attrib_values)],
+                                                        'True'])
+  
+  def prob_function_builder_for_mid_layer(self, cpt, theta):    
+    return lambda theta=theta: float(cpt.ix[[tuple(theta.value)],'True'])
+       
+  
   
   @staticmethod      
   def format_attribute_list(attrib_list):
