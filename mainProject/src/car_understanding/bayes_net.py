@@ -115,6 +115,7 @@ class BayesNet:
     for ii in range(clf_res_descrete.shape[0]):
       cc = clf_res_descrete.iloc[ii]
       row = tuple(cc[clf_names])
+      print row
       has_attrib = cc['class_index'] in attrib_class_ids
       cpt.ix[row, str(has_attrib)] += 1
     
