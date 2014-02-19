@@ -398,10 +398,10 @@ def bayes_net_generic():
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
-  print "training attrib classifiers"
-  run_attrib_training(args, cross_validation=True)
-  print "Returning after training attrib classifiers"
-  return
+#   print "training attrib classifiers"
+#   run_attrib_training(args, cross_validation=True)
+#   print "Returning after training attrib classifiers"
+#   return
   
   attrib_classifiers = []
   for name in args:
