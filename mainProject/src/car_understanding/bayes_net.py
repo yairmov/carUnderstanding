@@ -93,7 +93,7 @@ class BayesNet:
   
   
   def cpt_for_attrib(self, attrib_name, attrib_selector):
-    clf_names = self.clf_names
+    clf_names = np.array(self.clf_names)
     clf_res = self.clf_res
     
     
