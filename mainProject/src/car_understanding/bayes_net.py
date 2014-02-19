@@ -96,32 +96,39 @@ class BayesNet:
     clf_names = self.clf_names
     clf_res = self.clf_res
     
-    # Create all tuples of True/False classifier score
-    rows = list(itertools.product(*[(1, 0) for 
-                                    ii in range(len(clf_names))]))
-    
     
     attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
     # intersect attrib_class_ids with clf_res.class_index
     attrib_class_ids = \
     [val for val in attrib_class_ids if val in list(clf_res.class_index)]
-    print attrib_class_ids
-    return
     
     clf_res_descrete = clf_res.copy()
     clf_res_descrete.ix[:, clf_names] = \
                   clf_res.ix[:, clf_names] > self.config.attribute.high_thresh
     
+    # Create all tuples of True/False classifier score
+    rows = list(itertools.product(*[(1, 0) for 
+                                    ii in range(len(clf_names))]))
     cpt = pd.DataFrame(np.ones([len(rows), 2]), 
                        index=rows, columns=['True', 'False'])
     
-    for ii, row in enumerate(rows):
-      tmp = clf_res_descrete.copy()
-      for jj, name in enumerate(clf_names):
-        tmp = tmp[(tmp[name] == row[jj])]
-      
-      cpt.iloc[ii][0] += tmp.class_index.isin(attrib_class_ids).sum()
-      cpt.iloc[ii][1] += tmp.shape[0] - cpt.iloc[ii][0]
+    for ii in clf_res_descrete.shape[0]:
+      cc = clf_res_descrete.iloc[ii]
+      row = tuple(cc[clf_names])
+      has_attrib = cc['class_index'] in attrib_class_ids
+      cpt.ix[row, str(has_attrib)] += 1
+    
+    print cpt
+    return
+    
+    
+#     for ii, row in enumerate(rows):
+#       tmp = clf_res_descrete.copy()
+#       for jj, name in enumerate(clf_names):
+#         tmp = tmp[(tmp[name] == row[jj])]
+#       
+#       cpt.iloc[ii][0] += tmp.class_index.isin(attrib_class_ids).sum()
+#       cpt.iloc[ii][1] += tmp.shape[0] - cpt.iloc[ii][0]
         
     # normalize all the rows, to create a probability function
     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
