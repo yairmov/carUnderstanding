@@ -26,7 +26,6 @@ class AttributeSelector:
     self.class_meta = class_meta.copy()
     
     
-#     self.process_dataset()
     
     
   def create_attrib_meta(self, attrib_names):
