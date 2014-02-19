@@ -48,8 +48,11 @@ class BayesNet:
                                   ii in range(len(self.attrib_clfs))]
     
     # sort by attrib name (keep the attributs sorted at all times!)
+    print self.clf_names
     inds = np.argsort(self.clf_names)
+    print inds
     self.clf_names = list(np.array(self.clf_names)[inds])
+    print self.clf_names
     self.attrib_clfs = list(np.array(self.attrib_clfs)[inds]) 
      
     
