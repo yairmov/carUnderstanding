@@ -116,8 +116,6 @@ class BayesNet:
     cpt = pd.DataFrame(np.ones([len(rows), 2]), 
                        index=rows, columns=['True', 'False'])
     
-    print clf_res.head(20)
-    return
     
     for ii in range(clf_res_descrete.shape[0]):
       cc = clf_res_descrete.iloc[ii]
