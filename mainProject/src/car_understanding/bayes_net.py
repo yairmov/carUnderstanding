@@ -128,16 +128,7 @@ class BayesNet:
     
     print cpt
     return
-    
-    
-#     for ii, row in enumerate(rows):
-#       tmp = clf_res_descrete.copy()
-#       for jj, name in enumerate(clf_names):
-#         tmp = tmp[(tmp[name] == row[jj])]
-#       
-#       cpt.iloc[ii][0] += tmp.class_index.isin(attrib_class_ids).sum()
-#       cpt.iloc[ii][1] += tmp.shape[0] - cpt.iloc[ii][0]
-        
+            
     # normalize all the rows, to create a probability function
     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
     return cpt
