@@ -40,19 +40,20 @@ class BayesNet:
     self.config       = config.copy()
     self.train_annos  = train_annos.copy()
     self.class_meta   = class_meta.copy()
-    self.attrib_clfs  = attrib_clfs 
+    
+    self.attrib_clfs  = attrib_clfs
+    for ii in range(len(self.attrib_clfs)):
+      attrib_clfs[ii].name = str.lower(attrib_clfs[ii].name)
+       
     self.desc         = desc
     self.clf_res      = None
     self.CPT          = {}
-    self.clf_names    = [str.lower(self.attrib_clfs[ii].name) for 
+    self.clf_names    = [self.attrib_clfs[ii].name for 
                                   ii in range(len(self.attrib_clfs))]
     
     # sort by attrib name (keep the attributs sorted at all times!)
-    print self.clf_names
     inds = np.argsort(self.clf_names)
-    print inds
     self.clf_names = list(np.array(self.clf_names)[inds])
-    print self.clf_names
     self.attrib_clfs = list(np.array(self.attrib_clfs)[inds]) 
      
     
