@@ -112,7 +112,7 @@ class BayesNet:
     cpt = pd.DataFrame(np.ones([len(rows), 2]), 
                        index=rows, columns=['True', 'False'])
     
-    for ii in clf_res_descrete.shape[0]:
+    for ii in range(clf_res_descrete.shape[0]):
       cc = clf_res_descrete.iloc[ii]
       row = tuple(cc[clf_names])
       has_attrib = cc['class_index'] in attrib_class_ids
