@@ -44,7 +44,7 @@ class BayesNet:
     self.desc         = desc
     self.clf_res      = None
     self.CPT          = {}
-    self.clf_names    = [self.attrib_clfs[ii].name for 
+    self.clf_names    = [str.lower(self.attrib_clfs[ii].name) for 
                                   ii in range(len(self.attrib_clfs))]
     
     # sort by attrib name (keep the attributs sorted at all times!)
@@ -117,9 +117,7 @@ class BayesNet:
     
     for ii in range(clf_res_descrete.shape[0]):
       cc = clf_res_descrete.iloc[ii]
-      print clf_names
       row = tuple(cc[clf_names])
-      print row
       has_attrib = cc['class_index'] in attrib_class_ids
       cpt.ix[row, str(has_attrib)] += 1
     
