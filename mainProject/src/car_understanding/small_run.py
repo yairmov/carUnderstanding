@@ -22,21 +22,19 @@ import Bow
 from attribute_classifier import AttributeClassifier
 from bayes_net import BayesNet
 
-def preprocess(args):
-  config = get_config(args)
-  (train_annos, class_meta, domain_meta) = fgu.get_all_metadata(config)
-
-  # Filter the class meta and train annotations according to the small use
-  # case definitions
-  class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
-  train_annos = train_annos[train_annos.class_index.isin(class_meta.class_index)]
-
-#   config = load_classes_from_atrib_names(config, class_meta)
-
-  return ({'train_annos': train_annos,
-             'class_meta': class_meta,
-             'domain_meta': domain_meta},
-          config)
+# def preprocess(args):
+#   config = get_config(args)
+#   (train_annos, class_meta, domain_meta) = fgu.get_all_metadata(config)
+# 
+#   # Filter the class meta and train annotations according to the small use
+#   # case definitions
+#   class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
+#   train_annos = train_annos[train_annos.class_index.isin(class_meta.class_index)]
+# 
+#   return ({'train_annos': train_annos,
+#              'class_meta': class_meta,
+#              'domain_meta': domain_meta},
+#           config)
 
 
 def class_ids_from_name(name, class_meta):
@@ -246,7 +244,9 @@ def print_output(clf, scores, config):
 
 
 def run_attrib_training(args, cross_validation=False):
-  (dataset, config) = preprocess(args)
+#   (dataset, config) = preprocess(args)
+  config = get_config(args)
+  (dataset, config) = fgu.get_all_metadata(config)
 
   #  RUN dense SIFT on alll images
   print "Saving Dense SIFT to disk"
@@ -297,8 +297,8 @@ def select_small_set_for_bayes_net(dataset, makes, types):
 
   c2 = classes[np.array(classes.class_index.isin(list(make_ids)))]
   final_ids = set([])
-  for type in types:
-    ids = class_ids_from_name(type, c2)
+  for car_type in types:
+    ids = class_ids_from_name(car_type, c2)
     final_ids.update(ids)
 
   c2 = c2[np.array(c2.class_index.isin(list(final_ids)))]
@@ -394,7 +394,9 @@ def bayes_net_generic():
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
   args = makes + types
-  (dataset, config) = preprocess(args)
+#   (dataset, config) = preprocess(args)
+  config = get_config(args)
+  (dataset, config) = fgu.get_all_metadata(config)
   
   print "training attrib classifiers"
   run_attrib_training(args, cross_validation=True)

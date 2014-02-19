@@ -94,17 +94,19 @@ class BayesNet:
   
   def cpt_for_attrib(self, attrib_name, attrib_selector):
     clf_names = self.clf_names
+    clf_res = self.clf_res
+    
     # Create all tuples of True/False classifier score
     rows = list(itertools.product(*[(1, 0) for 
                                     ii in range(len(clf_names))]))
     
-    clf_names = self.clf_names
-    clf_res = self.clf_res
     
     attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
     # intersect attrib_class_ids with clf_res.class_index
     attrib_class_ids = \
     [val for val in attrib_class_ids if val in list(clf_res.class_index)]
+    print attrib_class_ids
+    return
     
     clf_res_descrete = clf_res.copy()
     clf_res_descrete.ix[:, clf_names] = \
@@ -166,6 +168,16 @@ class BayesNet:
     attrib_names = self.clf_names
     class_inds  = self.train_annos.class_index.unique()
     
+    
+    self.cpt_for_attrib('suv', attrib_selector)
+    return
+    
+    # P(attribute | res of attrib classifiers)
+    #-----------------------------------------
+    for attrib_name in attrib_names:
+      self.CPT['p({}|theta)'.format(attrib_name)] = \
+        self.cpt_for_attrib(attrib_name, attrib_selector)
+    
     # P(class | attributes)
     #----------------------
     for class_index in class_inds:
@@ -180,11 +192,6 @@ class BayesNet:
                                                attrib_selector)
     
     
-    # P(attribute | res of attrib classifiers)
-    #-----------------------------------------
-    for attrib_name in attrib_names:
-      self.CPT['p({}|theta)'.format(attrib_name)] = \
-        self.cpt_for_attrib(attrib_name, attrib_selector)
         
   
   def predict_one(self, clf_res):

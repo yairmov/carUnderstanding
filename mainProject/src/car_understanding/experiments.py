@@ -9,9 +9,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pymc as mc
 import time
+import pandas as pd
 
-# import fgcomp_dataset_utils as fgu
-# from configuration import get_config
+import fgcomp_dataset_utils as fgu
+from configuration import get_config
+from attribute_selector import AttributeSelector
 # import small_run
 # import Bow
 
@@ -170,8 +172,60 @@ def bayes_net_test():
   
   
 #   print A.get_parents()
+
+
+
+def class_ids_from_name(name, class_meta):
+  pos_ids = []
+  pos_name = str.lower(name)
+  for ii in range(len(class_meta)):
+    class_name = str.lower(class_meta['class_name'].iloc[ii])
+    if str.find(class_name, pos_name) != -1:
+      pos_ids.append(class_meta['class_index'].iloc[ii])
+
+  return pos_ids
     
-    
+def select_small_set_for_bayes_net(dataset, makes, types):
+  classes = dataset['class_meta']
+
+  make_ids = set([])
+  for make in makes:
+    ids = class_ids_from_name(make, classes)
+    make_ids.update(ids)
+
+  c2 = classes[np.array(classes.class_index.isin(list(make_ids)))]
+  final_ids = set([])
+  for car_type in types:
+    ids = class_ids_from_name(car_type, c2)
+    final_ids.update(ids)
+
+  c2 = c2[np.array(c2.class_index.isin(list(final_ids)))]
+  return c2.copy()    
+
+def classes_for_attribs():
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types
+  config = get_config(args)
+  (dataset, config) = fgu.get_all_metadata(config)
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
+  
+  attrib_meta = pd.DataFrame(np.zeros([classes.shape[0], len(args)],dtype=int), 
+                             columns = args,
+                             index = classes.index)
+  
+  for class_index in attrib_meta.index:
+    class_name = classes.class_name[class_index]
+    for name in attrib_meta.columns:
+      attrib_meta.ix[class_index, name] = \
+      AttributeSelector.has_attribute_by_name(class_name, name)
+       
+
+  
+  
+  
+  classes.to_csv('classes.csv')
+  attrib_meta.to_csv('attribs.csv')
   
 
 
@@ -180,4 +234,5 @@ if __name__ == '__main__':
 #   dbg_clustering()
 #     test_work_remote
 #   multi_test()
-  bayes_net_test()
+#   bayes_net_test()
+  classes_for_attribs()

@@ -9,7 +9,7 @@ Created on Jan 16, 2014
 import pandas as pd
 import numpy as np
 import os
-from numpy import nper
+from configuration import get_config
 
 # Use this function to create a pandas array for the classes.
 # You can't just use pd.read_csv cause the file has names with commas in them...
@@ -69,7 +69,12 @@ def read_training_data(infilename):
   return dataset
 
 
-def get_all_metadata(config):
+def get_all_metadata(config=None, args=None):
+  if config == None and args == None:
+    raise Exception('Either config or args need to be not None')
+  if config == None:
+    config = get_config(args)
+    
   class_meta  = read_class_meta(config.dataset.class_meta_file)
   train_annos = read_training_data(config.dataset.train_annos_file)
   domain_meta = read_domain_meta(config.dataset.domain_meta_file)
@@ -79,6 +84,14 @@ def get_all_metadata(config):
                                          class_index in 
                                          train_annos.class_index])
 
-  return (train_annos, class_meta, domain_meta)
+  # Filter the class meta and train annotations to just use the 
+  # domains defined in config
+  class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
+  train_annos = train_annos[train_annos.class_index.isin(class_meta.class_index)]
+
+  return ({'train_annos': train_annos,
+             'class_meta': class_meta,
+             'domain_meta': domain_meta},
+          config)
 
 

@@ -10,6 +10,7 @@ car_understanding.attribute_selector -- A convinience class for selecting attrib
 '''
 
 import numpy as np
+import pandas as pd
 
 class AttributeSelector:
   """A class that provides easy selection of images based on a n attribute."""
@@ -26,6 +27,21 @@ class AttributeSelector:
     
     
     self.process_dataset()
+    
+    
+  def create_attrib_meta(self, attrib_names):
+    classes = self.class_meta
+    attrib_meta = pd.DataFrame(np.zeros([classes.shape[0], len(attrib_names)],
+                                        dtype=int), 
+                               columns = attrib_names,
+                               index = classes.index)
+    for class_index in attrib_meta.index:
+      class_name = classes.class_name[class_index]
+    for name in attrib_meta.columns:
+      attrib_meta.ix[class_index, name] = \
+      AttributeSelector.has_attribute_by_name(class_name, name)
+      
+    return attrib_meta
     
   def class_ids_for_attribute(self, attrib_name):
     '''
@@ -78,7 +94,7 @@ class AttributeSelector:
     i.e. the class "Acura RL Sedan 2012" has the attributes:
     [Acura, Sedan, 2012], but not the attribute Ford. 
     '''
-    return str.find(class_name, attrib_name) != -1
+    return str.find(str.lower(class_name), str.lower(attrib_name)) != -1
   
   @staticmethod  
   def has_list_attributes_by_name(class_name, attrib_names):
@@ -89,6 +105,7 @@ class AttributeSelector:
                   a_name in attrib_names]
     
     return np.array(has_attrib).all()
+  
   
 
 
