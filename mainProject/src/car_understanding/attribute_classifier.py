@@ -9,8 +9,11 @@ car_understanding.attribute_classifier -- a single attribute classifier
 @contact:    yair@cs.cmu.edu
 '''
 
-from sklearn.externals.joblib import dump, load
 import sklearn as sk
+from sklearn.externals.joblib import dump, load
+from sklearn.grid_search import GridSearchCV
+from sklearn.svm import SVC
+from sklearn import metrics
 import numpy as np
 import os
 
@@ -36,10 +39,10 @@ class AttributeClassifier:
     self.pos_img_inds = pos_inds
     self.dataset      = dataset.copy()
     self.desc         = desc
-    self.clf          = sk.svm.SVC(kernel='linear', 
-                                   class_weight='auto',
+    self.clf          = SVC(kernel='linear', 
+                           class_weight='auto',
 #                                    C=0.005,
-                                   probability=True)
+                           probability=True)
 #     self.memory   = Memory(cachedir=config.SIFT.BoW.hist_dir.format(name), 
 #                            verbose=0)
     
@@ -102,8 +105,38 @@ class AttributeClassifier:
     return (features, labels)
     
   
-  def fit(self, features, labels):
-    self.clf.fit(features, labels)
+  def fit(self, features, labels, grid_search=False):
+    '''
+    Fits the classifier. 
+    Can use gridsearch for finding best parameters.
+    '''
+    if not grid_search:
+      self.clf.fit(features, labels)
+    else:
+      # Set the parameters by cross-validation
+      tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
+                           'C': [1, 10, 100, 1000]},
+                          {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+      
+      print("# Tuning hyper-parameters")
+      print()
+    
+      clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
+                         n_jobs=-2, verbose=3)
+      clf.fit(features, labels)
+    
+      print("Best parameters set found on development set:")
+      print()
+      print(clf.best_estimator_)
+      print()
+      print("Grid scores on development set:")
+      print()
+      for params, mean_score, scores in clf.grid_scores_:
+          print("%0.3f (+/-%0.03f) for %r"
+                % (mean_score, scores.std() / 2, params))
+      print()
+      
+      self.clf = clf
     
     
   def cross_validate(self, features, labels):
@@ -126,7 +159,7 @@ class AttributeClassifier:
                   (scores.mean(), scores.std() * 2))
     rand_pred = np.random.choice([True, False], size=labels.shape)
     self.my_print("Random (precision): {}".format(
-                               sk.metrics.precision_score(labels, rand_pred)))
+                               metrics.precision_score(labels, rand_pred)))
     
   def my_print(self, str):
     print "AttributeCLassifier(" + self.name + "):" + str

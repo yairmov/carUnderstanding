@@ -240,25 +240,23 @@ def cv_for_params():
                        'C': [1, 10, 100, 1000]},
                       {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
   
-  scores = ['precision', 'recall'] 
-  for score in scores:
-    print("# Tuning hyper-parameters for %s" % score)
-    print()
+  print("# Tuning hyper-parameters")
+  print()
 
-    clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring=score,
-                       n_jobs=-2, verbose=3)
-    clf.fit(X, y)
+  clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
+                     n_jobs=-2, verbose=3)
+  clf.fit(X, y)
 
-    print("Best parameters set found on development set:")
-    print()
-    print(clf.best_estimator_)
-    print()
-    print("Grid scores on development set:")
-    print()
-    for params, mean_score, scores in clf.grid_scores_:
-        print("%0.3f (+/-%0.03f) for %r"
-              % (mean_score, scores.std() / 2, params))
-    print()
+  print("Best parameters set found on development set:")
+  print()
+  print(clf.best_estimator_)
+  print()
+  print("Grid scores on development set:")
+  print()
+  for params, mean_score, scores in clf.grid_scores_:
+      print("%0.3f (+/-%0.03f) for %r"
+            % (mean_score, scores.std() / 2, params))
+  print()
 
 
 if __name__ == '__main__':
