@@ -68,6 +68,7 @@ class AttributeClassifier:
   
     # create pos/neg labels
     labels = self.dataset.index.isin(self.pos_img_inds)
+    dump([features, labels], 'features.tmp')
     
     num_pos = sum(labels)
     num_neg = labels.shape[0] - num_pos
@@ -92,7 +93,7 @@ class AttributeClassifier:
     assert features.shape[0] == num_pos + num_neg, \
     "features.shape[0] == num_pos + num_neg"
     
-    dump([features, labels], 'features.tmp')
+#     dump([features, labels], 'features.tmp')
   
     return (features, labels)
     
