@@ -85,8 +85,7 @@ class BayesNet:
 #     for attrib_clf in attrib_classifiers:
     for ii in progress.bar(range(len(attrib_classifiers))):
       attrib_clf = attrib_classifiers[ii]
-      curr_res = attrib_clf.clf.decision_function(features)
-#       curr_res = attrib_clf.clf.predict(features)
+      curr_res = attrib_clf.decision_function(features)
       res[attrib_clf.name] = curr_res.reshape(len(curr_res))
   
     res = pd.DataFrame(data=res, index=train_annos.index)

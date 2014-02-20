@@ -61,7 +61,7 @@ def get_config(args):
   config.attribute.names = args
   config.attribute.dir = assign_dir(os.path.join(config.main_path, 
                                       'attribute_classifiers'))
-  config.attribute.high_thresh = 0
+  config.attribute.high_thresh = 0.5
   
   
   return config
