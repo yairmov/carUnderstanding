@@ -84,17 +84,19 @@ class AttributeClassifier:
     features = features[np.concatenate([pos_inds, neg_inds]), :]
     labels  = np.concatenate([np.ones(shape=pos_inds.shape),
                              np.zeros(shape=neg_inds.shape)])
-     
-     
-     
-    num_pos = sum(labels)
-    num_neg = labels.shape[0] - num_pos
-    print "equalized sets: num_pos: {}, num_neg: {}".format(num_pos, num_neg)
-    assert num_neg == num_pos, "num_neg == num_pos"
-    assert features.shape[0] == num_pos + num_neg, \
-    "features.shape[0] == num_pos + num_neg"
     
-    dump([features, labels], 'features.tmp')
+    dump([features, labels], 'features_all.tmp')
+     
+     
+     
+#     num_pos = sum(labels)
+#     num_neg = labels.shape[0] - num_pos
+#     print "equalized sets: num_pos: {}, num_neg: {}".format(num_pos, num_neg)
+#     assert num_neg == num_pos, "num_neg == num_pos"
+#     assert features.shape[0] == num_pos + num_neg, \
+#     "features.shape[0] == num_pos + num_neg"
+#     
+#     dump([features, labels], 'features_eq.tmp')
   
     return (features, labels)
     
