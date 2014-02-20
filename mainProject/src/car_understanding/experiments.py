@@ -7,7 +7,7 @@ Created on Jan 13, 2014
 # import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
-import pymc as mc
+# import pymc as mc
 import time
 import pandas as pd
 
