@@ -243,8 +243,8 @@ def cv_for_params():
   print("# Tuning hyper-parameters")
   print()
 
-  clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
-                     n_jobs=-2, verbose=3, cache_size=2000)
+  clf = GridSearchCV(SVC(C=1,cache_size=2000), tuned_parameters, cv=5, scoring='precision',
+                     n_jobs=-2, verbose=3)
   clf.fit(X, y)
 
   print("Best parameters set found on development set:")
