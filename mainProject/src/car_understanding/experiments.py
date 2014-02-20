@@ -244,7 +244,7 @@ def cv_for_params():
   print()
 
   clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
-                     n_jobs=-2, verbose=3)
+                     n_jobs=-2, verbose=3, cache_size=2000)
   clf.fit(X, y)
 
   print("Best parameters set found on development set:")
