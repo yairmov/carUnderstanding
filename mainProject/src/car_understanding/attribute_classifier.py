@@ -161,8 +161,8 @@ class AttributeClassifier:
     self.my_print("Random (precision): {}".format(
                                metrics.precision_score(labels, rand_pred)))
     
-  def my_print(self, str):
-    print "AttributeCLassifier(" + self.name + "):" + str
+  def my_print(self, s):
+    print "AttributeCLassifier(" + self.name + "):" + s
     
   def run_training_pipeline(self, cv=False):
     """ The full sequence of operations that trains an attribute classifier"""
