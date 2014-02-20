@@ -15,6 +15,8 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.svm import SVC
 from sklearn import metrics
 from sklearn.preprocessing import Scaler
+from sklearn.pipeline import Pipeline
+
 import numpy as np
 import os
 
@@ -46,8 +48,10 @@ class AttributeClassifier:
                            probability=True)
     self.Scaler       = Scaler()
     
-    # Creating memoiztion for functions
-#     self.calc_raw_feature = self.memory.cache(self.calc_raw_feature) 
+#     self.clf          = Pipeline([('Scaler', Scaler()), 
+#                                   ('Classifier', SVC(kernel='linear',
+#                                                      class_weight='auto',
+#                                                      probability=True))])
     
   
   def create_feature_matrix(self, features=None):
@@ -170,7 +174,7 @@ class AttributeClassifier:
     self.my_print("Loading feature-word histograms from disk, and creating " + 
                   "matrix for attribute classification.")
     (features, labels) = self.create_feature_matrix()
-    return
+#     return
     
     
     if cv:
