@@ -7,7 +7,7 @@ Created on Jan 13, 2014
 # import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
-# import pymc as mc
+import pymc as mc
 import time
 import pandas as pd
 
@@ -229,7 +229,7 @@ def classes_for_attribs():
   
 
 def cv_for_params():
-  from sklearn.externals.joblib import load, dump
+  from sklearn.externals.joblib import load
   from sklearn.cross_validation import StratifiedKFold
   from sklearn.grid_search import GridSearchCV
   from sklearn.metrics import classification_report
