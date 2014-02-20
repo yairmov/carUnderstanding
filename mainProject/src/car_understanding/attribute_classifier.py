@@ -122,7 +122,7 @@ class AttributeClassifier:
       print()
     
       clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
-                         n_jobs=-2, verbose=3)
+                         n_jobs=-1, verbose=3)
       clf.fit(features, labels)
     
       print("Best parameters set found on development set:")
