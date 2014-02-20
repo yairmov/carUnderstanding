@@ -243,7 +243,7 @@ def cv_for_params():
   print("# Tuning hyper-parameters")
   print()
 
-  clf = GridSearchCV(SVC(C=1,cache_size=2000), tuned_parameters, cv=5, scoring='precision',
+  clf = GridSearchCV(SVC(C=1,cache_size=2000, tol=1e-2), tuned_parameters, cv=5, scoring='precision',
                      n_jobs=-2, verbose=3)
   clf.fit(X, y)
 
