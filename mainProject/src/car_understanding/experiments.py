@@ -228,6 +228,45 @@ def classes_for_attribs():
   attrib_meta.to_csv('attribs.csv')
   
 
+def cv_for_params():
+  from sklearn.externals.joblib import load, dump
+  from sklearn.cross_validation import StratifiedKFold
+  from sklearn.grid_search import GridSearchCV
+  from sklearn.metrics import classification_report
+  from sklearn.metrics import precision_score
+  from sklearn.metrics import recall_score
+  from sklearn.svm import SVC
+  from pprint import pprint
+  
+  (X, y) = load('features_eq.tmp')
+  # split the dataset in two equal part respecting label proportions
+  train, test = iter(StratifiedKFold(y, 2)).next()
+  
+  # Set the parameters by cross-validation
+  tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
+                       'C': [1, 10, 100, 1000]},
+                      {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+  
+  scores = [
+      ('precision', precision_score),
+      ('recall', recall_score),
+  ]
+  
+  
+  for score_name, score_func in scores:
+    clf = GridSearchCV(SVC(C=1), tuned_parameters, score_func=score_func)
+    clf.fit(X[train], y[train], cv=StratifiedKFold(y[train], 5))
+    y_true, y_pred = y[test], clf.predict(X[test])
+
+    print "Classification report for the best estimator: "
+    print clf.best_estimator_
+    print "Tuned for '%s' with optimal value: %0.3f" % (
+        score_name, score_func(y_true, y_pred))
+    print classification_report(y_true, y_pred)
+    print "Grid scores:"
+    pprint(clf.grid_scores_)
+    print
+
 
 if __name__ == '__main__':
 #   test_fg_utils()
@@ -235,4 +274,5 @@ if __name__ == '__main__':
 #     test_work_remote
 #   multi_test()
 #   bayes_net_test()
-  classes_for_attribs()
+#   classes_for_attribs()
+  cv_for_params()
