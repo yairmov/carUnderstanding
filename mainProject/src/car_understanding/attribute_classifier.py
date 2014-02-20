@@ -14,6 +14,7 @@ from sklearn.externals.joblib import dump, load
 from sklearn.grid_search import GridSearchCV
 from sklearn.svm import SVC
 from sklearn import metrics
+from sklearn.preprocessing import Scaler
 import numpy as np
 import os
 
@@ -43,9 +44,7 @@ class AttributeClassifier:
                            class_weight='auto',
 #                                    C=0.005,
                            probability=True)
-#     self.memory   = Memory(cachedir=config.SIFT.BoW.hist_dir.format(name), 
-#                            verbose=0)
-    
+    self.Scaler       = Scaler()
     
     # Creating memoiztion for functions
 #     self.calc_raw_feature = self.memory.cache(self.calc_raw_feature) 
@@ -66,11 +65,12 @@ class AttributeClassifier:
         features[ii, :] = hist[0]
   
   
-    # preprocess features
-    features = sk.preprocessing.scale(features)
-  
     # create pos/neg labels
     labels = self.dataset.index.isin(self.pos_img_inds)
+    
+    # preprocess features
+#     features = sk.preprocessing.scale(features)
+    features = self.Scaler.fit_transform(features)
     
     num_pos = sum(labels)
     num_neg = labels.shape[0] - num_pos
@@ -182,6 +182,7 @@ class AttributeClassifier:
     
     
   def decision_function(self, features):
+    features = self.Scaler.transform(features)
     if self.clf.probability:
       return self.clf.predict_proba(features)[:,0]
     return self.clf.decision_function(features)
