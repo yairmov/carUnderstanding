@@ -75,6 +75,8 @@ class AttributeClassifier:
     print "num_pos: {}, num_neg: {}".format(num_pos, num_neg)
     assert num_neg >= num_pos, "num_neg >= num_pos"
     
+    dump([features, labels], 'features_all.tmp')
+    
     
     # make pos/neg sets of equal size
     pos_inds = labels.nonzero()[0]
@@ -85,8 +87,7 @@ class AttributeClassifier:
     labels  = np.concatenate([np.ones(shape=pos_inds.shape),
                              np.zeros(shape=neg_inds.shape)])
     
-    dump([features, labels], 'features_all.tmp')
-     
+    dump([features, labels], 'features_eq.tmp') 
      
      
     num_pos = sum(labels)
@@ -96,7 +97,7 @@ class AttributeClassifier:
     assert features.shape[0] == num_pos + num_neg, \
     "features.shape[0] == num_pos + num_neg"
      
-    dump([features, labels], 'features_eq.tmp')
+    
   
     return (features, labels)
     
