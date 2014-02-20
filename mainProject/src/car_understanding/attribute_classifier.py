@@ -69,6 +69,30 @@ class AttributeClassifier:
     # create pos/neg labels
     labels = self.dataset.index.isin(self.pos_img_inds)
     
+    num_pos = sum(labels)
+    num_neg = labels.shape[0] - num_pos
+    
+    print "num_pos: {}, num_neg: {}".format(num_pos, num_neg)
+    assert(num_neg >= num_pos, "num_neg >= num_pos")
+    
+#     pos_features = features[labels, :]
+#     neg_features = features[np.logical_not(labels), :]
+    
+    pos_inds = labels.nonzero()[0]
+    neg_inds = np.logical_not(labels).nonzero()[0]
+    neg_inds = np.random.permutation(neg_inds)[:num_pos]
+    
+    fetures = features[np.concatenate([pos_inds]), :]
+    labels  = np.concatenate([np.ones(shape=pos_inds.shape),
+                             np.zeros(shape=neg_inds.shape)])
+    
+    
+    
+    num_pos = sum(labels)
+    num_neg = labels.shape[0] - num_pos
+    print "equalized sets: num_pos: {}, num_neg: {}".format(num_pos, num_neg)
+    assert(num_neg == num_pos, "num_neg == num_pos")
+    
 #     dump([features, labels], 'features.tmp')
   
     return (features, labels)
@@ -109,6 +133,7 @@ class AttributeClassifier:
     self.my_print("Loading feature-word histograms from disk, and creating " + 
                   "matrix for attribute classification.")
     (features, labels) = self.create_feature_matrix()
+    return
     
     
     if cv:

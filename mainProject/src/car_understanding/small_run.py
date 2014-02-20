@@ -266,6 +266,7 @@ def run_attrib_training(args, cross_validation=False):
   # Train attribute classifiers
   print "Training attribute classifiers"
   print "+++++++++++++++++++++++++++++++"
+  config.attribute.names = [config.attribute.names[3]]
   for attrib_name in config.attribute.names:
     print attrib_name
     pos_class_ids = class_ids_from_name(attrib_name, dataset['class_meta'])
@@ -278,8 +279,10 @@ def run_attrib_training(args, cross_validation=False):
                                      desc=attrib_name)
 
     attrib_clf.run_training_pipeline(cross_validation)
-    AttributeClassifier.save(attrib_clf, os.path.join(config.attribute.dir,
-                                                      attrib_clf.name + '.dat'))
+#     AttributeClassifier.save(attrib_clf, os.path.join(config.attribute.dir,
+#                                                       attrib_clf.name + '.dat'))
+
+    print "NOT SAVING!!!"
 
     print "-------------------------------------"
     print "-------------------------------------"
@@ -398,10 +401,10 @@ def bayes_net_generic():
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
-#   print "training attrib classifiers"
-#   run_attrib_training(args, cross_validation=True)
-#   print "Returning after training attrib classifiers"
-#   return
+  print "training attrib classifiers"
+  run_attrib_training(args, cross_validation=True)
+  print "Returning after training attrib classifiers"
+  return
   
   attrib_classifiers = []
   for name in args:
