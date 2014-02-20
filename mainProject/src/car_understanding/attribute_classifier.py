@@ -178,7 +178,7 @@ class AttributeClassifier:
       self.cross_validate(features, labels)
 #     else:
     self.my_print("Training classifier")
-    self.fit(features, labels)
+    self.fit(features, labels, grid_search=True)
     
     
   def decision_function(self, features):
