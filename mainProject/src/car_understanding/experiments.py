@@ -254,7 +254,10 @@ def cv_for_params():
   
   
   for score_name, score_func in scores:
-    clf = GridSearchCV(SVC(C=1), tuned_parameters, score_func=score_func)
+    clf = GridSearchCV(SVC(C=1), 
+                       tuned_parameters, 
+                       score_func=score_func,
+                       n_jobs=-2)
     clf.fit(X[train], y[train], cv=StratifiedKFold(y[train], 5))
     y_true, y_pred = y[test], clf.predict(X[test])
 
