@@ -75,14 +75,11 @@ class AttributeClassifier:
     print "num_pos: {}, num_neg: {}".format(num_pos, num_neg)
     assert(num_neg >= num_pos, "num_neg >= num_pos")
     
-#     pos_features = features[labels, :]
-#     neg_features = features[np.logical_not(labels), :]
-    
     pos_inds = labels.nonzero()[0]
     neg_inds = np.logical_not(labels).nonzero()[0]
     neg_inds = np.random.permutation(neg_inds)[:num_pos]
     
-    fetures = features[np.concatenate([pos_inds]), :]
+    features = features[np.concatenate([pos_inds]), :]
     labels  = np.concatenate([np.ones(shape=pos_inds.shape),
                              np.zeros(shape=neg_inds.shape)])
     
@@ -93,7 +90,7 @@ class AttributeClassifier:
     print "equalized sets: num_pos: {}, num_neg: {}".format(num_pos, num_neg)
     assert(num_neg == num_pos, "num_neg == num_pos")
     
-#     dump([features, labels], 'features.tmp')
+    dump([features, labels], 'features.tmp')
   
     return (features, labels)
     
