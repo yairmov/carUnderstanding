@@ -422,6 +422,8 @@ def bayes_net_generic():
                   classes, attrib_classifiers, desc=str(args))
   bnet.init_CPT()
   
+  bnet.predict_one(bnet.clf_res.iloc[0])
+  
 
 
 if __name__ == '__main__':

@@ -232,6 +232,9 @@ class BayesNet:
     clf_res_descrete = clf_res.copy()
     clf_res_descrete[self.clf_names] = \
         clf_res[self.clf_names] > self.config.attribute.high_thresh
+        
+    print clf_res_descrete
+    return
     
     # the actual distrobution used is not important as these are 
     # *observed* variables. We set the value to be the result of the classifiers              
