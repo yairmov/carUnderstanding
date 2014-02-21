@@ -155,11 +155,15 @@ class BayesNet:
                                                       attrib_list):
         num_classes_with_attrib += 1
          
+    p = 1 / num_classes_with_attrib
     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
-                        dtype=int))], 'True'] = 1 / num_classes_with_attrib
+                        dtype=int))], 'True'] = p
+    cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
+                        dtype=int))], 'False'] = 1 - p
                         
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
-    print "---------------------------------"                        
+    print "---------------------------------"
+    print cpt                        
     return cpt
     
       
