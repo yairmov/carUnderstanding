@@ -199,6 +199,7 @@ class BayesNet:
     
     
     
+    print self.class_meta
     cind = class_inds[0]
     print "class_index: {}".format(cind)
     print "attrib_names: {}".format(attrib_names)
