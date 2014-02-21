@@ -100,6 +100,8 @@ class AttributeSelector:
     '''
     Does class:class_name has all attributes in attrib_names?
     '''
+    print "class_name: {}".format(class_name)
+    print "attrib_names: {}".format(attrib_names)
     has_attrib = [AttributeSelector.has_attribute_by_name(class_name, a_name) for
                   a_name in attrib_names]
     
