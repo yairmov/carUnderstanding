@@ -11,13 +11,11 @@ import pymc as mc
 import time
 import pandas as pd
 
-import car_understanding.fgcomp_dataset_utils as fgu
-from car_understanding.configuration import get_config
-from car_understanding.attribute_selector import AttributeSelector
-from car_understanding.attribute_classifier import AttributeClassifier
-from car_understanding.bayes_net import BayesNet
-# import small_run
-# import Bow
+import fgcomp_dataset_utils as fgu
+from configuration import get_config
+from attribute_selector import AttributeSelector
+from attribute_classifier import AttributeClassifier
+from bayes_net import BayesNet
 
 
 def test_fg_utils():

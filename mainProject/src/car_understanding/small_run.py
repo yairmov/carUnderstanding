@@ -15,12 +15,12 @@ import cv2 as cv
 import pandas as pd
 import collections
 
-from car_understanding.configuration import get_config
-import car_understanding.fgcomp_dataset_utils as fgu
-from car_understanding.dense_SIFT import dense_SIFT, save_to_disk, load_from_disk
-import car_understanding.Bow as Bow
-from car_understanding.attribute_classifier import AttributeClassifier
-from car_understanding.bayes_net import BayesNet
+from configuration import get_config
+import fgcomp_dataset_utils as fgu
+from dense_SIFT import dense_SIFT, save_to_disk, load_from_disk
+import Bow as Bow
+from attribute_classifier import AttributeClassifier
+from bayes_net import BayesNet
 
 # def preprocess(args):
 #   config = get_config(args)

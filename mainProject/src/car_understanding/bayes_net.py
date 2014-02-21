@@ -20,7 +20,7 @@ import pandas as pd
 import pymc as mc
 
 import car_understanding.Bow as Bow
-from car_understanding.attribute_selector import AttributeSelector
+from attribute_selector import AttributeSelector
 
 
 class BayesNet:
