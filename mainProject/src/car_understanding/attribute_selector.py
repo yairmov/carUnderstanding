@@ -61,7 +61,7 @@ class AttributeSelector:
     Does class:class_index has the attribute list atrrib_names?
     '''
     return AttributeSelector.has_list_attributes_by_name(
-                                      self.class_meta[class_id].class_name, 
+                                      self.class_meta.class_name[class_id], 
                                       attrib_names)
     
   def has_attribute_by_index(self, class_index, attrib_name):
