@@ -14,7 +14,7 @@ import pandas as pd
 import fgcomp_dataset_utils as fgu
 from configuration import get_config
 from attribute_selector import AttributeSelector
-from car_understanding.attribute_classifier import AttributeClassifier
+from attribute_classifier import AttributeClassifier
 from bayes_net import BayesNet
 
 
@@ -271,7 +271,7 @@ def roc():
                   dataset['class_meta'], [attrib_clf], desc=str(args))
   
   res = bnet.create_attrib_res_on_images()
-  print res.shape
+  print res.head()
 
 if __name__ == '__main__':
 #   test_fg_utils()
