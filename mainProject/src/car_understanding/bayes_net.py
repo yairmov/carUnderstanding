@@ -174,14 +174,16 @@ class BayesNet:
     class_inds  = self.train_annos.class_index.unique()
     
     
-    self.cpt_for_attrib('suv', attrib_selector)
-    return
+#     self.cpt_for_attrib('suv', attrib_selector)
+#     return
     
     # P(attribute | res of attrib classifiers)
     #-----------------------------------------
     for attrib_name in attrib_names:
       self.CPT['p({}|theta)'.format(attrib_name)] = \
         self.cpt_for_attrib(attrib_name, attrib_selector)
+        
+    return
     
     # P(class | attributes)
     #----------------------
