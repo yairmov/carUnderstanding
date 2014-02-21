@@ -141,14 +141,10 @@ class BayesNet:
     rows = list(itertools.product(*[(1, 0) for 
                                     ii in range(len(attrib_list))]))
     
-    print attrib_list
-    print rows
-    return
-    
     cpt = pd.DataFrame(np.zeros([len(rows), 2]), 
                        index=rows, columns=['True', 'False'])
     
-    # All rows except the one that has ALL the attributes should be zero.
+    # All rows except the one that has ALL the attributes should have p(true)=0.
     # The one in which all attribs are true, should be the proportion of this class
     # with respect to all classes that have all these attributes.
     cpt['False'] = 1
@@ -160,7 +156,7 @@ class BayesNet:
         num_classes_with_attrib += 1
          
     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
-                        dtype=str))], 'True'] = 1 / num_classes_with_attrib
+                        dtype=int))], 'True'] = 1 / num_classes_with_attrib
                         
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
     print "---------------------------------"                        
