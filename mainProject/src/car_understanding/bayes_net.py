@@ -150,7 +150,7 @@ class BayesNet:
     cpt['False'] = 1
     
     num_classes_with_attrib = 0
-    for k, class_index in self.class_meta.iterkv():
+    for class_index in self.class_meta.index:
       if attribute_selector.has_list_attributes_by_index(class_index, 
                                                       attrib_list):
         num_classes_with_attrib += 1
