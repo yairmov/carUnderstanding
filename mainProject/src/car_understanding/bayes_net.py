@@ -199,8 +199,11 @@ class BayesNet:
     
     
     
-    attrib_list = attrib_selector.prune_attributes(class_inds[0], attrib_names)
-    self.cpt_for_class(class_inds[0], 
+    cind = class_inds[0]
+    print "class_index: {}".format(cind)
+    print "attrib_names: {}".format(attrib_names)
+    attrib_list = attrib_selector.prune_attributes(cind, attrib_names)
+    self.cpt_for_class(cind, 
                        attrib_list, 
                        attrib_selector)
     return
