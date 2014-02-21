@@ -261,6 +261,7 @@ def cv_for_params():
 
 def roc():
   from sklearn.metrics import roc_auc_score
+  from sklearn.metrics import roc_curve
   
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
@@ -280,7 +281,8 @@ def roc():
 #   attrib_meta = attrib_selector.create_attrib_meta([attrib_clf.name])
   pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
   true_labels = res.class_index.isin(pos_classes)
-  roc_auc_score(true_labels, res[attrib_name])
+  print "roc_auc_score: {}".format(roc_auc_score(true_labels, res[attrib_name]))
+  fpr, tpr, thresholds = roc_curve(true_labels, res[attrib_name])
   plt.show()
   raw_input('press enter to continue\n')
   
