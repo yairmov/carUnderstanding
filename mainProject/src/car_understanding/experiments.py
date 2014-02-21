@@ -286,7 +286,8 @@ def roc():
   print sum(true_labels)
   
   print(classification_report(true_labels, np.array(res[attrib_name]) > 0.5, 
-                              target_names=[attrib_name, 'not-{}'.format(attrib_name)]))
+                              target_names=['not-{}'.format(attrib_name),
+                                            attrib_name]))
   
   
   roc_score = roc_auc_score(true_labels, np.array(res[attrib_name]))
