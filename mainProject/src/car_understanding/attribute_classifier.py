@@ -20,7 +20,7 @@ from sklearn.pipeline import Pipeline
 import numpy as np
 import os
 
-import Bow
+import car_understanding.Bow as Bow
 
 class AttributeClassifier:
   """A module for classifying attributes."""

@@ -19,8 +19,8 @@ from clint.textui import progress
 import pandas as pd
 import pymc as mc
 
-import Bow
-from attribute_selector import AttributeSelector
+import car_understanding.Bow as Bow
+from car_understanding.attribute_selector import AttributeSelector
 
 
 class BayesNet:

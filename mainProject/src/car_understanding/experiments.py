@@ -11,9 +11,11 @@ import pymc as mc
 import time
 import pandas as pd
 
-import fgcomp_dataset_utils as fgu
-from configuration import get_config
-from attribute_selector import AttributeSelector
+import car_understanding.fgcomp_dataset_utils as fgu
+from car_understanding.configuration import get_config
+from car_understanding.attribute_selector import AttributeSelector
+from car_understanding.attribute_classifier import AttributeClassifier
+from car_understanding.bayes_net import BayesNet
 # import small_run
 # import Bow
 
@@ -259,6 +261,19 @@ def cv_for_params():
   print()
 
 
+def roc():
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types
+  config = get_config(args)
+  (dataset, config) = fgu.get_all_metadata(config)
+  
+  attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/sedan.dat')
+  bnet = BayesNet(config, dataset['train_annos'], 
+                  dataset['class_meta'], [attrib_clf,], desc=str(args))
+  
+  res = bnet.create_attrib_res_on_images()
+
 if __name__ == '__main__':
 #   test_fg_utils()
 #   dbg_clustering()
@@ -266,4 +281,5 @@ if __name__ == '__main__':
 #   multi_test()
 #   bayes_net_test()
 #   classes_for_attribs()
-  cv_for_params()
+#   cv_for_params()
+  roc()
