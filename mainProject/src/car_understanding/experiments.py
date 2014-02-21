@@ -283,6 +283,7 @@ def roc():
   true_labels = res.class_index.isin(pos_classes)
   print "roc_auc_score: {}".format(roc_auc_score(true_labels, res[attrib_name]))
   fpr, tpr, thresholds = roc_curve(true_labels, res[attrib_name])
+  plt.draw()
   plt.show()
   raw_input('press enter to continue\n')
   
