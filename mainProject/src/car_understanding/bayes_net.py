@@ -141,6 +141,10 @@ class BayesNet:
     rows = list(itertools.product(*[(1, 0) for 
                                     ii in range(len(attrib_list))]))
     
+    print attrib_list
+    print rows
+    return
+    
     cpt = pd.DataFrame(np.zeros([len(rows), 2]), 
                        index=rows, columns=['True', 'False'])
     
