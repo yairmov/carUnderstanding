@@ -273,7 +273,7 @@ def roc():
   res = bnet.create_attrib_res_on_images()
   
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
-  attrib_meta = attrib_selector.create_attrib_meta([attrib_clf])
+  attrib_meta = attrib_selector.create_attrib_meta([attrib_clf.name])
   
   print attrib_meta.head()
 
