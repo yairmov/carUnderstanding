@@ -281,7 +281,8 @@ def roc():
   pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
   true_labels = res.class_index.isin(pos_classes)
   roc_auc_score(true_labels, res[attrib_name])
-  raw_input('press enter to continue')
+  plt.show()
+  raw_input('press enter to continue\n')
   
   
   
