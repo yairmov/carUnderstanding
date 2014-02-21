@@ -42,9 +42,9 @@ class AttributeClassifier:
     self.pos_img_inds = pos_inds
     self.dataset      = dataset.copy()
     self.desc         = desc
-    self.clf          = SVC(kernel='linear', 
+    self.clf          = SVC(kernel='rbf', 
                            class_weight='auto',
-#                                    C=0.005,
+                           C=1, gamma=1e-3,
                            probability=True)
     self.Scaler       = Scaler()
     
@@ -182,7 +182,7 @@ class AttributeClassifier:
       self.cross_validate(features, labels)
 #     else:
     self.my_print("Training classifier")
-    self.fit(features, labels, grid_search=True)
+    self.fit(features, labels, grid_search=False)
     
     
   def decision_function(self, features):
