@@ -268,7 +268,7 @@ def roc():
   
   attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/sedan.dat')
   bnet = BayesNet(config, dataset['train_annos'], 
-                  dataset['class_meta'], [attrib_clf,], desc=str(args))
+                  dataset['class_meta'], [attrib_clf], desc=str(args))
   
   res = bnet.create_attrib_res_on_images()
   print res.shape
