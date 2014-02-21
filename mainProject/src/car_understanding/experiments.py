@@ -260,22 +260,31 @@ def cv_for_params():
 
 
 def roc():
+  from sklearn.metrics import roc_auc_score
+  
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
   args = makes + types
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
-  attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/sedan.dat')
+  attrib_name = 'sedan'
+  
+  attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
   bnet = BayesNet(config, dataset['train_annos'], 
                   dataset['class_meta'], [attrib_clf], desc=str(args))
   
   res = bnet.create_attrib_res_on_images()
   
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
-  attrib_meta = attrib_selector.create_attrib_meta([attrib_clf.name])
+#   attrib_meta = attrib_selector.create_attrib_meta([attrib_clf.name])
+  pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
+  true_labels = res.class_index.isin(pos_classes)
+  roc_auc_score(true_labels, res[attrib_name])
+  raw_input('press enter to continue')
   
-  print attrib_meta.head()
+  
+  
 
 if __name__ == '__main__':
 #   test_fg_utils()
