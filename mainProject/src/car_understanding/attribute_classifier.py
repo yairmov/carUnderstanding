@@ -14,7 +14,7 @@ from sklearn.externals.joblib import dump, load
 from sklearn.grid_search import GridSearchCV
 from sklearn.svm import SVC
 from sklearn import metrics
-from sklearn.preprocessing import Scaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
 import numpy as np
@@ -46,7 +46,7 @@ class AttributeClassifier:
                            class_weight='auto',
                            C=1, gamma=1e-3,
                            probability=True)
-    self.Scaler       = Scaler()
+    self.Scaler       = StandardScaler()
     
 #     self.clf          = Pipeline([('Scaler', Scaler()), 
 #                                   ('Classifier', SVC(kernel='linear',
