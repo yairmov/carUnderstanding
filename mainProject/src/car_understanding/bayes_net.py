@@ -199,15 +199,15 @@ class BayesNet:
     
     
     
-    print self.class_meta
-    cind = class_inds[0]
-    print "class_index: {}".format(cind)
-    print "attrib_names: {}".format(attrib_names)
-    attrib_list = attrib_selector.prune_attributes(cind, attrib_names)
-    self.cpt_for_class(cind, 
-                       attrib_list, 
-                       attrib_selector)
-    return
+#     print self.class_meta
+#     cind = class_inds[0]
+#     print "class_index: {}".format(cind)
+#     print "attrib_names: {}".format(attrib_names)
+#     attrib_list = attrib_selector.prune_attributes(cind, attrib_names)
+#     self.cpt_for_class(cind, 
+#                        attrib_list, 
+#                        attrib_selector)
+#     return
     
     # P(class | attributes)
     #----------------------
