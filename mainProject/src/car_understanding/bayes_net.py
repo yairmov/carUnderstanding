@@ -125,11 +125,11 @@ class BayesNet:
       has_attrib = cc['class_index'] in attrib_class_ids
       cpt.ix[row, str(has_attrib)] += 1
     
-    print cpt
-    return
-            
+    
     # normalize all the rows, to create a probability function
     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
+    print "CPT for attrib: {}".format(attrib_name)
+    print cpt
     return cpt
     
   
