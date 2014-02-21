@@ -69,7 +69,7 @@ class AttributeSelector:
     Does class:class_index has the attribute atrrib_name?
     '''
     return AttributeSelector.has_attribute_by_name(
-                                 self.class_meta[class_index].class_name, 
+                                 self.class_meta.class_name[class_index], 
                                  attrib_name)
     
   def prune_attributes(self, class_index, attrib_names):

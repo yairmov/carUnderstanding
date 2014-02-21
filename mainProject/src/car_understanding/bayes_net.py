@@ -177,7 +177,6 @@ class BayesNet:
                                         self.class_meta)
     attrib_names = self.clf_names
     print attrib_names
-    return
     class_inds  = self.train_annos.class_index.unique()
     
     
