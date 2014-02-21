@@ -14,7 +14,7 @@ import pandas as pd
 import fgcomp_dataset_utils as fgu
 from configuration import get_config
 from attribute_selector import AttributeSelector
-from attribute_classifier import AttributeClassifier
+from car_understanding.attribute_classifier import AttributeClassifier
 from bayes_net import BayesNet
 
 
