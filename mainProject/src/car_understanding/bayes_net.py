@@ -155,6 +155,8 @@ class BayesNet:
                                                       attrib_list):
         num_classes_with_attrib += 1
          
+         
+    print "num_classes_with_attrib: {}".format(num_classes_with_attrib)
     p = 1.0 / num_classes_with_attrib
     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
                         dtype=int))], 'True'] = p
