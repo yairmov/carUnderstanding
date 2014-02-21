@@ -38,7 +38,7 @@ class AttributeSelector:
       class_name = classes.class_name[class_index]
       for name in attrib_meta.columns:
         print "class_name: " + class_name
-        print "name: " + name
+        print "name: " + str(name)
         attrib_meta.ix[class_index, name] = \
         AttributeSelector.has_attribute_by_name(class_name, name)
       
