@@ -197,6 +197,14 @@ class BayesNet:
         self.cpt_for_attrib(attrib_name, attrib_selector)
         
     
+    
+    
+    attrib_list = attrib_selector.prune_attributes(class_inds[0], attrib_names)
+    self.cpt_for_class(class_inds[0], 
+                       attrib_list, 
+                       attrib_selector)
+    return
+    
     # P(class | attributes)
     #----------------------
     for class_index in class_inds:
