@@ -222,7 +222,7 @@ class BayesNet:
                                                attrib_list, 
                                                attrib_selector)
     
-    
+    print self.class_meta
         
   
   def predict_one(self, clf_res):
