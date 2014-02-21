@@ -19,7 +19,7 @@ from clint.textui import progress
 import pandas as pd
 import pymc as mc
 
-import car_understanding.Bow as Bow
+import Bow as Bow
 from attribute_selector import AttributeSelector
 
 
