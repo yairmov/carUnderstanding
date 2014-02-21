@@ -262,6 +262,7 @@ def cv_for_params():
 def roc():
   from sklearn.metrics import roc_auc_score
   from sklearn.metrics import roc_curve
+  from sklearn.metrics import classification_report
   
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
@@ -280,9 +281,13 @@ def roc():
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
 #   attrib_meta = attrib_selector.create_attrib_meta([attrib_clf.name])
   pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
-  true_labels = res.class_index.isin(pos_classes)
+  true_labels = np.array(res.class_index.isin(pos_classes))
+  
+  print(classification_report(true_labels, np.array(res[attrib_name]), 
+                              target_names=[attrib_name, 'not-{}'.format(attrib_name)]))
+  
+  
   roc_score = roc_auc_score(true_labels, np.array(res[attrib_name]))
-  print "roc_auc_score: {}".format(roc_score)
   fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[attrib_name]))
   plt.plot(fpr, tpr)
   plt.title('ROC: {}'.format(attrib_name))
