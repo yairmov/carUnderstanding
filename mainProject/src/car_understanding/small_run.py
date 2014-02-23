@@ -423,6 +423,7 @@ def bayes_net_generic():
   bnet.init_CPT()
   
   bnet.predict_one(bnet.clf_res.iloc[0])
+  print bnet.clf_res.iloc[0]
   
 
 

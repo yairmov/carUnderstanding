@@ -80,20 +80,20 @@ def multi_test():
   p.terminate()
 
 # Define the Alarm node, which has B/E as parents
-@mc.deterministic(dtype=int)
-def Alarm(value=0, B=1, E=1):
-    """Probability of alarm given B/E"""
-    p = -np.Inf
-    if B and E:
-      p = 0.95
-    if B and not E:
-      p = 0.94
-    if E and not B:
-      p = 0.29
-    if not B and not E:
-      p = 0.001
-      
-    return -np.log(p)
+# @mc.deterministic(dtype=int)
+# def Alarm(value=0, B=1, E=1):
+#     """Probability of alarm given B/E"""
+#     p = -np.Inf
+#     if B and E:
+#       p = 0.95
+#     if B and not E:
+#       p = 0.94
+#     if E and not B:
+#       p = 0.29
+#     if not B and not E:
+#       p = 0.001
+#       
+#     return -np.log(p)
 
 def bayes_net_test():
   # trying the earthquake example from norvig
@@ -153,6 +153,8 @@ def bayes_net_test():
   mcmc = mc.MCMC(model)
   mcmc.sample(10000, 3000)
   
+  
+  mcmc.summary()
   
   b_samples = mcmc.trace('B')[:]
   print b_samples.shape
@@ -312,4 +314,5 @@ if __name__ == '__main__':
 #   bayes_net_test()
 #   classes_for_attribs()
 #   cv_for_params()
-  roc()
+#   roc()
+  bayes_net_test()

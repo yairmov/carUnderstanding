@@ -55,6 +55,9 @@ class BayesNet:
     inds = np.argsort(self.clf_names)
     self.clf_names = list(np.array(self.clf_names)[inds])
     self.attrib_clfs = list(np.array(self.attrib_clfs)[inds]) 
+    
+    self.attrib_selector = AttributeSelector(self.config, 
+                                        self.class_meta)
      
     
   
@@ -141,13 +144,14 @@ class BayesNet:
     rows = list(itertools.product(*[(1, 0) for 
                                     ii in range(len(attrib_list))]))
     
-    cpt = pd.DataFrame(np.zeros([len(rows), 2]), 
+    min_prob = 1e-2
+    cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2]), 
                        index=rows, columns=['True', 'False'])
     
-    # All rows except the one that has ALL the attributes should have p(true)=0.
+    # All rows except the one that has ALL the attributes should have p(true)=min_prob.
     # The one in which all attribs are true, should be the proportion of this class
     # with respect to all classes that have all these attributes.
-    cpt['False'] = 1
+    cpt['False'] = 1-min_prob
     
     num_classes_with_attrib = 0
     for cind in self.class_meta.index:
@@ -180,8 +184,8 @@ class BayesNet:
     if self.clf_res == None:
       self.clf_res = self.create_attrib_res_on_images()
     
-    attrib_selector = AttributeSelector(self.config, 
-                                        self.class_meta)
+    attrib_selector = self.attrib_selector
+    
     attrib_names = self.clf_names
     print attrib_names
     class_inds  = self.train_annos.class_index.unique()
@@ -196,19 +200,7 @@ class BayesNet:
       self.CPT['p({}|theta)'.format(attrib_name)] = \
         self.cpt_for_attrib(attrib_name, attrib_selector)
         
-    
-    
-    
-#     print self.class_meta
-#     cind = class_inds[0]
-#     print "class_index: {}".format(cind)
-#     print "attrib_names: {}".format(attrib_names)
-#     attrib_list = attrib_selector.prune_attributes(cind, attrib_names)
-#     self.cpt_for_class(cind, 
-#                        attrib_list, 
-#                        attrib_selector)
-#     return
-    
+        
     # P(class | attributes)
     #----------------------
     for class_index in class_inds:
@@ -233,9 +225,6 @@ class BayesNet:
     clf_res_descrete[self.clf_names] = \
         clf_res[self.clf_names] > self.config.attribute.high_thresh
         
-    print clf_res_descrete
-    return
-    
     # the actual distrobution used is not important as these are 
     # *observed* variables. We set the value to be the result of the classifiers              
     theta = mc.DiscreteUniform('theta', 0, 1,
@@ -243,35 +232,85 @@ class BayesNet:
                                observed=True,
                                value=clf_res_descrete[self.clf_names])
     
+    
+    
     # The hidden layer. Each attriute is connected to all attribute classifiers
     # as its parents.
     attrib_names = self.clf_names
-    attrib_bnet_nodes = []
+    attrib_bnet_nodes = {}
     for attrib_name in attrib_names:
       identifier = 'p({}|theta)'.format(attrib_name)
       cpt = self.CPT[identifier]
       p_function = mc.Lambda(identifier, 
                              self.prob_function_builder_for_mid_layer(cpt, 
                                                                       theta))
-      attrib_bnet_nodes.append(mc.Bernoull(attrib_name, p_function))
+      attrib_bnet_nodes[attrib_name] = mc.Bernoulli(attrib_name, p_function)
       
-   
+     
+     
+     
+    # The top layer Each class is connected to the attributes it has 
     class_inds = self.train_annos.class_index.unique() 
+    attrib_selector = self.attrib_selector
+    
+    class_bnet_nodes = {}
     for class_index in class_inds:
-      attrib_list = attrib_selector.prune_attributes(class_index, attrib_names)
+      attrib_name_list = attrib_selector.prune_attributes(class_index, attrib_names)
       class_key = 'p({} | {})'.format(class_index, 
-                                   BayesNet.format_attribute_list(attrib_list))
+                                   BayesNet.format_attribute_list(attrib_name_list))
       cpt = self.CPT[class_key]
+      curr_attribs = [attrib_bnet_nodes[name] for name in attrib_name_list]
       
+      p_function = mc.Lambda(class_key, 
+                             self.prob_function_builder_for_class_layer(cpt, 
+                                                                      curr_attribs))
+      class_bnet_nodes[class_index] = mc.Bernoulli(str(class_index), p_function)
       
+    nodes = attrib_bnet_nodes.values()
+    nodes.extend(class_bnet_nodes.values())
+    nodes.extend(theta)
+    model = mc.Model(nodes)
+#     mc.graph.dag(model).write_pdf('tmp.pdf')
+    MAP = mc.MAP(model)
+    MAP.fit() # first do MAP estimation
+    mcmc = mc.MCMC(model)
+    mcmc.sample(5000, 1000)
+    print()
+
+##     use    
+#     mcmc.summary()
+##     or:
+#     for node in attrib_bnet_nodes.values():
+#       node.summary()       
+#     for node in class_bnet_nodes.values():
+#       node.summary()
+
+    attrib_probs = pd.Series(np.zeros([len(attrib_names),]), index=attrib_names)
+    for attrib_name in attrib_names:
+      samples = mcmc.trace(str(attrib_name))[:]
+      attrib_probs[attrib_name] = samples.mean()
+    print "attrib_probs:"
+    print attrib_probs   
+    
+    class_probs = pd.Series(np.zeros([len(class_inds),]), index=class_inds)
+    for class_index in class_inds:
+      samples = mcmc.trace(str(class_index))[:]
+      class_probs[class_index] = samples.mean()
+    print "class_probs:"
+    print class_probs 
+    
+    return (class_probs, attrib_probs)
   
   
-  def prob_function_builder_for_class_layer(self, cpt, attrib_values):
-    return lambda attrib_values=attrib_values: float(cpt.ix[[tuple(attrib_values)],
+  def prob_function_builder_for_class_layer(self, cpt, attribs):
+#     print [a.value.item() for a in attribs]
+#     return lambda attribs=attribs: [a for a in attribs] 
+  
+    return lambda attribs=attribs: float(cpt.ix[[tuple([int(a) for a in attribs])],
                                                         'True'])
   
   def prob_function_builder_for_mid_layer(self, cpt, theta):    
-    return lambda theta=theta: float(cpt.ix[[tuple(theta.value)],'True'])
+    return lambda theta=theta: float(cpt.ix[[tuple(theta)],'True'])
        
   
   
