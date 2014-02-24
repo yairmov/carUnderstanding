@@ -226,24 +226,24 @@ class BayesNet:
                               index=self.train_annos.index, 
                               columns=attrib_names)
     
-    Parallel(n_jobs=-1, verbose=self.config.logging.verbose)(
-                        delayed(self.predict_parallel)(ii, class_prob, attrib_prob, self) 
-                        for ii in range(2))
+#     Parallel(n_jobs=-1, verbose=self.config.logging.verbose)(
+#                         delayed(self.predict_parallel)(ii, class_prob, attrib_prob, self) 
+#                         for ii in range(2))
     
-#     for ii in range(self.clf_res.shape[0]):
+    for ii in range(self.clf_res.shape[0]):
 #     for ii in range(2):
-#       print "=================={}========================".format(ii)
-#       (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
-#       class_prob.iloc[ii] = class_prob_ii
-#       attrib_prob.iloc[ii] = attrib_prob_ii
+      print "=================={}========================".format(ii)
+      (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
+      class_prob.iloc[ii] = class_prob_ii
+      attrib_prob.iloc[ii] = attrib_prob_ii
       
     return (class_prob, attrib_prob)
       
-  @staticmethod
-  def predict_parallel(ii, class_prob, attrib_prob, bnet):
-    (class_prob_ii, attrib_prob_ii) = bnet.predict_one(bnet.clf_res.iloc[ii])
-    class_prob.iloc[ii] = class_prob_ii
-    attrib_prob.iloc[ii] = attrib_prob_ii
+#   @staticmethod
+#   def predict_parallel(ii, class_prob, attrib_prob, bnet):
+#     (class_prob_ii, attrib_prob_ii) = bnet.predict_one(bnet.clf_res.iloc[ii])
+#     class_prob.iloc[ii] = class_prob_ii
+#     attrib_prob.iloc[ii] = attrib_prob_ii
   
   def predict_one(self, clf_res):
     # building model
