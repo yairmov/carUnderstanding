@@ -424,8 +424,12 @@ def bayes_net_generic():
   
   
   (class_probs, attrib_probs) = bnet.predict()
-  dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
-       'bnet_res.dat')
+  print "class_probs: "
+  print class_probs
+  print "attrib_probs: "
+  print attrib_probs
+#   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
+#        'bnet_res.dat')
   
   
 
