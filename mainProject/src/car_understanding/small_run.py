@@ -14,6 +14,7 @@ from sklearn.externals.joblib import Parallel, delayed, dump, load
 import cv2 as cv
 import pandas as pd
 import collections
+import matplotlib.pyplot as plt
 
 from configuration import get_config
 import fgcomp_dataset_utils as fgu
@@ -424,13 +425,35 @@ def bayes_net_generic():
   
   
   (class_probs, attrib_probs) = bnet.predict()
-#   print "class_probs: "
-#   print class_probs.head(10)
-#   print "attrib_probs: "
-#   print attrib_probs.head(10)
   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
        'bnet_res.dat')
   
+  
+  
+def show_confusion_matrix(train_annos, class_meta, class_prob):
+  from sklearn.metrics import confusion_matrix
+  
+  y_pred_class  = class_prob.idxmax(axis=1)
+#   y_pred_attrib = attrib_prob.idxmax(axis=1)
+  
+  class_true = train_annos.class_index
+  class_names = class_meta.class_name[np.sort(np.array(class_prob.columns))]
+  cm = confusion_matrix(class_true, y_pred_class, class_names.index)
+  
+  
+  # Show confusion matrix in a separate window
+  fig = plt.figure()
+  ax = fig.add_subplot(111)
+  cax = ax.matshow(cm)
+  plt.title('Confusion matrix of the classifier')
+  fig.colorbar(cax)
+  ax.set_xticklabels([''] + class_names)
+  ax.set_yticklabels([''] + class_names)
+  plt.xlabel('Predicted')
+  plt.ylabel('True')
+  plt.show()
+  
+  raw_input('press return\n')
   
 
 
@@ -480,10 +503,24 @@ if __name__ == '__main__':
   # Using the more generic BayesNet class
   #-------------------------------------
   
-  bayes_net_generic()
+#   bayes_net_generic()
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types
+#   (dataset, config) = preprocess(args)
+  config = get_config(args)
+  (dataset, config) = fgu.get_all_metadata(config)  
 
-
-
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
+  train_annos = dataset['train_annos']
+  train_annos = train_annos[np.array(
+                             train_annos.class_index.isin(classes.class_index))]
+  
+  
+  a = load('bnet_res.dat')
+  class_prob = a['class_probs']
+  attrib_prob = a['attrib_probs']
+  show_confusion_matrix(train_annos, classes, class_prob)
 
 
 
