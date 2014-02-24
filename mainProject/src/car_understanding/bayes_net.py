@@ -225,11 +225,13 @@ class BayesNet:
                               index=self.train_annos.index, 
                               columns=attrib_names)
 #     for ii in range(self.clf_res.shape[0]):
-    for ii in range(10):
+    for ii in range(2):
       print "=================={}========================".format(ii)
       (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
+      
+    return (attrib_prob, attrib_prob)
       
   
   def predict_one(self, clf_res):
