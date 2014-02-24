@@ -449,6 +449,7 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   fig.colorbar(cax)
   ax.set_xticks(np.arange(len(class_names)))
   ax.set_xticklabels([''] + np.array(class_names), rotation='vertical')
+  ax.set_yticks(np.arange(len(class_names)))
   ax.set_yticklabels([''] + np.array(class_names))
   plt.xlabel('Predicted')
   plt.ylabel('True')
