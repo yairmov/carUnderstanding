@@ -422,8 +422,9 @@ def bayes_net_generic():
                   classes, attrib_classifiers, desc=str(args))
   bnet.init_CPT()
   
-  bnet.predict_one(bnet.clf_res.iloc[0])
-  print bnet.clf_res.iloc[0]
+  
+  (class_probs, attrib_probs) = bnet.predict()
+  
   
 
 

@@ -40,6 +40,7 @@ class BayesNet:
     self.config       = config.copy()
     self.train_annos  = train_annos.copy()
     self.class_meta   = class_meta.copy()
+    self.class_inds   = self.class_meta.class_index.unique()
     
     self.attrib_clfs  = attrib_clfs
     for ii in range(len(self.attrib_clfs)):
@@ -122,9 +123,6 @@ class BayesNet:
     for ii in range(clf_res_descrete.shape[0]):
       cc = clf_res_descrete.iloc[ii]
       row = tuple(cc[clf_names])
-#       print clf_names
-#       print cc
-#       print row
       has_attrib = cc['class_index'] in attrib_class_ids
       cpt.ix[row, str(has_attrib)] += 1
     
@@ -188,11 +186,8 @@ class BayesNet:
     
     attrib_names = self.clf_names
     print attrib_names
-    class_inds  = self.train_annos.class_index.unique()
+    class_inds  = self.class_inds
     
-    
-#     self.cpt_for_attrib('suv', attrib_selector)
-#     return
     
     # P(attribute | res of attrib classifiers)
     #-----------------------------------------
@@ -216,6 +211,26 @@ class BayesNet:
     
     print self.class_meta
         
+  
+  def predict(self):
+    class_inds = self.class_inds
+    class_prob = pd.DataFrame(np.zeros([self.clf_res.shape[0], 
+                                        len(class_inds)]),
+                              index=self.train_annos.index, 
+                              columns=class_inds)
+    
+    attrib_names = self.clf_names
+    attrib_prob = pd.DataFrame(np.zeros([self.clf_res.shape[0], 
+                                         len(attrib_names)]),
+                              index=self.train_annos.index, 
+                              columns=attrib_names)
+    for ii in range(self.clf_res.shape[0]):
+      print "=========================================="
+      (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
+      class_prob.iloc[ii] = class_prob_ii
+      attrib_prob.iloc[ii] = attrib_prob_ii
+      print "=========================================="
+      
   
   def predict_one(self, clf_res):
     # building model
@@ -250,7 +265,7 @@ class BayesNet:
      
      
     # The top layer Each class is connected to the attributes it has 
-    class_inds = self.train_annos.class_index.unique() 
+    class_inds = self.class_inds
     attrib_selector = self.attrib_selector
     
     class_bnet_nodes = {}
@@ -303,9 +318,6 @@ class BayesNet:
   
   
   def prob_function_builder_for_class_layer(self, cpt, attribs):
-#     print [a.value.item() for a in attribs]
-#     return lambda attribs=attribs: [a for a in attribs] 
-  
     return lambda attribs=attribs: float(cpt.ix[[tuple([int(a) for a in attribs])],
                                                         'True'])
   
