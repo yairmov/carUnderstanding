@@ -231,7 +231,7 @@ class BayesNet:
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
       
-    return (attrib_prob, attrib_prob)
+    return (class_prob, attrib_prob)
       
   
   def predict_one(self, clf_res):
