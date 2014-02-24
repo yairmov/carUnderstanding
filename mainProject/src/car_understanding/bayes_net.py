@@ -18,6 +18,7 @@ import itertools
 from clint.textui import progress
 import pandas as pd
 import pymc as mc
+from sklearn.externals.joblib import Parallel, delayed
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
@@ -224,15 +225,25 @@ class BayesNet:
                                          len(attrib_names)]),
                               index=self.train_annos.index, 
                               columns=attrib_names)
+    
+    Parallel(n_jobs=-1, verbose=self.config.logging.verbose)(
+                        delayed(self.predict_parallel)(ii, class_prob, attrib_prob) 
+                        for ii in range(2))
+    
 #     for ii in range(self.clf_res.shape[0]):
-    for ii in range(2):
-      print "=================={}========================".format(ii)
-      (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
-      class_prob.iloc[ii] = class_prob_ii
-      attrib_prob.iloc[ii] = attrib_prob_ii
+#     for ii in range(2):
+#       print "=================={}========================".format(ii)
+#       (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
+#       class_prob.iloc[ii] = class_prob_ii
+#       attrib_prob.iloc[ii] = attrib_prob_ii
       
     return (class_prob, attrib_prob)
       
+  
+  def predict_parallel(self, ii, class_prob, attrib_prob):
+    (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
+    class_prob.iloc[ii] = class_prob_ii
+    attrib_prob.iloc[ii] = attrib_prob_ii
   
   def predict_one(self, clf_res):
     # building model
