@@ -227,7 +227,7 @@ class BayesNet:
                               columns=attrib_names)
     
     Parallel(n_jobs=-1, verbose=self.config.logging.verbose)(
-                        delayed(self.predict_parallel)(ii, class_prob, attrib_prob) 
+                        delayed(self.predict_parallel)(ii, class_prob, attrib_prob, self) 
                         for ii in range(2))
     
 #     for ii in range(self.clf_res.shape[0]):
@@ -239,9 +239,9 @@ class BayesNet:
       
     return (class_prob, attrib_prob)
       
-  
-  def predict_parallel(self, ii, class_prob, attrib_prob):
-    (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
+  @staticmethod
+  def predict_parallel(ii, class_prob, attrib_prob, bnet):
+    (class_prob_ii, attrib_prob_ii) = bnet.predict_one(bnet.clf_res.iloc[ii])
     class_prob.iloc[ii] = class_prob_ii
     attrib_prob.iloc[ii] = attrib_prob_ii
   
