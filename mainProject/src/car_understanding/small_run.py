@@ -447,7 +447,7 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   cax = ax.matshow(cm)
   plt.title('Confusion matrix of the classifier')
   fig.colorbar(cax)
-  ax.set_xticklabels([''] + np.array(class_names))
+  ax.set_xticklabels([''] + np.array(class_names), rotation='vertical')
   ax.set_yticklabels([''] + np.array(class_names))
   plt.xlabel('Predicted')
   plt.ylabel('True')
