@@ -294,7 +294,7 @@ def roc():
   
   
   roc_score = roc_auc_score(true_labels, np.array(res[attrib_name]))
-  fpr, tpr, thresholds = roc_curve(true_labels, 1-np.array(res[attrib_name]))
+  fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[attrib_name]))
   plt.plot(fpr, tpr)
   plt.title('ROC: {}'.format(attrib_name))
   plt.xlabel('False Positive Rate')
