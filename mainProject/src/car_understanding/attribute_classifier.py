@@ -70,7 +70,13 @@ class AttributeClassifier:
   
   
     # create pos/neg labels
-    labels = self.dataset.index.isin(self.pos_img_inds)
+    mask = self.dataset.index.isin(self.pos_img_inds)
+    labels = np.empty(shape=mask.shape, dtype=str)
+    trueval = self.name
+    falseval = '~' + self.name
+    labels.fill(falseval)
+    labels[mask] = trueval
+    
     
     # preprocess features
 #     features = sk.preprocessing.scale(features)
