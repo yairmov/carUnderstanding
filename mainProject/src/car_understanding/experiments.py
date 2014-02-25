@@ -319,7 +319,24 @@ def precision_recall():
   plt.draw()
   plt.show()
   
+
+
+def classify_using_attributes():
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types
+  config = get_config(args)
+  (dataset, config) = fgu.get_all_metadata(config)
   
+  attrib_clfs = []
+  for attrib_name in args:
+    attrib_clfs.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
+  
+  bnet = BayesNet(config, dataset['train_annos'], 
+                    dataset['class_meta'], attrib_clfs, desc=str(args))
+  
+  res = bnet.create_attrib_res_on_images()
+  print res.head()  
   
 
 if __name__ == '__main__':
@@ -331,4 +348,5 @@ if __name__ == '__main__':
 #   classes_for_attribs()
 #   cv_for_params()
 #   precision_recall()
-  bayes_net_test()
+#   bayes_net_test()
+  classify_using_attributes()
