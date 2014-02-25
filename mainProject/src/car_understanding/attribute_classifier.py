@@ -104,16 +104,16 @@ class AttributeClassifier:
     "features.shape[0] == num_pos + num_neg"
      
      
-    string_labels = np.empty(shape=labels.shape, dtype=np.object)
-    trueval = self.name
-    falseval = '~' + self.name
-    string_labels[labels] = trueval
-    string_labels[np.logical_not(labels)] = falseval
+#     string_labels = np.empty(shape=labels.shape, dtype=np.object)
+#     trueval = self.name
+#     falseval = '~' + self.name
+#     string_labels[labels] = trueval
+#     string_labels[np.logical_not(labels)] = falseval
     
     
-    dump([features, string_labels], 'features_eq.tmp') 
+    dump([features, labels], 'features_eq.tmp') 
   
-    return (features, string_labels)
+    return (features, labels)
     
   
   def fit(self, features, labels, grid_search=False):
