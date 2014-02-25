@@ -432,31 +432,40 @@ def bayes_net_generic():
   
 def show_confusion_matrix(train_annos, class_meta, class_prob):
   from sklearn.metrics import confusion_matrix
+  from sklearn.preprocessing import normalize
+#   from mpltools import style
+  from sklearn.metrics import classification_report
+  from sklearn.metrics import accuracy_score
   
-  y_pred_class  = class_prob.idxmax(axis=1)
-#   y_pred_attrib = attrib_prob.idxmax(axis=1)
+#   style.use('ggplot')
   
   class_true = train_annos.class_index
-  class_names = class_meta.class_name[np.sort(np.array(class_prob.columns))]
-  cm = confusion_matrix(class_true, y_pred_class, class_names.index)
+  y_pred_class  = class_prob.idxmax(axis=1)
+  
+#   y_pred_attrib = attrib_prob.idxmax(axis=1)
+  
+  class_inds = np.sort(np.array(class_prob.columns))
+  class_names = class_meta.class_name[class_inds]
+  print classification_report(class_true, y_pred_class, list(class_inds), list(class_names))
+  print "Accuracy: {}".format(accuracy_score(class_true, y_pred_class))
+  cm = confusion_matrix(class_true, y_pred_class, class_names.index) + 0.0
+  cm = normalize(cm, norm='l1', axis=1)
   
   
   # Show confusion matrix in a separate window
-  fig = plt.figure()
+  fig = plt.figure(figsize=(15,15))
   ax = fig.add_subplot(111)
   cax = ax.matshow(cm)
   plt.title('Confusion matrix of the classifier')
   fig.colorbar(cax)
   ax.set_xticks(np.arange(len(class_names)))
-  ax.set_xticklabels([''] + np.array(class_names), rotation=45)
+  ax.set_xticklabels([''] + np.array(class_names), rotation=45, ha='left')
   ax.set_yticks(np.arange(len(class_names)))
   ax.set_yticklabels([''] + np.array(class_names))
   plt.xlabel('Predicted')
   plt.ylabel('True')
-  plt.show()
-  
-  raw_input('press return\n')
-  
+  plt.show()  
+
 
 
 if __name__ == '__main__':
@@ -518,10 +527,10 @@ if __name__ == '__main__':
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
   
-  
   a = load('bnet_res.dat')
   class_prob = a['class_probs']
   attrib_prob = a['attrib_probs']
+  dump((train_annos, classes, class_prob, attrib_prob), 'tmp.dat')
   show_confusion_matrix(train_annos, classes, class_prob)
 
 
