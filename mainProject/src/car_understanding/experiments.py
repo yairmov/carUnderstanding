@@ -330,7 +330,7 @@ def classify_using_attributes():
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
-  attrib_names = args
+  attrib_names = [str.lower(a) for a in args]
   attrib_clfs = []
   for attrib_name in args:
     attrib_clfs.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
