@@ -234,7 +234,7 @@ class BayesNet:
     class_prob_cache = {}
     attrrib_prob_cache = {}
     
-    print clf_res_descrete.head()
+    print clf_res_descrete[attrib_names].head()
     return
     for ii in range(self.clf_res.shape[0]):
       print "=================={}========================".format(ii)
