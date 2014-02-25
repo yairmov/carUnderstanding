@@ -277,8 +277,8 @@ class BayesNet:
       attrib_bnet_nodes[attrib_name] = mc.Bernoulli(attrib_name, p_function)
       
      
-     
-     
+    for node in attrib_bnet_nodes:
+      print node.value.__class__ 
     # The top layer Each class is connected to the attributes it has 
     class_inds = self.class_inds
     attrib_selector = self.attrib_selector
