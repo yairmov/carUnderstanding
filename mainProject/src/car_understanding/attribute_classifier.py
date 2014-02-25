@@ -82,7 +82,7 @@ class AttributeClassifier:
 #     features = sk.preprocessing.scale(features)
     features = self.Scaler.fit_transform(features)
     
-    num_pos = sum(labels)
+    num_pos = sum(mask)
     num_neg = labels.shape[0] - num_pos
     
     print "num_pos: {}, num_neg: {}".format(num_pos, num_neg)
