@@ -104,12 +104,12 @@ class AttributeClassifier:
     "features.shape[0] == num_pos + num_neg"
      
      
-#     string_labels = np.empty(shape=labels.shape, dtype=np.object)
-#     trueval = self.name
-#     falseval = '~' + self.name
-#     string_labels[labels] = trueval
-#     string_labels[np.logical_not(labels)] = falseval
-    
+    string_labels = np.empty(shape=labels.shape, dtype=np.object)
+    trueval = self.name
+    falseval = '~' + self.name
+    string_labels[labels] = trueval
+    string_labels[np.logical_not(labels)] = falseval
+    labels = string_labels
     
     dump([features, labels], 'features_eq.tmp') 
   
