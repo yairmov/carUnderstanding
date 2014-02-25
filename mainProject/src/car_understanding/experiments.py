@@ -314,5 +314,5 @@ if __name__ == '__main__':
 #   bayes_net_test()
 #   classes_for_attribs()
 #   cv_for_params()
-#   roc()
-  bayes_net_test()
+  roc()
+#   bayes_net_test()
