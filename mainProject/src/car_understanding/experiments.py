@@ -291,7 +291,7 @@ def roc():
     print "--------------{}-------------".format(attrib_name) 
     print res[str.lower(attrib_name)].describe()
     
-    print classification_report(true_labels, np.array(res[attrib_name]) > 0.65, 
+    print classification_report(true_labels, np.array(res[str.lower(attrib_name)]) > 0.65, 
                                 target_names=['not-{}'.format(attrib_name),
                                               attrib_name])
   
