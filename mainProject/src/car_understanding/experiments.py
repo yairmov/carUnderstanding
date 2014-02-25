@@ -347,7 +347,7 @@ def classify_using_attributes():
   y_pred = np.array(clf.predict(res[attrib_names]))
   y_true = np.array(res.class_index)
   
-  classification_report(y_true, y_pred)
+  print(classification_report(y_true, y_pred))
     
   
 
