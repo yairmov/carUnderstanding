@@ -147,7 +147,7 @@ def bayes_net_test():
   mc.graph.dag(model).write_pdf('tmp.pdf')
 
   MAP = mc.MAP(model)
-  MAP.fit() # first do MAP estimation
+  MAP.fit(method = 'fmin') # first do MAP estimation
   
   
   mcmc = mc.MCMC(model)
