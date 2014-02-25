@@ -261,9 +261,11 @@ def cv_for_params():
   print()
 
 
-def roc():
-  from sklearn.metrics import roc_auc_score
-  from sklearn.metrics import roc_curve
+def precision_recall():
+#   from sklearn.metrics import roc_auc_score
+#   from sklearn.metrics import roc_curve
+  from sklearn.metrics import precision_recall_curve
+  from sklearn.metrics import auc
   from sklearn.metrics import classification_report
   from mpltools import style
   style.use('ggplot')
@@ -299,15 +301,20 @@ def roc():
   
   
   
-    
-    roc_score = roc_auc_score(true_labels, np.array(res[str.lower(attrib_name)]))
-    fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[str.lower(attrib_name)]))
+    precision, recall, thresholds = precision_recall_curve(true_labels, np.array(res[str.lower(attrib_name)]))
+    score = auc(recall, precision)
+    print("Area Under Curve: %0.2f" % score)
+#     score = roc_auc_score(true_labels, np.array(res[str.lower(attrib_name)]))
+#     fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[str.lower(attrib_name)]))
     plt.subplot(2,2,ii+1)
-    plt.plot(fpr, tpr)
-    plt.title('ROC: {}'.format(attrib_name))
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.legend(['ROC curve, area = {}'.format(roc_score)])
+#     plt.plot(fpr, tpr)
+    plt.plot(recall, precision, label='Precision-Recall curve')
+    plt.title('Precision-Recall: {}'.format(attrib_name))
+#     plt.xlabel('False Positive Rate')
+#     plt.ylabel('True Positive Rate')
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.legend(['area = {}'.format(score)])
     
   plt.draw()
   plt.show()
@@ -323,5 +330,5 @@ if __name__ == '__main__':
 #   bayes_net_test()
 #   classes_for_attribs()
 #   cv_for_params()
-  roc()
+  precision_recall()
 #   bayes_net_test()
