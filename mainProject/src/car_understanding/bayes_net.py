@@ -237,6 +237,7 @@ class BayesNet:
     
     for ii in range(self.clf_res.shape[0]):
       print "=================={}========================".format(ii)
+      print np.array(clf_res_descrete.iloc[ii])
       key = np.array(clf_res_descrete.iloc[ii]).tostring()
       if not class_prob_cache.has_key(key):
         (class_prob_ii, attrib_prob_ii) = self.predict_one(clf_res_descrete.iloc[ii])
