@@ -272,7 +272,7 @@ def roc():
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
-  attrib_name = 'sedan'
+  attrib_name = 'bmw'
   
   attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
   bnet = BayesNet(config, dataset['train_annos'], 
