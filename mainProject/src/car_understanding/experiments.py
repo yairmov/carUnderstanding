@@ -151,7 +151,7 @@ def bayes_net_test():
   
   
   mcmc = mc.MCMC(model)
-  mcmc.sample(100)
+  mcmc.sample(1000)
   
   
   mcmc.summary()
