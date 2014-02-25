@@ -110,9 +110,9 @@ class AttributeClassifier:
     string_labels.fill(falseval)
     string_labels[labels] = trueval
     
-    dump([features, labels], 'features_eq.tmp') 
+    dump([features, string_labels], 'features_eq.tmp') 
   
-    return (features, labels)
+    return (features, string_labels)
     
   
   def fit(self, features, labels, grid_search=False):
