@@ -346,7 +346,7 @@ def classify_using_attributes():
   res = bnet.create_attrib_res_on_images()
   
   # define a classifier that uses the attribute scores
-  clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
+  clf = RandomForestClassifier(n_estimators=10, n_jobs=-1)
   clf.fit(res[attrib_names], res.class_index)
   
   y_pred = np.array(clf.predict(res[attrib_names]))
