@@ -146,8 +146,8 @@ def bayes_net_test():
   model = mc.Model([A, B, E, J, M])
   mc.graph.dag(model).write_pdf('tmp.pdf')
 
-  MAP = mc.MAP(model)
-  MAP.fit(method = 'fmin_powell') # first do MAP estimation
+#   MAP = mc.MAP(model)
+#   MAP.fit(method = 'fmin_powell') # first do MAP estimation
   
   
   mcmc = mc.MCMC(model)
