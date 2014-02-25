@@ -285,8 +285,8 @@ def roc():
   pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
   true_labels = np.array(res.class_index.isin(pos_classes))
   
-  print sum(true_labels)
   
+  print res[attrib_name].describe()
   
   print classification_report(true_labels, np.array(res[attrib_name]) > 0.5, 
                               target_names=['not-{}'.format(attrib_name),
