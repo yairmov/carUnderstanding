@@ -331,12 +331,17 @@ def classify_using_attributes():
   (dataset, config) = fgu.get_all_metadata(config)
   
   attrib_names = [str.lower(a) for a in args]
-  attrib_clfs = []
+  attrib_classifiers = []
   for attrib_name in args:
-    attrib_clfs.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
+    attrib_classifiers.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
   
-  bnet = BayesNet(config, dataset['train_annos'], 
-                    dataset['class_meta'], attrib_clfs, desc=str(attrib_names))
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
+  train_annos = dataset['train_annos']
+  train_annos = train_annos[np.array(
+                             train_annos.class_index.isin(classes.class_index))]
+  
+  bnet = BayesNet(config, train_annos, 
+                  classes, attrib_classifiers, desc=str(args))
   
   res = bnet.create_attrib_res_on_images()
   
