@@ -117,7 +117,7 @@ class BayesNet:
     # Create all tuples of True/False classifier score
     rows = list(itertools.product(*[(1, 0) for 
                                     ii in range(len(clf_names))]))
-    cpt = pd.DataFrame(np.ones([len(rows), 2]), 
+    cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
                        index=rows, columns=['True', 'False'])
     
     
@@ -144,7 +144,7 @@ class BayesNet:
                                     ii in range(len(attrib_list))]))
     
     min_prob = 1e-2
-    cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2]), 
+    cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2], dtype=np.float64), 
                        index=rows, columns=['True', 'False'])
     
     # All rows except the one that has ALL the attributes should have p(true)=min_prob.
@@ -335,11 +335,11 @@ class BayesNet:
   
   
   def prob_function_builder_for_class_layer(self, cpt, attribs):
-    return lambda attribs=attribs: float(cpt.ix[[tuple([int(a) for a in attribs])],
+    return lambda attribs=attribs: np.float(cpt.ix[[tuple([int(a) for a in attribs])],
                                                         'True'])
   
   def prob_function_builder_for_mid_layer(self, cpt, theta):    
-    return lambda theta=theta: float(cpt.ix[[tuple(theta)],'True'])
+    return lambda theta=theta: np.float(cpt.ix[[tuple(theta)],'True'])
        
   
   
