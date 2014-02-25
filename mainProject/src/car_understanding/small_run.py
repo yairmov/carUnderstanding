@@ -425,6 +425,7 @@ def bayes_net_generic():
   
   
   (class_probs, attrib_probs) = bnet.predict()
+  show_confusion_matrix(train_annos, classes, class_probs)
   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
        'bnet_res.dat')
   
@@ -517,23 +518,23 @@ if __name__ == '__main__':
   bayes_net_generic()
 
 
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'SUV']
-  args = makes + types
-#   (dataset, config) = preprocess(args)
-  config = get_config(args)
-  (dataset, config) = fgu.get_all_metadata(config)  
-
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
-  train_annos = dataset['train_annos']
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
-  
-  a = load('bnet_res.dat')
-  class_prob = a['class_probs']
-  attrib_prob = a['attrib_probs']
-  dump((train_annos, classes, class_prob, attrib_prob), 'tmp.dat')
-  show_confusion_matrix(train_annos, classes, class_prob)
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'SUV']
+#   args = makes + types
+# #   (dataset, config) = preprocess(args)
+#   config = get_config(args)
+#   (dataset, config) = fgu.get_all_metadata(config)  
+# 
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   train_annos = dataset['train_annos']
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
+#   
+#   a = load('bnet_res.dat')
+#   class_prob = a['class_probs']
+#   attrib_prob = a['attrib_probs']
+#   dump((train_annos, classes, class_prob, attrib_prob), 'tmp.dat')
+#   show_confusion_matrix(train_annos, classes, class_prob)
 
 
 
