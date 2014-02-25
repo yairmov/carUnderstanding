@@ -278,7 +278,8 @@ class BayesNet:
       
      
     for node in attrib_bnet_nodes:
-      print node.value.__class__ 
+      print node.value.__class__
+    return 
     # The top layer Each class is connected to the attributes it has 
     class_inds = self.class_inds
     attrib_selector = self.attrib_selector
