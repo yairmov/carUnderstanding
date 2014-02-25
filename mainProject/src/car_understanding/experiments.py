@@ -267,7 +267,7 @@ def roc():
   from sklearn.metrics import classification_report
   
   makes = ['bmw', 'ford']
-  types = ['sedan', 'suv']
+  types = ['sedan', 'SUV']
   args = makes + types
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
@@ -289,7 +289,7 @@ def roc():
     
    
     print "--------------{}-------------".format(attrib_name) 
-    print res[attrib_name].describe()
+    print res[str.lower(attrib_name)].describe()
     
     print classification_report(true_labels, np.array(res[attrib_name]) > 0.65, 
                                 target_names=['not-{}'.format(attrib_name),
