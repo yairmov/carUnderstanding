@@ -306,8 +306,9 @@ def roc():
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
     plt.legend(['ROC curve, area = {}'.format(roc_score)])
-    plt.draw()
-    plt.show()
+    
+  plt.draw()
+  plt.show()
   
   
   
