@@ -265,6 +265,7 @@ def precision_recall():
 #   from sklearn.metrics import roc_auc_score
 #   from sklearn.metrics import roc_curve
   from sklearn.metrics import precision_recall_curve
+  from sklearn.metrics import precision_score
   from sklearn.metrics import auc
   from sklearn.metrics import classification_report
   from mpltools import style
@@ -304,6 +305,8 @@ def precision_recall():
     precision, recall, thresholds = precision_recall_curve(true_labels, np.array(res[str.lower(attrib_name)]))
     score = auc(recall, precision)
     print("Area Under Curve: %0.2f" % score)
+    p = precision_score(true_labels, np.array(res[str.lower(attrib_name)]) > 0.65)
+    print("precision: {}".format(p))
 #     score = roc_auc_score(true_labels, np.array(res[str.lower(attrib_name)]))
 #     fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[str.lower(attrib_name)]))
     plt.subplot(2,2,ii+1)
