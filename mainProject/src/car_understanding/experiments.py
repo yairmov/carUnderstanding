@@ -322,21 +322,33 @@ def precision_recall():
 
 
 def classify_using_attributes():
+  from sklearn.ensemble import RandomForestClassifier
+  from sklearn.metrics import classification_report
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
   args = makes + types
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
+  attrib_names = args
   attrib_clfs = []
   for attrib_name in args:
     attrib_clfs.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
   
   bnet = BayesNet(config, dataset['train_annos'], 
-                    dataset['class_meta'], attrib_clfs, desc=str(args))
+                    dataset['class_meta'], attrib_clfs, desc=str(attrib_names))
   
   res = bnet.create_attrib_res_on_images()
-  print res.head()  
+  
+  # define a classifier that uses the attribute scores
+  clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
+  clf.fit(res[attrib_names], res.class_index)
+  
+  y_pred = np.array(clf.predict(res[attrib_names]))
+  y_true = np.array(res.class_index)
+  
+  classification_report(y_true, y_pred)
+    
   
 
 if __name__ == '__main__':
