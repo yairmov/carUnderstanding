@@ -107,8 +107,9 @@ class AttributeClassifier:
     string_labels = np.empty(shape=labels.shape, dtype=str)
     trueval = self.name
     falseval = '~' + self.name
-    string_labels.fill(falseval)
     string_labels[labels] = trueval
+    string_labels[np.logical_not(labels)] = falseval
+    
     
     dump([features, string_labels], 'features_eq.tmp') 
   
