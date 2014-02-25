@@ -225,33 +225,33 @@ class BayesNet:
                                          len(attrib_names)]),
                               index=self.train_annos.index, 
                               columns=attrib_names)
+        
+    clf_res_descrete = self.clf_res.copy()
+    clf_res_descrete[self.clf_names] = \
+        self.clf_res[self.clf_names] > self.config.attribute.high_thresh
     
-#     Parallel(n_jobs=-1, verbose=self.config.logging.verbose)(
-#                         delayed(self.predict_parallel)(ii, class_prob, attrib_prob, self) 
-#                         for ii in range(2))
+    # Create cache for results - we only have 2^num_attrib options.
+    class_prob_cache = {}
+    attrrib_prob_cache = {}
+    
     
     for ii in range(self.clf_res.shape[0]):
-#     for ii in range(2):
       print "=================={}========================".format(ii)
-      (class_prob_ii, attrib_prob_ii) = self.predict_one(self.clf_res.iloc[ii])
-      class_prob.iloc[ii] = class_prob_ii
-      attrib_prob.iloc[ii] = attrib_prob_ii
+      key = np.array(clf_res_descrete.iloc[ii]).tostring()
+      if not class_prob_cache.has_key(key):
+        (class_prob_ii, attrib_prob_ii) = self.predict_one(clf_res_descrete.iloc[ii])
+        class_prob_cache[key] = class_prob_ii
+        attrrib_prob_cache[key] = attrib_prob_ii
+      
+      class_prob.iloc[ii] = class_prob_cache[key]
+      attrib_prob.iloc[ii] = attrrib_prob_cache[key]
       
     return (class_prob, attrib_prob)
       
-#   @staticmethod
-#   def predict_parallel(ii, class_prob, attrib_prob, bnet):
-#     (class_prob_ii, attrib_prob_ii) = bnet.predict_one(bnet.clf_res.iloc[ii])
-#     class_prob.iloc[ii] = class_prob_ii
-#     attrib_prob.iloc[ii] = attrib_prob_ii
-  
-  def predict_one(self, clf_res):
+  def predict_one(self, clf_res_descrete):
     # building model
     # first start with observed variables - the results of all the classifiers 
     # on the image
-    clf_res_descrete = clf_res.copy()
-    clf_res_descrete[self.clf_names] = \
-        clf_res[self.clf_names] > self.config.attribute.high_thresh
         
     # the actual distrobution used is not important as these are 
     # *observed* variables. We set the value to be the result of the classifiers              
