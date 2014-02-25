@@ -266,7 +266,7 @@ def roc():
   from sklearn.metrics import roc_curve
   from sklearn.metrics import classification_report
   from mpltools import style
-  style('ggplot')
+  style.use('ggplot')
   
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
