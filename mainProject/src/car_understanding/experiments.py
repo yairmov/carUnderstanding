@@ -298,8 +298,8 @@ def roc():
   
   
     
-    roc_score = roc_auc_score(true_labels, np.array(res[attrib_name]))
-    fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[attrib_name]))
+    roc_score = roc_auc_score(true_labels, np.array(res[str.lower(attrib_name)]))
+    fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[str.lower(attrib_name)]))
     plt.subplot(2,2,ii+1)
     plt.plot(fpr, tpr)
     plt.title('ROC: {}'.format(attrib_name))
