@@ -70,25 +70,20 @@ class AttributeClassifier:
   
   
     # create pos/neg labels
-    mask = self.dataset.index.isin(self.pos_img_inds)
-    labels = np.empty(shape=mask.shape, dtype=str)
-    trueval = self.name
-    falseval = '~' + self.name
-    labels.fill(falseval)
-    labels[mask] = trueval
+    labels = self.dataset.index.isin(self.pos_img_inds)
     
     
     # preprocess features
 #     features = sk.preprocessing.scale(features)
     features = self.Scaler.fit_transform(features)
     
-    num_pos = sum(mask)
+    num_pos = sum(labels)
     num_neg = labels.shape[0] - num_pos
     
     print "num_pos: {}, num_neg: {}".format(num_pos, num_neg)
     assert num_neg >= num_pos, "num_neg >= num_pos"
     
-    dump([features, labels], 'features_all.tmp')
+#     dump([features, labels], 'features_all.tmp')
     
     
     # make pos/neg sets of equal size
@@ -97,10 +92,8 @@ class AttributeClassifier:
     neg_inds = np.random.permutation(neg_inds)[:num_pos]
      
     features = features[np.concatenate([pos_inds, neg_inds]), :]
-    labels  = np.concatenate([np.ones(shape=pos_inds.shape),
-                             np.zeros(shape=neg_inds.shape)])
-    
-    dump([features, labels], 'features_eq.tmp') 
+    labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
+                             np.zeros(shape=neg_inds.shape, dtype=bool)])
      
      
     num_pos = sum(labels)
@@ -110,7 +103,14 @@ class AttributeClassifier:
     assert features.shape[0] == num_pos + num_neg, \
     "features.shape[0] == num_pos + num_neg"
      
+     
+    string_labels = np.empty(shape=labels.shape, dtype=str)
+    trueval = self.name
+    falseval = '~' + self.name
+    string_labels.fill(falseval)
+    string_labels[labels] = trueval
     
+    dump([features, labels], 'features_eq.tmp') 
   
     return (features, labels)
     
