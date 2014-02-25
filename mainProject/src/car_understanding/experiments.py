@@ -330,5 +330,5 @@ if __name__ == '__main__':
 #   bayes_net_test()
 #   classes_for_attribs()
 #   cv_for_params()
-  precision_recall()
-#   bayes_net_test()
+#   precision_recall()
+  bayes_net_test()
