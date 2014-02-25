@@ -150,8 +150,8 @@ def bayes_net_test():
   MAP.fit(method = 'fmin_powell') # first do MAP estimation
   
   
-  mcmc = mc.MCMC(model)
-  mcmc.sample(1000)
+#   mcmc = mc.MCMC(model)
+#   mcmc.sample(1000)
   
   
   mcmc.summary()
