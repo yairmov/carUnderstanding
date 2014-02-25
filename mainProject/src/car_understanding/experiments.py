@@ -272,36 +272,42 @@ def roc():
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
-  attrib_name = 'bmw'
   
-  attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
-  bnet = BayesNet(config, dataset['train_annos'], 
-                  dataset['class_meta'], [attrib_clf], desc=str(args))
+  for ii, attrib_name in enumerate(args):
+  #   attrib_name = 'bmw'
+    
+    attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
+    bnet = BayesNet(config, dataset['train_annos'], 
+                    dataset['class_meta'], [attrib_clf], desc=str(args))
+    
+    res = bnet.create_attrib_res_on_images()
+    
+    attrib_selector = AttributeSelector(config, dataset['class_meta'])
+  #   attrib_meta = attrib_selector.create_attrib_meta([attrib_clf.name])
+    pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
+    true_labels = np.array(res.class_index.isin(pos_classes))
+    
+   
+    print "--------------{}-------------".format(attrib_name) 
+    print res[attrib_name].describe()
+    
+    print classification_report(true_labels, np.array(res[attrib_name]) > 0.65, 
+                                target_names=['not-{}'.format(attrib_name),
+                                              attrib_name])
   
-  res = bnet.create_attrib_res_on_images()
-  
-  attrib_selector = AttributeSelector(config, dataset['class_meta'])
-#   attrib_meta = attrib_selector.create_attrib_meta([attrib_clf.name])
-  pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
-  true_labels = np.array(res.class_index.isin(pos_classes))
   
   
-  print res[attrib_name].describe()
-  
-  print classification_report(true_labels, np.array(res[attrib_name]) > 0.65, 
-                              target_names=['not-{}'.format(attrib_name),
-                                            attrib_name])
-  
-  
-  roc_score = roc_auc_score(true_labels, np.array(res[attrib_name]))
-  fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[attrib_name]))
-  plt.plot(fpr, tpr)
-  plt.title('ROC: {}'.format(attrib_name))
-  plt.xlabel('False Positive Rate')
-  plt.ylabel('True Positive Rate')
-  plt.legend(['ROC curve, area = {}'.format(roc_score)])
-  plt.draw()
-  plt.show()
+    
+    roc_score = roc_auc_score(true_labels, np.array(res[attrib_name]))
+    fpr, tpr, thresholds = roc_curve(true_labels, np.array(res[attrib_name]))
+    plt.subplot(2,2,ii)
+    plt.plot(fpr, tpr)
+    plt.title('ROC: {}'.format(attrib_name))
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.legend(['ROC curve, area = {}'.format(roc_score)])
+    plt.draw()
+    plt.show()
   
   
   
