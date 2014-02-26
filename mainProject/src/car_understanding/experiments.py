@@ -352,7 +352,7 @@ def classify_using_attributes():
   clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
   
   scores = cross_validation.cross_val_score(clf, res[attrib_names], 
-                                            res.class_index, cv=5)
+                                            res.class_index, cv=2)
   print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 #   clf.fit(res[attrib_names], res.class_index)
