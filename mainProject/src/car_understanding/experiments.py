@@ -349,10 +349,10 @@ def classify_using_attributes():
   res = bnet.create_attrib_res_on_images()
   
   # define a classifier that uses the attribute scores
-  clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
+  clf = RandomForestClassifier(n_estimators=100, n_jobs=-1)
   
   scores = cross_validation.cross_val_score(clf, res[attrib_names], 
-                                            res.class_index, cv=2, verbose=3)
+                                            res.class_index, cv=2)
   print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 #   clf.fit(res[attrib_names], res.class_index)
