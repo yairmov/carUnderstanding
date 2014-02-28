@@ -380,7 +380,8 @@ def feature_test():
     imfname = '../../../fgcomp2013_normed/release/train_images/0000/FGCOMP_0000018.jpg'
 
 
-    detector_format = ["","Grid","Pyramid"]
+#     detector_format = ["", "Grid","Pyramid"]
+    detector_format = [""]
     # "Dense" and "SimpleBlob" omitted because they caused the program to crash
 #     detector_types = ["FAST","STAR","SIFT","SURF","ORB","MSER","GFTT","HARRIS"]
     detector_types = ["dense"]
