@@ -398,7 +398,7 @@ def feature_test():
                                   kpts, flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
             plt.imshow(img)
             for k in kpts:
-              print k
+              print k.octave
 #             for k in kpts:
 #                 x,y = k.pt
 #                 plt.plot(x,-y,'ro')
