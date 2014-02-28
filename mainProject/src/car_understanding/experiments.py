@@ -384,7 +384,7 @@ def feature_test():
     detector_format = [""]
     # "Dense" and "SimpleBlob" omitted because they caused the program to crash
 #     detector_types = ["FAST","STAR","SIFT","SURF","ORB","MSER","GFTT","HARRIS"]
-    detector_types = ["dense"]
+    detector_types = ["Dense"]
     image = cv.imread(imfname)
 
     for form in detector_format:
