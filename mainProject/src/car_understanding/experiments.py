@@ -4,7 +4,7 @@ Created on Jan 13, 2014
 @author: ymovshov
 '''
 
-# import cv2 as cv
+import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 import pymc as mc
@@ -362,7 +362,42 @@ def classify_using_attributes():
 #   
 #   print(classification_report(y_true, y_pred))
     
-  
+ 
+
+def test_feature_detector(detector, imfname):
+    image = cv.imread(imfname)
+    forb = cv.FeatureDetector_create(detector)
+    # Detect crashes program if image is not greyscale
+    t1 = time.time()
+    kpts = forb.detect(cv.cvtColor(image, cv.COLOR_BGR2GRAY))
+    t2 = time.time()
+    print detector, 'number of KeyPoint objects', len(kpts), '(time', t2-t1, ')'
+
+    return kpts
+
+
+def feature_test():
+    imfname = r'_______.bmp'
+
+
+    detector_format = ["","Grid","Pyramid"]
+    # "Dense" and "SimpleBlob" omitted because they caused the program to crash
+    detector_types = ["FAST","STAR","SIFT","SURF","ORB","MSER","GFTT","HARRIS"]
+
+
+    for form in detector_format:
+        for detector in detector_types:
+            kpts = test_feature_detector(form + detector, imfname)
+
+            # KeyPoint class: angle, class_id, octave, pt, response, size
+            plt.figure(form + detector)
+            for k in kpts:
+                x,y = k.pt
+                plt.plot(x,-y,'ro')
+            plt.axis('equal')
+
+    plt.show()
+ 
 
 if __name__ == '__main__':
 #   test_fg_utils()
