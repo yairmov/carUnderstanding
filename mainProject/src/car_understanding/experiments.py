@@ -377,12 +377,13 @@ def test_feature_detector(detector, imfname):
 
 
 def feature_test():
-    imfname = r'_______.bmp'
+    imfname = '../../../fgcomp2013_normed/release/train_images/0000/FGCOMP_0000018.jpg'
 
 
     detector_format = ["","Grid","Pyramid"]
     # "Dense" and "SimpleBlob" omitted because they caused the program to crash
-    detector_types = ["FAST","STAR","SIFT","SURF","ORB","MSER","GFTT","HARRIS"]
+#     detector_types = ["FAST","STAR","SIFT","SURF","ORB","MSER","GFTT","HARRIS"]
+    detector_types = ["SIFT"]
 
 
     for form in detector_format:
