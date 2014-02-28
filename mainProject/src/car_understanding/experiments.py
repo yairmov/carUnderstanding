@@ -367,7 +367,11 @@ def classify_using_attributes():
 def test_feature_detector(detector, imfname):
     image = cv.imread(imfname)
     forb = cv.FeatureDetector_create(detector)
-    forb.setInt('levels', 3)
+    forb.setInt('featureScaleLevels', 3)
+    forb.setBool('varyXyStepWithScale', True)
+    forb.setBool('varyImgBoundWithScale', True)
+    forb.setInt('initXyStep', 4)
+    
     # Detect crashes program if image is not greyscale
     t1 = time.time()
     kpts = forb.detect(cv.cvtColor(image, cv.COLOR_BGR2GRAY))
@@ -382,7 +386,7 @@ def feature_test():
 
 
 #     detector_format = ["", "Grid","Pyramid"]
-    detector_format = ["Pyramid"]
+    detector_format = [""]
     # "Dense" and "SimpleBlob" omitted because they caused the program to crash
 #     detector_types = ["FAST","STAR","SIFT","SURF","ORB","MSER","GFTT","HARRIS"]
     detector_types = ["Dense"]
