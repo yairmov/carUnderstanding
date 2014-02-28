@@ -370,7 +370,7 @@ def test_feature_detector(detector, imfname):
 #     forb.setInt('featureScaleLevels', 3)
 #     forb.setBool('varyXyStepWithScale', True)
 #     forb.setBool('varyImgBoundWithScale', True)
-    forb.setInt('initXyStep', 4)
+    forb.setInt('initXyStep', 16)
     
     # Detect crashes program if image is not greyscale
     t1 = time.time()
