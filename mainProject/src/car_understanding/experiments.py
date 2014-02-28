@@ -397,6 +397,8 @@ def feature_test():
             img=cv.drawKeypoints(cv.cvtColor(image, cv.COLOR_BGR2GRAY),
                                   kpts, flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
             plt.imshow(img)
+            for k in kpts:
+              print k
 #             for k in kpts:
 #                 x,y = k.pt
 #                 plt.plot(x,-y,'ro')
