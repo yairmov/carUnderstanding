@@ -392,11 +392,13 @@ def feature_test():
 
             # KeyPoint class: angle, class_id, octave, pt, response, size
             plt.figure(form + detector)
-            plt.imshow(image)
-            for k in kpts:
-                x,y = k.pt
-                plt.plot(x,-y,'ro')
-            plt.axis('equal')
+            img=cv.drawKeypoints(cv.cvtColor(image, cv.COLOR_BGR2GRAY),
+                                  kpts, flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+            plt.imshow(img)
+#             for k in kpts:
+#                 x,y = k.pt
+#                 plt.plot(x,-y,'ro')
+#             plt.axis('equal')
 
     plt.show()
  
