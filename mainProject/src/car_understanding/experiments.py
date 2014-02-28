@@ -366,7 +366,7 @@ def classify_using_attributes():
 
 def test_feature_detector(detector, imfname):
     image = cv.imread(imfname)
-    forb = cv.FeatureDetector_create(detector)
+    forb = cv.FeatureDetector_create(detector, 'initXyStep', 4)
     # Detect crashes program if image is not greyscale
     t1 = time.time()
     kpts = forb.detect(cv.cvtColor(image, cv.COLOR_BGR2GRAY))
