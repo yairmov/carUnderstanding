@@ -367,7 +367,7 @@ def classify_using_attributes():
 def test_feature_detector(detector, imfname):
     image = cv.imread(imfname)
     forb = cv.FeatureDetector_create(detector)
-#     forb.setInt('featureScaleLevels', 3)
+    forb.setInt('featureScaleLevels', 2)
 #     forb.setBool('varyXyStepWithScale', True)
 #     forb.setBool('varyImgBoundWithScale', True)
     forb.setInt('initXyStep', 8)
