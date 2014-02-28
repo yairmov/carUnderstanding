@@ -384,7 +384,7 @@ def feature_test():
     # "Dense" and "SimpleBlob" omitted because they caused the program to crash
 #     detector_types = ["FAST","STAR","SIFT","SURF","ORB","MSER","GFTT","HARRIS"]
     detector_types = ["SIFT"]
-
+    image = cv.imread(imfname)
 
     for form in detector_format:
         for detector in detector_types:
@@ -392,6 +392,7 @@ def feature_test():
 
             # KeyPoint class: angle, class_id, octave, pt, response, size
             plt.figure(form + detector)
+            plt.imshow(image)
             for k in kpts:
                 x,y = k.pt
                 plt.plot(x,-y,'ro')
