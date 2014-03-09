@@ -81,7 +81,8 @@ def word_histogram(features, bow_model, config):
 
 
   # using LLC encoding
-  if config.SIFT.LLC.use:
+#   if config.SIFT.LLC.use:
+  if False:
     codebook = bow_model.cluster_centers_
     encoding = LLC_encoding(codebook, features, config.SIFT.LLC.knn, config.SIFT.LLC.beta)
     
