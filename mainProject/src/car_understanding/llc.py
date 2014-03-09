@@ -35,12 +35,13 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
   II = np.eye(knn, knn)
   coeff = np.zeros([nframe, nbase])
 
+  import pprint.pprint as pprint
 #   for ii in np.arange(nframe):
   for ii in [146]:
     print ii
     idx = IDX[ii,:]
     z = B[idx,:] - X[ii,:]     # shift ith pt to origin
-    print "B_idx", B[idx,0:10]
+    pprint( "B_idx", B[idx,0:10])
     C = z.dot(z.T)             # local covariance
     C = C + II*beta*np.trace(C)   # regularlization (K>D)
     w = linalg.lstsq(C, np.ones([knn, 1]))[0]
