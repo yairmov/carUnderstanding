@@ -109,25 +109,31 @@ def create_word_histogram_on_file(raw_feature_file, bow_model, config):
   hist = word_histogram(desc, bow_model, config)
   (name, ext) = os.path.splitext(os.path.split(raw_feature_file)[1])
   hist_filename = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
-  print hist_filename
   save(hist, hist_filename)
 
 def create_word_histograms_on_dataset(train_annos, config):
   bow_model = load(config.SIFT.BoW.model_file)
 
   dir_path = config.SIFT.raw_dir
-  n_files = len(train_annos)
+  n_files = train_annos.shape[0]
 
   if not os.path.isdir(config.SIFT.BoW.hist_dir):
     os.makedirs(config.SIFT.BoW.hist_dir)
         
-  Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-                 delayed(create_word_histogram_on_file)(
-                 os.path.join(dir_path,
-                              os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
-                 bow_model,
-                 config)
-                 for ii in range(n_files))
+#   Parallel(n_jobs=-1, verbose=config.logging.verbose)(
+#                  delayed(create_word_histogram_on_file)(
+#                  os.path.join(dir_path,
+#                               os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
+#                  bow_model,
+#                  config)
+#                  for ii in range(n_files))
+
+    for ii in range(n_files):
+      print ii
+      create_word_histogram_on_file(os.path.join(dir_path,
+                                  os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
+                                  bow_model,
+                                  config)
 
 if __name__ == "__main__":
   print 'la'
