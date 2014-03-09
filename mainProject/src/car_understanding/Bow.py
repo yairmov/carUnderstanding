@@ -104,6 +104,7 @@ def normalize_features(features):
 def create_word_histogram_on_file(raw_feature_file, bow_model, config):
   (kp, desc) = dense_SIFT.load_from_disk(raw_feature_file)
   hist = word_histogram(desc, bow_model, config)
+  print hist.shape
   (name, ext) = os.path.splitext(os.path.split(raw_feature_file)[1])
   hist_file_name = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
   save(hist, hist_file_name)
