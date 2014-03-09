@@ -33,7 +33,7 @@ def get_config(args):
   config.SIFT.BoW.max_desc_total = 4e6
   
   # SIFT-LLC
-  config.SIFT.LLC.use = False
+  config.SIFT.LLC.use = True
   config.SIFT.LLC.knn = 5
   config.SIFT.LLC.beta = 3e-2
   

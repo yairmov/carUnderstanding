@@ -92,11 +92,10 @@ def word_histogram(features, bow_model, config):
   else:
 
     word_ids = bow_model.predict(features)
-    print word_ids.shape 
     hist = np.histogram(word_ids, bins=config.SIFT.BoW.num_clusters,
                         range=[0, config.SIFT.BoW.num_clusters], density=True)
+    hist = hist[0]
     
-  print hist[0].shape
   return hist
 
 
@@ -108,8 +107,6 @@ def normalize_features(features):
 def create_word_histogram_on_file(raw_feature_file, bow_model, config):
   (kp, desc) = dense_SIFT.load_from_disk(raw_feature_file)
   hist = word_histogram(desc, bow_model, config)
-  print hist.shape
-  return
   (name, ext) = os.path.splitext(os.path.split(raw_feature_file)[1])
   hist_file_name = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
   save(hist, hist_file_name)
@@ -123,12 +120,6 @@ def create_word_histograms_on_dataset(train_annos, config):
   if not os.path.isdir(config.SIFT.BoW.hist_dir):
     os.makedirs(config.SIFT.BoW.hist_dir)
     
-  create_word_histogram_on_file(os.path.join(dir_path,
-                              os.path.splitext(train_annos.iloc[0]['basename'])[0] + '.dat'),
-                              bow_model,
-                              config)
-  return  
-
   Parallel(n_jobs=-1, verbose=config.logging.verbose)(
                  delayed(create_word_histogram_on_file)(
                  os.path.join(dir_path,
