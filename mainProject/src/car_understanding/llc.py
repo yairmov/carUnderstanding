@@ -35,7 +35,7 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
   II = np.eye(knn, knn)
   coeff = np.zeros([nframe, nbase])
 
-  import pprint.pprint as pprint
+  from pprint import pprint
 #   for ii in np.arange(nframe):
   for ii in [146]:
     print ii
