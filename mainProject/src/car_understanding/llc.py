@@ -36,19 +36,14 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
   coeff = np.zeros([nframe, nbase])
 
   from pprint import pprint
-  np.savetxt("tmp.csv", B[:,:10], delimiter=",", fmt='%.3g')
   
-#   for ii in np.arange(nframe):
-  for ii in [146]:
-    print ii
+  for ii in np.arange(nframe):
+#   for ii in [146]:
     idx = IDX[ii,:]
     z = B[idx,:] - X[ii,:]     # shift ith pt to origin
-    pprint( ("B_idx", B[idx,:10]))
-    pprint( ("X_ii", X[ii,:10]))
     C = z.dot(z.T)             # local covariance
     C = C + II*beta*np.trace(C)   # regularlization (K>D)
     w = linalg.lstsq(C, np.ones([knn, 1]))[0]
-    print w, w.sum()
     w = w / w.sum()
     # print "w.shape: {}, coeff[ii, idx].shape: {}".format(w.T.reshape(w.size,).shape, coeff[ii, idx].shape)
     # return
