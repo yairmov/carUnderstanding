@@ -35,7 +35,8 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
   II = np.eye(knn, knn)
   coeff = np.zeros([nframe, nbase])
 
-  for ii in np.arange(nframe):
+#   for ii in np.arange(nframe):
+  for ii in [146]:
     print ii
     idx = IDX[ii,:]
     z = B[idx,:] - X[ii,:]     # shift ith pt to origin
