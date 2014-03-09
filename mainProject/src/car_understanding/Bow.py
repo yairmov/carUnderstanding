@@ -86,15 +86,17 @@ def word_histogram(features, bow_model, config):
     encoding = LLC_encoding(codebook, features, config.SIFT.LLC.knn, config.SIFT.LLC.beta)
     
     # use max pooling for LLC
-    return encoding.max(axis=0)
+    hist = encoding.max(axis=0)
   
   
   else:
 
     word_ids = bow_model.predict(features)
     print word_ids.shape 
-    return np.histogram(word_ids, bins=config.SIFT.BoW.num_clusters,
+    hist = np.histogram(word_ids, bins=config.SIFT.BoW.num_clusters,
                         range=[0, config.SIFT.BoW.num_clusters], density=True)
+    
+  return hist
 
 
 
