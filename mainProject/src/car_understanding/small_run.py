@@ -262,7 +262,7 @@ def run_attrib_training(args, cross_validation=False):
 
   # Assign cluster labels to all images
   print "Assigning to histograms"
-#   Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
+  Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
 
   # Train attribute classifiers
   print "Training attribute classifiers"
@@ -403,10 +403,10 @@ def bayes_net_generic():
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
-#   print "training attrib classifiers"
-#   run_attrib_training(args, cross_validation=False)
-#   print "Returning after training attrib classifiers"
-#   return
+  print "training attrib classifiers"
+  run_attrib_training(args, cross_validation=False)
+  print "Returning after training attrib classifiers"
+  return
   
   attrib_classifiers = []
   for name in args:

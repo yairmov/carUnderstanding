@@ -80,12 +80,13 @@ def word_histogram(features, bow_model, config):
   features = normalize_features(features)
 
 
+  # using LLC encoding
   if config.SIFT.LLC.use:
     codebook = bow_model.cluster_centers_
     encoding = LLC_encoding(codebook, features, config.SIFT.LLC.knn, config.SIFT.LLC.beta)
     
     # use max pooling for LLC
-    return np.sum(encoding, axis=0)
+    return encoding.max(axis=0)
   
   
   else:
