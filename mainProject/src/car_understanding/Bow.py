@@ -96,7 +96,7 @@ def word_histogram(features, bow_model, config):
     hist = np.histogram(word_ids, bins=config.SIFT.BoW.num_clusters,
                         range=[0, config.SIFT.BoW.num_clusters], density=True)
     
-  print hist.shape
+  print hist[0].shape
   return hist
 
 
