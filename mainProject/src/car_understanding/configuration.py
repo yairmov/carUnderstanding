@@ -31,6 +31,11 @@ def get_config(args):
   config.SIFT.BoW.num_clusters = 1024
   config.SIFT.BoW.max_desc_per_img = 1000
   config.SIFT.BoW.max_desc_total = 4e6
+  
+  # SIFT-LLC
+  config.SIFT.LLC.use = True
+  config.SIFT.LLC.knn = 5
+  config.SIFT.LLC.beta = 3e-2
 
 
 
