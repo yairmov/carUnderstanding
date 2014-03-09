@@ -31,6 +31,14 @@ def get_config(args):
   config.SIFT.BoW.num_clusters = 1024
   config.SIFT.BoW.max_desc_per_img = 1000
   config.SIFT.BoW.max_desc_total = 4e6
+  
+  # HOG
+  config.HOG.orientations = 9
+  config.HOG.pixels_per_cell = (8, 8)
+  
+  # LBP
+  config.LPB.P = 8 # Number of circularly symmetric neighbour set points (quantization of the angular space).
+  config.LPB.R = 8 # Radius of circle (spatial resolution of the operator).
 
 
 
