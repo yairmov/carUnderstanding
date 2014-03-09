@@ -35,13 +35,15 @@ def cluster_to_words(features, config):
 
     # Mini batch KMEANS
 #     batch_size = int(np.round(float(config.SIFT.BoW.num_clusters) / 10))
-    batch_size = 100
+#     batch_size = 1000
+    batch_size = config.SIFT.BoW.num_clusters * 10
     estimator = MiniBatchKMeans(init='k-means++',
                             n_clusters=config.SIFT.BoW.num_clusters,
                             batch_size=batch_size,
 #                             max_no_improvement=10,
-                            init_size=3*config.SIFT.BoW.num_clusters,
+                            init_size=10*config.SIFT.BoW.num_clusters,
                             n_init = 10,
+                            compute_labels = True,
                             verbose=True)
 
 
