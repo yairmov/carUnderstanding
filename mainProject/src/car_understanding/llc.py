@@ -39,6 +39,7 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
   for ii in [146]:
     print ii
     idx = IDX[ii,:]
+    print idx
     z = B[idx,:] - X[ii,:]     # shift ith pt to origin
     print "x_ii", X[ii,:].shape
     print "B_idx", B[idx,:].shape
