@@ -40,7 +40,7 @@ def cluster_to_words(features, config):
     estimator = MiniBatchKMeans(init='k-means++',
                             n_clusters=config.SIFT.BoW.num_clusters,
                             batch_size=batch_size,
-#                             max_no_improvement=10,
+                            tol=0.001,
                             init_size=10*config.SIFT.BoW.num_clusters,
                             n_init = 10,
                             compute_labels = True,
@@ -122,20 +122,20 @@ def create_word_histograms_on_dataset(train_annos, config):
   if not os.path.isdir(config.SIFT.BoW.hist_dir):
     os.makedirs(config.SIFT.BoW.hist_dir)
         
-#   Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-#                  delayed(create_word_histogram_on_file)(
-#                  os.path.join(dir_path,
-#                               os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
-#                  bow_model,
-#                  config)
-#                  for ii in range(n_files))
+  Parallel(n_jobs=-1, verbose=config.logging.verbose)(
+                 delayed(create_word_histogram_on_file)(
+                 os.path.join(dir_path,
+                              os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
+                 bow_model,
+                 config)
+                 for ii in range(n_files))
 
-  for ii in [368]:
-    print ii
-    create_word_histogram_on_file(os.path.join(dir_path,
-                                os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
-                                bow_model,
-                                config)
+#   for ii in [368]:
+#     print ii
+#     create_word_histogram_on_file(os.path.join(dir_path,
+#                                 os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
+#                                 bow_model,
+#                                 config)
 
 if __name__ == "__main__":
   print 'la'
