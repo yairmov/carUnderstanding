@@ -107,11 +107,10 @@ def normalize_features(features):
 def create_word_histogram_on_file(raw_feature_file, bow_model, config):
   (kp, desc) = dense_SIFT.load_from_disk(raw_feature_file)
   hist = word_histogram(desc, bow_model, config)
-  print hist.shape
-  return
   (name, ext) = os.path.splitext(os.path.split(raw_feature_file)[1])
-  hist_file_name = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
-  save(hist, hist_file_name)
+  hist_filename = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
+  print hist_filename
+  save(hist, hist_filename)
 
 def create_word_histograms_on_dataset(train_annos, config):
   bow_model = load(config.SIFT.BoW.model_file)
