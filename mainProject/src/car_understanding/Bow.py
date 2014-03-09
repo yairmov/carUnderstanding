@@ -74,13 +74,26 @@ def create_BoW_model(features, config):
 # Assign each features vector in features (row) to a cluster center from
 # bow_model, and return count histogram
 def word_histogram(features, bow_model, config):
+  from llc import LLC_encoding
 
   # normalize SIFT features
   features = normalize_features(features)
 
-  word_ids = bow_model.predict(features)
-  return np.histogram(word_ids, bins=config.SIFT.BoW.num_clusters,
-                      range=[0, config.SIFT.BoW.num_clusters], density=True)
+
+  if config.SIFT.LLC.use:
+    codebook = bow_model.cluster_centers_
+    encoding = LLC_encoding(codebook, features, config.SIFT.LLC.knn, config.SIFT.LLC.beta)
+    
+    # use max pooling for LLC
+    return np.sum(encoding, axis=0)
+  
+  
+  else:
+
+    word_ids = bow_model.predict(features)
+    return np.histogram(word_ids, bins=config.SIFT.BoW.num_clusters,
+                        range=[0, config.SIFT.BoW.num_clusters], density=True)
+
 
 
 def normalize_features(features):
