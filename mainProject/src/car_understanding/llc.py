@@ -36,9 +36,7 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
   coeff = np.zeros([nframe, nbase])
 
   from pprint import pprint
-  f = open('tmp.txt', 'w')
-  pprint(B[:,:10], f)
-  f.close()
+  np.savetxt("tmp.csv", B, delimiter=",")
   
 #   for ii in np.arange(nframe):
   for ii in [146]:
