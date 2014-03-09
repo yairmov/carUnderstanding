@@ -130,7 +130,7 @@ def create_word_histograms_on_dataset(train_annos, config):
 #                  config)
 #                  for ii in range(n_files))
 
-  for ii in [368]:
+  for ii in range(n_files):
     print ii
     create_word_histogram_on_file(os.path.join(dir_path,
                                 os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
