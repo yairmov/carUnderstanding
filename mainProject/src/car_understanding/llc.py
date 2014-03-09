@@ -41,6 +41,7 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
     idx = IDX[ii,:]
     z = B[idx,:] - X[ii,:]     # shift ith pt to origin
     print "x_ii", X[ii,:]
+    print "B_idx", B[idx,:]
     C = z.dot(z.T)             # local covariance
     C = C + II*beta*np.trace(C)   # regularlization (K>D)
     w = linalg.lstsq(C, np.ones([knn, 1]))[0]
