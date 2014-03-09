@@ -36,6 +36,14 @@ def get_config(args):
   config.SIFT.LLC.use = True
   config.SIFT.LLC.knn = 5
   config.SIFT.LLC.beta = 3e-2
+  
+  # HOG
+  config.HOG.orientations = 9
+  config.HOG.pixels_per_cell = (8, 8)
+  
+  # LBP
+  config.LPB.P = 8 # Number of circularly symmetric neighbour set points (quantization of the angular space).
+  config.LPB.R = 8 # Radius of circle (spatial resolution of the operator).
 
 
 
