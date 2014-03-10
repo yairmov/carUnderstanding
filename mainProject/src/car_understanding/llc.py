@@ -5,7 +5,6 @@ from scipy import linalg
 from numba.decorators import autojit, jit
 
 # @jit('f8[:,:](f8[:,:],f8[:,:],i8,f8)')
-@autojit
 def LLC_encoding(B, X, knn=5, beta=3e-2):
   '''
   ========================================================================
