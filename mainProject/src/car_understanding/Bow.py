@@ -107,6 +107,7 @@ def normalize_features(features):
 
 
 def create_word_histogram_on_file(raw_feature_file, bow_model, config):
+  print raw_feature_file
   (kp, desc) = dense_SIFT.load_from_disk(raw_feature_file)
   hist = word_histogram(desc, bow_model, config)
   (name, ext) = os.path.splitext(os.path.split(raw_feature_file)[1])
@@ -122,20 +123,20 @@ def create_word_histograms_on_dataset(train_annos, config):
   if not os.path.isdir(config.SIFT.BoW.hist_dir):
     os.makedirs(config.SIFT.BoW.hist_dir)
         
-#   Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-#                  delayed(create_word_histogram_on_file)(
-#                  os.path.join(dir_path,
-#                               os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
-#                  bow_model,
-#                  config)
-#                  for ii in range(n_files))
+  Parallel(n_jobs=-1, verbose=config.logging.verbose)(
+                 delayed(create_word_histogram_on_file)(
+                 os.path.join(dir_path,
+                              os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
+                 bow_model,
+                 config)
+                 for ii in range(n_files))
 
-  for ii in range(n_files):
-    print ii
-    create_word_histogram_on_file(os.path.join(dir_path,
-                                os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
-                                bow_model,
-                                config)
+#   for ii in range(n_files):
+#     print ii
+#     create_word_histogram_on_file(os.path.join(dir_path,
+#                                 os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
+#                                 bow_model,
+#                                 config)
 
 if __name__ == "__main__":
   print 'la'
