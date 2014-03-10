@@ -2,9 +2,9 @@ import numpy as np
 from scipy.spatial.distance import cdist
 from scipy import linalg
 # import numba
-from numba.decorators import autojit
+from numba.decorators import autojit, jit
 
-@autojit
+@jit('void(f8[:,:],f8[:,:],f8[:,:]),int,f8')
 def LLC_encoding(B, X, knn=5, beta=3e-2):
   '''
   ========================================================================
@@ -37,7 +37,7 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
   II = np.eye(knn, knn)
   coeff = np.zeros([nframe, nbase])
 
-  from pprint import pprint
+#   from pprint import pprint
   
   for ii in np.arange(nframe):
 #   for ii in [146]:
