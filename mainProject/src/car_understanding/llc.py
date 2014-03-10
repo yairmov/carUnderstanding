@@ -47,8 +47,6 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
     C = C + II*beta*np.trace(C)   # regularlization (K>D)
     w = linalg.lstsq(C, np.ones([knn, 1]))[0]
     w = w / w.sum()
-    # print "w.shape: {}, coeff[ii, idx].shape: {}".format(w.T.reshape(w.size,).shape, coeff[ii, idx].shape)
-    # return
     coeff[ii, idx] = w.T.reshape(w.size,)
 
 
