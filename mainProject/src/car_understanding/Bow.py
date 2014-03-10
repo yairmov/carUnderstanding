@@ -43,7 +43,6 @@ def cluster_to_words(features, config):
                             tol=0.001,
                             init_size=10*config.SIFT.BoW.num_clusters,
                             n_init = 10,
-                            compute_labels = True,
                             verbose=True)
 
 
@@ -53,6 +52,15 @@ def cluster_to_words(features, config):
     # Cluster features
     print "Clustering features into {} clusters".format(estimator.n_clusters)
     estimator.fit(features)
+    
+    # Drop duplicate clusters (usually empty clusters)
+    clusters = pd.DataFrame(data=estimator.cluster_centers_)
+    clusters.drop_duplicates(inplace=True)
+    estimator.cluster_centers_ = np.array(clusters)
+    estimator.n_clusters = clusters.shape[0]
+    
+    # Update config to show new number of clusters
+    config.SIFT.BoW.num_clusters = estimator.n_clusters
 
     return estimator
 
