@@ -135,7 +135,7 @@ def create_word_histograms_on_dataset(train_annos, config):
   for ii in [18961]:
     print ii
     create_word_histogram_on_file(os.path.join(dir_path,
-                                os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
+                                os.path.splitext(train_annos.loc[ii]['basename'])[0] + '.dat'),
                                 bow_model,
                                 config)
 
