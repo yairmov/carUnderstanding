@@ -40,6 +40,7 @@ def LLC_encoding(B, X, knn=5, beta=3e-2):
 #   from pprint import pprint
   
   for ii in np.arange(nframe):
+    print ii
 #   for ii in [146]:
     idx = IDX[ii,:]
     z = B[idx,:] - X[ii,:]     # shift ith pt to origin
