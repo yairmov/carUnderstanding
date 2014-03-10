@@ -1,8 +1,10 @@
 import numpy as np
 from scipy.spatial.distance import cdist
 from scipy import linalg
+# import numba
+from numba.decorators import autojit
 
-
+@autojit
 def LLC_encoding(B, X, knn=5, beta=3e-2):
   '''
   ========================================================================
