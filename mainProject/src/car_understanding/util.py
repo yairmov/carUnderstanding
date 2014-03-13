@@ -5,14 +5,12 @@ Created on Jan 28, 2014
 @author: yair@cs.cmu.edu
 '''
 
+from __future__ import print_function
 import os
 import scipy.misc
 import matplotlib.pyplot as plt
 from clint.textui import progress
-from __future__ import print_function
 import sys
-
-import small_run
 
 def set_width_to_normalize_bb(img, xmin, xmax, to_width):
   w = xmax - xmin
