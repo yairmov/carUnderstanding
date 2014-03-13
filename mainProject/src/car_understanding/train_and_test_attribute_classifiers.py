@@ -94,7 +94,8 @@ def test(args, config, dataset):
     print(attrib_name)
     print("")
     attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
-    curr_res = attrib_clf.decision_function(features, use_prob=False)  
+    curr_res = attrib_clf.decision_function(features, 
+                                            use_prob=config.attribute.use_prob)  
     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
     progress.animate(ii)
   print("")
