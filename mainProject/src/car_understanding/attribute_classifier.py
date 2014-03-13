@@ -126,8 +126,9 @@ class AttributeClassifier:
     else:
       # Set the parameters by cross-validation
       tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
-                           'C': [1, 10, 100, 1000]},
-                          {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+                           'C': [1, 10, 100, 1000], 'class_weight': 'auto'},
+                          {'kernel': ['linear'], 'C': [1, 10, 100, 1000],
+                           'class_weight': 'auto'}]
       
       print("# Tuning hyper-parameters")
       print()
@@ -189,7 +190,7 @@ class AttributeClassifier:
       self.cross_validate(features, labels)
 #     else:
     self.my_print("Training classifier")
-    self.fit(features, labels, grid_search=False)
+    self.fit(features, labels, grid_search=True)
     
     
   def decision_function(self, features):
