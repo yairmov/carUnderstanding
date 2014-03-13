@@ -83,7 +83,7 @@ class BayesNet:
       hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
                                    img_name) + '_hist.dat'
       hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
-      features[ii, :] = hist[0]
+      features[ii, :] = hist
   
     print "Apply attribute classifiers on images"
     res = {}

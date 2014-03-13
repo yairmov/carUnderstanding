@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from clint.textui import progress
 import numpy as np
 import cv2 as cv
+from __future__ import print_function
+import sys, time
 
 import small_run
 
@@ -119,6 +121,58 @@ def explore_training_data(train_annos, config):
 
   plt.close()
 
+
+class ProgressBar:
+    def __init__(self, iterations):
+        self.iterations = iterations
+        self.prog_bar = '[]'
+        self.fill_char = '*'
+        self.width = 50
+        self.__update_amount(0)
+
+    def animate(self, iter):
+        print('\r', self, end='')
+        sys.stdout.flush()
+        self.update_iteration(iter + 1)
+
+    def update_iteration(self, elapsed_iter):
+        self.__update_amount((elapsed_iter / float(self.iterations)) * 100.0)
+        self.prog_bar += '  %d of %s complete' % (elapsed_iter, self.iterations)
+
+    def __update_amount(self, new_amount):
+        percent_done = int(round((new_amount / 100.0) * 100.0))
+        all_full = self.width - 2
+        num_hashes = int(round((percent_done / 100.0) * all_full))
+        self.prog_bar = '[' + self.fill_char * num_hashes + ' ' * (all_full - num_hashes) + ']'
+        pct_place = (len(self.prog_bar) // 2) - len(str(percent_done))
+        pct_string = '%d%%' % percent_done
+        self.prog_bar = self.prog_bar[0:pct_place] + \
+            (pct_string + self.prog_bar[pct_place + len(pct_string):])
+
+    def __str__(self):
+        return str(self.prog_bar)
+
+
+
+def series_to_iplot(series, name=''):
+    '''
+    Coverting a Pandas Series to Plotly interface
+    '''
+    if series.index.__class__.__name__=="DatetimeIndex":
+        #Convert the index to MySQL Datetime like strings
+        x = series.index.format()
+        #Alternatively, directly use x, since DateTime index is np.datetime64
+        #see http://nbviewer.ipython.org/gist/cparmer/7721116
+        #x=df.index.values.astype('datetime64[s]')
+    else:
+        x = series.index.values
+
+    line = {}
+    line['x'] = x
+    line['y'] = series.values
+    line['name'] = name
+
+    return [line]
 
 
 if __name__ == '__main__':
