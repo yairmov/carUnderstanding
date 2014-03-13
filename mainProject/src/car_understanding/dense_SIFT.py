@@ -16,7 +16,6 @@ car_understanding.dense_SIFT is a tool for calculating dense SIFT on a list of i
 
 import sys
 import os
-
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import cv2 as cv

@@ -46,6 +46,9 @@ def main(argv=None):  # IGNORE:C0111
   
   # Process arguments
   args = parser.parse_args()
+  
+  print("Got arguments: ")
+  print(args)
 
   config = get_config(args.attrib_names)
   (dataset, config) = fgu.get_all_metadata(config)
@@ -79,4 +82,10 @@ def train(args, config, dataset):
     print "-------------------------------------"
 
 if __name__ == '__main__':
-    pass
+    main()
+  
+  
+  
+  
+  
+  
