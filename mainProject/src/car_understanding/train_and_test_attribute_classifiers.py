@@ -1,3 +1,4 @@
+#!/usr0/home/ymovshov/Enthought/Canopy_64bit/User/bin/ipython
 '''
 Created on Mar 13, 2014
 
