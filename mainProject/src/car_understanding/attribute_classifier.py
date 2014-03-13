@@ -197,9 +197,9 @@ class AttributeClassifier:
     self.fit(features, labels, grid_search=False)
     
     
-  def decision_function(self, features):
+  def decision_function(self, features, use_prob=True):
     features = self.Scaler.transform(features)
-    if self.clf.probability:
+    if self.clf.probability and use_prob:
       return self.clf.predict_proba(features)[:,0]
     return self.clf.decision_function(features)
     

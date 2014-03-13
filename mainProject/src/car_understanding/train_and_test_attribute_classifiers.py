@@ -85,6 +85,7 @@ def test(args, config, dataset):
     hist = Bow.load(hist_filename) 
     features[ii, :] = hist
     progress.animate(ii)
+  print("")
   
   print("Apply classifiers")
   progress = ProgressBar(len(args.attrib_names))
@@ -93,9 +94,10 @@ def test(args, config, dataset):
     print(attrib_name)
     print("")
     attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
-    curr_res = attrib_clf.decision_function(features)  
+    curr_res = attrib_clf.decision_function(features, use_prob=False)  
     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
     progress.animate(ii)
+  print("")
   
   res = pd.DataFrame(data=res, index=train_annos.index)
   res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
@@ -104,6 +106,7 @@ def test(args, config, dataset):
     pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
     true_labels = np.array(res.class_index.isin(pos_classes))
     print("--------------{}-------------".format(attrib_name)) 
+    print("Classification score stats:")
     print(res[str.lower(attrib_name)].describe())
     
     print(classification_report(true_labels, np.array(res[str.lower(attrib_name)]) > 0.65, 
