@@ -250,7 +250,7 @@ def run_attrib_training(args, cross_validation=False):
   (dataset, config) = fgu.get_all_metadata(config)
 
   #  RUN dense SIFT on alll images
-  print "Saving Dense SIFT to disk"
+#   print "Saving Dense SIFT to disk"
 #   calc_dense_SIFT_on_dataset(dataset, config)
 
   # Create BoW model
@@ -263,14 +263,13 @@ def run_attrib_training(args, cross_validation=False):
 #   return
 
   # Assign cluster labels to all images
-  print "Assigning to histograms"
-  Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
-  return
+#   print "Assigning to histograms"
+#   Bow.create_word_histograms_on_dataset(dataset['train_annos'], config)
+#   return
 
   # Train attribute classifiers
   print "Training attribute classifiers"
   print "+++++++++++++++++++++++++++++++"
-#   config.attribute.names = [config.attribute.names[3]] #DELETE ME!!!
   for attrib_name in config.attribute.names:
     print attrib_name
     pos_class_ids = class_ids_from_name(attrib_name, dataset['class_meta'])
@@ -284,7 +283,6 @@ def run_attrib_training(args, cross_validation=False):
 
     attrib_clf.run_training_pipeline(cross_validation)
     
-#     print "NOT SAVING!!!"
     AttributeClassifier.save(attrib_clf, os.path.join(config.attribute.dir,
                                                       attrib_clf.name + '.dat'))
 
