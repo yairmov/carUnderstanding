@@ -133,6 +133,8 @@ class AttributeClassifier:
       print("# Tuning hyper-parameters")
       print()
     
+      print np.unique(labels)
+      return
       clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
 #                          n_jobs=-1,
                           verbose=3)
