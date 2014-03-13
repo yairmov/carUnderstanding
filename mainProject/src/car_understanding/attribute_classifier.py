@@ -137,7 +137,7 @@ class AttributeClassifier:
       print('')
     
       clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
-#                          n_jobs=-1,
+                          n_jobs=-1,
                           verbose=3)
       clf.fit(features, labels)
     
