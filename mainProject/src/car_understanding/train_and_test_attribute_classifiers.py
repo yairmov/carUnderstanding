@@ -55,8 +55,8 @@ def main(argv=None):  # IGNORE:C0111
   
   parser.add_argument(dest="attrib_names", help="attributes to train/test [default: %(default)s]", nargs='+', default=None)
   parser.add_argument("-c", "--crossval", dest="cv", default=False, action='store_true')
-  parser.add_argument("-t", "--train", dest='train', default=True, action="store", type=bool)
-  parser.add_argument("-p", "--predict", dest='test', default=True, action="store", type=bool)
+  parser.add_argument("-t", "--train", dest='train', default=True, action="store")
+  parser.add_argument("-p", "--predict", dest='test', default=True, action="store")
   
   # Process arguments
   args = parser.parse_args()
