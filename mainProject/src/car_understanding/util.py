@@ -5,15 +5,12 @@ Created on Jan 28, 2014
 @author: yair@cs.cmu.edu
 '''
 
-import pandas as pd
 import os
 import scipy.misc
 import matplotlib.pyplot as plt
 from clint.textui import progress
-import numpy as np
-import cv2 as cv
 from __future__ import print_function
-import sys, time
+import sys
 
 import small_run
 
@@ -46,7 +43,7 @@ def normalize_dataset(train_annos_file, main_path, out_file, bb_width):
     content = f.readlines()
 
   out_fid = open(os.path.join(main_path, out_file), 'w')
-  print "Resizing images such that BB is of width = %g" % bb_width
+  print("Resizing images such that BB is of width = %g" % bb_width)
   for ii in progress.bar(range(len(content))):
     curr_line = content[ii]
     curr_line = curr_line.strip()
@@ -109,7 +106,7 @@ def explore_training_data(train_annos, config):
                       config.dataset.main_path, curr_anno['rel_path']))
     bbox = (curr_anno['xmin'], curr_anno['xmax'],
             curr_anno['ymin'], curr_anno['ymax'])
-    print 'BB width: %g' % (bbox[1] - bbox[0])
+    print('BB width: %g' % (bbox[1] - bbox[0]))
     boxes = (bbox,) # create a tuple, as it is expected by showboxes
     showboxes(img, boxes, is_opencv=False)
     c = raw_input('Press any key to continue\n')
@@ -176,22 +173,6 @@ def series_to_iplot(series, name=''):
 
 
 if __name__ == '__main__':
-#   img = cv.imread('/usr0/home/ymovshov/Documents/Research/Code/carUnderstanding/fgcomp2013_normed/release/train_images/0010/FGCOMP_0010819.jpg')
-#   xmin, xmax = 48.0, 441.0
-#   ymin, ymax = 24.0, 202.0
-#   img_s, scaler = set_width_to_normalize_bb(img, xmin, xmax, 200)
-#   xmin_s, xmax_s, ymin_s, ymax_s = change_bb_loc(scaler, xmin, xmax, ymin, ymax)
-#
-#   showboxes(img, ((xmin, xmax, ymin, ymax),), is_opencv=True)
-#   plt.figure()
-#   showboxes(img_s, ((xmin_s, xmax_s, ymin_s, ymax_s),), is_opencv=True)
-
-#   normalize_dataset('train_annos_old.txt', '../../../fgcomp2013_normed/release/',
-#                      'train_annos.txt', 200)
-
-  (dataset, config) = small_run.preprocess()
-  print config.makeReport()
-  train_annos = dataset['train_annos']
-  explore_training_data(train_annos, config)
+  pass
 
 
