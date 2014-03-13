@@ -65,7 +65,7 @@ class AttributeClassifier:
         img_name = os.path.splitext(img_name)[0]
         hist_filename = os.path.join(self.config.SIFT.BoW.hist_dir, 
                                      img_name) + '_hist.dat'
-        hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
+        hist = Bow.load(hist_filename)
         features[ii, :] = hist
   
   
