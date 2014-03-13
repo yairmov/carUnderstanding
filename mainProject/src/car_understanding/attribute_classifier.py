@@ -126,15 +126,16 @@ class AttributeClassifier:
     else:
       # Set the parameters by cross-validation
       tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
-                           'C': [1, 10, 100, 1000], 'class_weight': ['auto']},
+                           'C': [1, 10, 100, 1000], 
+#                            'class_weight': ['auto']
+                           },
                           {'kernel': ['linear'], 'C': [1, 10, 100, 1000],
-                           'class_weight': ['auto']}]
+#                            'class_weight': ['auto']
+                           }]
       
       print("# Tuning hyper-parameters")
-      print()
+      print('')
     
-      print np.unique(labels)
-      return
       clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
 #                          n_jobs=-1,
                           verbose=3)
