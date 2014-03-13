@@ -1,4 +1,4 @@
-#!/usr0/home/ymovshov/Enthought/Canopy_64bit/User/bin/ipython
+#!/usr0/home/ymovshov/Enthought/Canopy_64bit/User/bin/python
 '''
 Created on Mar 13, 2014
 
