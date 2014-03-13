@@ -14,8 +14,10 @@ from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import auc
 from sklearn.metrics import classification_report
 import pandas as pd
+import matplotlib.pyplot as plt
 from mpltools import style
 style.use('ggplot')
+
 
 from configuration import get_config
 import fgcomp_dataset_utils as fgu
@@ -52,6 +54,8 @@ def main(argv=None):  # IGNORE:C0111
   
   parser.add_argument(dest="attrib_names", help="attributes to train/test [default: %(default)s]", nargs='+', default=None)
   parser.add_argument("-c", "--crossval", dest="cv", default=False, action='store_true')
+  parser.add_argument('-t', '--train', dest='train', default=True, action="store")
+  parser.add_argument('-p', '--predict', dest='test', default=True, action="store")
   
   # Process arguments
   args = parser.parse_args()
@@ -88,7 +92,7 @@ def test(args, config, dataset):
   print("")
   
   print("Apply classifiers")
-  progress = ProgressBar(len(args.attrib_names))
+#   progress = ProgressBar(len(args.attrib_names))
   res = {}
   for ii, attrib_name in enumerate(args.attrib_names):
     print(attrib_name)
@@ -97,8 +101,8 @@ def test(args, config, dataset):
     curr_res = attrib_clf.decision_function(features, 
                                             use_prob=config.attribute.use_prob)  
     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
-    progress.animate(ii)
-  print("")
+#     progress.animate(ii)
+#   print("")
   
   res = pd.DataFrame(data=res, index=train_annos.index)
   res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
@@ -113,6 +117,21 @@ def test(args, config, dataset):
     print(classification_report(true_labels, np.array(res[str.lower(attrib_name)]) > 0.65, 
                                 target_names=['not-{}'.format(attrib_name),
                                               attrib_name]))
+    
+    # Create the plot
+    precision, recall, thresholds = precision_recall_curve(true_labels, 
+                                                           np.array(res[str.lower(attrib_name)]))
+    score = auc(recall, precision)
+    print("Area Under Curve: %0.2f" % score)
+    plt.subplot(2,2,ii+1)
+    plt.plot(recall, precision, label='Precision-Recall curve')
+    plt.title('Precision-Recall: {}'.format(attrib_name))
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.legend(['area = {}'.format(score)])
+    
+  plt.draw()
+  plt.show()
     
     
   
