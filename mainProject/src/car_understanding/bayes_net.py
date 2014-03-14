@@ -240,6 +240,7 @@ class BayesNet:
       print "=================={}========================".format(ii)
       key = np.array(clf_res_descrete.iloc[ii][attrib_names])
       print "key: {}".format(key)
+      print clf_res_descrete.iloc[ii]
       key = key.tostring()
       if not class_prob_cache.has_key(key):
         print "Never got this key before, computing...."
