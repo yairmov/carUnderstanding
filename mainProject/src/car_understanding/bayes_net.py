@@ -219,7 +219,7 @@ class BayesNet:
   fake: will use the ground truth attribute values for the middle 
   layer, to check what is the best we can hope for.
   '''
-  def predict(self, fake=False):
+  def predict(self, use_gt=False):
     class_inds = self.class_inds
     class_prob = pd.DataFrame(np.zeros([self.clf_res.shape[0], 
                                         len(class_inds)]),
@@ -236,18 +236,27 @@ class BayesNet:
     clf_res_descrete[self.clf_names] = \
         self.clf_res[self.clf_names] > self.config.attribute.high_thresh
         
+    # using ground truth    
+    if use_gt:
+      attrib_meta = self.attrib_selector.create_attrib_meta(attrib_names)
+        
     # Create cache for results - we only have 2^num_attrib options.
     class_prob_cache = {}
     attrrib_prob_cache = {}
     
     for ii in range(clf_res_descrete.shape[0]):
       print "=================={}========================".format(ii)
-      key = np.array(clf_res_descrete.iloc[ii][attrib_names])
+      if use_gt:
+        desc = attrib_meta.loc[clf_res_descrete.iloc[ii]['class_index']]
+        key = np.array(desc) 
+      else:
+        desc = clf_res_descrete.iloc[ii]
+        key = np.array(desc[attrib_names])
       print "key: {}".format(key)
       key = key.tostring()
-      if not class_prob_cache.has_key(key):
+      if (not class_prob_cache.has_key(key)):
         print "Never got this key before, computing...."
-        (class_prob_ii, attrib_prob_ii) = self.predict_one(clf_res_descrete.iloc[ii])
+        (class_prob_ii, attrib_prob_ii) = self.predict_one(desc, use_gt)
         class_prob_cache[key] = class_prob_ii
         attrrib_prob_cache[key] = attrib_prob_ii
       
@@ -256,7 +265,7 @@ class BayesNet:
       
     return (class_prob, attrib_prob)
       
-  def predict_one(self, clf_res_descrete, fake=False):
+  def predict_one(self, clf_res_descrete, use_gt=False):
     # building model
     # first start with observed variables - the results of all the classifiers 
     # on the image
@@ -271,21 +280,26 @@ class BayesNet:
     
     
     # The hidden layer. Each attriute is connected to all attribute classifiers
-    # as its parents.
+    # as its parents. If we are using the ground truth, then we set this layer to
+    # also be observed.
     attrib_names = self.clf_names
     attrib_bnet_nodes = {}
-    for attrib_name in attrib_names:
-      identifier = 'p({}|theta)'.format(attrib_name)
-      cpt = self.CPT[identifier]
-      p_function = mc.Lambda(identifier, 
-                             self.prob_function_builder_for_mid_layer(cpt, 
-                                                                      theta))
-      attrib_bnet_nodes[attrib_name] = mc.Bernoulli(attrib_name, p_function)
+    if use_gt:
+      for attrib_name in attrib_names:
+        rv = mc.DiscreteUniform(attrib_name, 
+                                observed=True, 
+                                value=clf_res_descrete[attrib_name])
+        attrib_bnet_nodes[attrib_name] = rv
+    else:
+      for attrib_name in attrib_names:
+        identifier = 'p({}|theta)'.format(attrib_name)
+        cpt = self.CPT[identifier]
+        p_function = mc.Lambda(identifier, 
+                               self.prob_function_builder_for_mid_layer(cpt, 
+                                                                        theta))
+        attrib_bnet_nodes[attrib_name] = mc.Bernoulli(attrib_name, p_function)
       
      
-#     for node in attrib_bnet_nodes.values():
-#       print np.obj2sctype(node.value)
-#     return 
     # The top layer Each class is connected to the attributes it has 
     class_inds = self.class_inds
     attrib_selector = self.attrib_selector

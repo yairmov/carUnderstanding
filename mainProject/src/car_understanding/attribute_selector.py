@@ -27,7 +27,6 @@ class AttributeSelector:
     
     
     
-    
   def create_attrib_meta(self, attrib_names):
     classes = self.class_meta
     attrib_meta = pd.DataFrame(np.zeros([classes.shape[0], len(attrib_names)],
