@@ -18,7 +18,8 @@ import itertools
 from clint.textui import progress
 import pandas as pd
 import pymc as mc
-from sklearn.externals.joblib import Parallel, delayed
+# from sklearn.externals.joblib import Parallel, delayed
+import sys
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
@@ -234,7 +235,7 @@ class BayesNet:
     print(self.clf_res.head(2))
     print("--")
     print(clf_res_descrete.head(2))
-    return
+    sys.exit(0)
     
     # Create cache for results - we only have 2^num_attrib options.
     class_prob_cache = {}
