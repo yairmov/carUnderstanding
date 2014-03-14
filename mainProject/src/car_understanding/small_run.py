@@ -419,12 +419,11 @@ def bayes_net_generic():
   train_annos = dataset['train_annos']
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
-  print(train_annos.head(10))
-  return
   
   bnet = BayesNet(config, train_annos, 
                   classes, attrib_classifiers, desc=str(args))
   bnet.init_CPT()
+  return
   
   
   (class_probs, attrib_probs) = bnet.predict()
