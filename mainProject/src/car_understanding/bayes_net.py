@@ -215,7 +215,11 @@ class BayesNet:
     print self.class_meta
         
   
-  def predict(self):
+  '''
+  fake: will use the ground truth attribute values for the middle 
+  layer, to check what is the best we can hope for.
+  '''
+  def predict(self, fake=False):
     class_inds = self.class_inds
     class_prob = pd.DataFrame(np.zeros([self.clf_res.shape[0], 
                                         len(class_inds)]),
@@ -252,7 +256,7 @@ class BayesNet:
       
     return (class_prob, attrib_prob)
       
-  def predict_one(self, clf_res_descrete):
+  def predict_one(self, clf_res_descrete, fake=False):
     # building model
     # first start with observed variables - the results of all the classifiers 
     # on the image
