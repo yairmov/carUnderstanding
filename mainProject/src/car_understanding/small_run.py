@@ -425,7 +425,6 @@ def bayes_net_generic():
   bnet.init_CPT()
   
   (class_probs, attrib_probs) = bnet.predict()
-  return
   show_confusion_matrix(train_annos, classes, class_probs)
   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
        'bnet_res.dat')
