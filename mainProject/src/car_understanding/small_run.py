@@ -423,7 +423,6 @@ def bayes_net_generic():
   bnet = BayesNet(config, train_annos, 
                   classes, attrib_classifiers, desc=str(args))
   bnet.init_CPT()
-  return
   
   
   (class_probs, attrib_probs) = bnet.predict()

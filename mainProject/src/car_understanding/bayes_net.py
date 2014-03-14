@@ -230,6 +230,11 @@ class BayesNet:
     clf_res_descrete = self.clf_res.copy()
     clf_res_descrete[self.clf_names] = \
         self.clf_res[self.clf_names] > self.config.attribute.high_thresh
+        
+    print(self.clf_res.head(2))
+    print("--")
+    print(clf_res_descrete.head(2))
+    return
     
     # Create cache for results - we only have 2^num_attrib options.
     class_prob_cache = {}
