@@ -59,8 +59,8 @@ def main(argv=None):  # IGNORE:C0111
   parser.add_argument('--no-train',dest='train',action='store_false')
   parser.set_defaults(train=True)
 #   parser.add_argument("-t", "--train", dest='train', default='True', action="store")
-  parser.add_argument('--predict',dest='predict',action='store_true')
-  parser.add_argument('--no-predict',dest='predict',action='store_false')
+  parser.add_argument('--test',dest='test',action='store_true')
+  parser.add_argument('--no-test',dest='test',action='store_false')
   parser.set_defaults(predict=True)
 #   parser.add_argument("-p", "--predict", dest='test', default='True', action="store")
   
