@@ -253,7 +253,6 @@ class BayesNet:
     return (class_prob, attrib_prob)
       
   def predict_one(self, clf_res_descrete):
-    print "here"
     # building model
     # first start with observed variables - the results of all the classifiers 
     # on the image
@@ -280,9 +279,9 @@ class BayesNet:
       attrib_bnet_nodes[attrib_name] = mc.Bernoulli(attrib_name, p_function)
       
      
-    for node in attrib_bnet_nodes.values():
-      print np.obj2sctype(node.value)
-    return 
+#     for node in attrib_bnet_nodes.values():
+#       print np.obj2sctype(node.value)
+#     return 
     # The top layer Each class is connected to the attributes it has 
     class_inds = self.class_inds
     attrib_selector = self.attrib_selector
