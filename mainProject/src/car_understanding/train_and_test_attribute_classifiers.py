@@ -55,8 +55,14 @@ def main(argv=None):  # IGNORE:C0111
   
   parser.add_argument(dest="attrib_names", help="attributes to train/test [default: %(default)s]", nargs='+', default=None)
   parser.add_argument("-c", "--crossval", dest="cv", default=False, action='store_true')
-  parser.add_argument("-t", "--train", dest='train', default='True', action="store")
-  parser.add_argument("-p", "--predict", dest='test', default='True', action="store")
+  parser.add_argument('--train',dest='train',action='store_true')
+  parser.add_argument('--no-train',dest='train',action='store_false')
+  parser.set_defaults(train=True)
+#   parser.add_argument("-t", "--train", dest='train', default='True', action="store")
+  parser.add_argument('--predict',dest='predict',action='store_true')
+  parser.add_argument('--no-predict',dest='predict',action='store_false')
+  parser.set_defaults(predict=True)
+#   parser.add_argument("-p", "--predict", dest='test', default='True', action="store")
   
   # Process arguments
   args = parser.parse_args()
@@ -67,10 +73,10 @@ def main(argv=None):  # IGNORE:C0111
   config = get_config(args.attrib_names)
   (dataset, config) = fgu.get_all_metadata(config)
   
-  if args.train == 'True':
+  if args.train:
     train(args, config, dataset)
   
-  if args.test == 'True':
+  if args.test:
     test(args, config, dataset)
   
 def test(args, config, dataset):
@@ -94,7 +100,6 @@ def test(args, config, dataset):
   print("")
   
   print("Apply classifiers")
-#   progress = ProgressBar(len(args.attrib_names))
   res = {}
   for ii, attrib_name in enumerate(args.attrib_names):
     print(attrib_name)
@@ -103,8 +108,6 @@ def test(args, config, dataset):
     curr_res = attrib_clf.decision_function(features, 
                                             use_prob=config.attribute.use_prob)  
     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
-#     progress.animate(ii)
-#   print("")
   
   res = pd.DataFrame(data=res, index=train_annos.index)
   res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
@@ -116,10 +119,6 @@ def test(args, config, dataset):
     print("Classification score stats:")
     print(res[str.lower(attrib_name)].describe())
     
-#     print(classification_report(true_labels, np.array(res[str.lower(attrib_name)]) > 0.65, 
-#                                 target_names=['not-{}'.format(attrib_name),
-#                                               attrib_name]))
-
     print(classification_report(true_labels, np.array(res[str.lower(attrib_name)]) > 0.65, 
                                 target_names=['not-{}'.format(attrib_name),
                                               attrib_name]))
