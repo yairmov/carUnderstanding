@@ -55,14 +55,19 @@ def main(argv=None):  # IGNORE:C0111
   
   parser.add_argument(dest="attrib_names", help="attributes to train/test [default: %(default)s]", nargs='+', default=None)
   parser.add_argument("-c", "--crossval", dest="cv", default=False, action='store_true')
+  
+  # train flag
   parser.add_argument('--train',dest='train',action='store_true')
   parser.add_argument('--no-train',dest='train',action='store_false')
   parser.set_defaults(train=True)
-#   parser.add_argument("-t", "--train", dest='train', default='True', action="store")
+  # test flag
   parser.add_argument('--test',dest='test',action='store_true')
   parser.add_argument('--no-test',dest='test',action='store_false')
   parser.set_defaults(test=True)
-#   parser.add_argument("-p", "--predict", dest='test', default='True', action="store")
+  # plot flag
+  parser.add_argument('--plot',dest='plot',action='store_true')
+  parser.add_argument('--no-plot',dest='plot',action='store_false')
+  parser.set_defaults(plot=True)
   
   # Process arguments
   args = parser.parse_args()
@@ -112,6 +117,7 @@ def test(args, config, dataset):
   res = pd.DataFrame(data=res, index=train_annos.index)
   res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
   
+  K = np.ceil(np.sqrt(len(args.attrib_names)))
   for ii, attrib_name in enumerate(args.attrib_names):
     pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
     true_labels = np.array(res.class_index.isin(pos_classes))
@@ -123,20 +129,23 @@ def test(args, config, dataset):
                                 target_names=['not-{}'.format(attrib_name),
                                               attrib_name]))
     
-    # Create the plot
+    
     precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
     score = auc(recall, precision)
     print("Area Under Curve: %0.2f" % score)
-    plt.subplot(2,2,ii+1)
-    plt.plot(recall, precision, label='Precision-Recall curve')
-    plt.title('Precision-Recall: {}'.format(attrib_name))
-    plt.xlabel('Recall')
-    plt.ylabel('Precision')
-    plt.legend(['area = {}'.format(score)])
+    if args.plot:
+      # Create the plot
+      plt.subplot(K,K,ii+1)
+      plt.plot(recall, precision, label='Precision-Recall curve')
+      plt.title('Precision-Recall: {}'.format(attrib_name))
+      plt.xlabel('Recall')
+      plt.ylabel('Precision')
+      plt.legend(['area = {}'.format(score)])
     
-  plt.draw()
-  plt.show()
+  if args.plot:
+    plt.draw()
+    plt.show()
     
     
   
