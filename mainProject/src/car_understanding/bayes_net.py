@@ -232,16 +232,11 @@ class BayesNet:
     clf_res_descrete[self.clf_names] = \
         self.clf_res[self.clf_names] > self.config.attribute.high_thresh
         
-    print(self.clf_res.head(2))
-    print("--")
-    print(clf_res_descrete.head(2))
-    sys.exit(0)
-    
     # Create cache for results - we only have 2^num_attrib options.
     class_prob_cache = {}
     attrrib_prob_cache = {}
     
-    for ii in range(self.clf_res.shape[0]):
+    for ii in range(clf_res_descrete.shape[0]):
       print "=================={}========================".format(ii)
       key = np.array(clf_res_descrete.iloc[ii][attrib_names])
       print "key: {}".format(key)
@@ -254,6 +249,7 @@ class BayesNet:
       
       class_prob.iloc[ii] = class_prob_cache[key]
       attrib_prob.iloc[ii] = attrrib_prob_cache[key]
+      sys.exit(0)
       
     return (class_prob, attrib_prob)
       
