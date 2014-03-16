@@ -447,8 +447,9 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   
   class_inds = np.sort(np.array(class_prob.columns))
   class_names = class_meta.class_name[class_inds]
-  class_names = class_names.apply(lambda x: str.find(str.lower(x), 'sedan') != -1)
-  class_names.sort()
+  cc = class_names.apply(lambda x: str.find(str.lower(x), 'sedan') != -1)
+  cc.sort()
+  class_names = class_names[cc.index]
   print classification_report(class_true, y_pred_class, list(class_inds), list(class_names))
   print "Accuracy: {}".format(accuracy_score(class_true, y_pred_class))
   cm = confusion_matrix(class_true, y_pred_class, class_names.index) + 0.0
