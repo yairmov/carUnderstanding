@@ -286,7 +286,6 @@ class BayesNet:
     attrib_bnet_nodes = {}
     if use_gt:
       for attrib_name in attrib_names:
-        print "predict one: ", attrib_name
         rv = mc.DiscreteUniform(attrib_name, 
                                 observed=True, 
                                 value=clf_res_descrete[attrib_name])
