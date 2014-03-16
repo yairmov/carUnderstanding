@@ -434,7 +434,7 @@ def bayes_net_generic():
 def show_confusion_matrix(train_annos, class_meta, class_prob):
   from sklearn.metrics import confusion_matrix
   from sklearn.preprocessing import normalize
-#   from mpltools import style
+  from mpltools import style
   from sklearn.metrics import classification_report
   from sklearn.metrics import accuracy_score
   
@@ -447,6 +447,8 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   
   class_inds = np.sort(np.array(class_prob.columns))
   class_names = class_meta.class_name[class_inds]
+  class_names = class_names.apply(lambda x: str.find(str.lower(x), 'sedan') != -1)
+  class_names.sort()
   print classification_report(class_true, y_pred_class, list(class_inds), list(class_names))
   print "Accuracy: {}".format(accuracy_score(class_true, y_pred_class))
   cm = confusion_matrix(class_true, y_pred_class, class_names.index) + 0.0
