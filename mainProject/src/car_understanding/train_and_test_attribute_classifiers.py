@@ -106,7 +106,7 @@ def test(args, config, dataset):
   
   print("Apply classifiers")
   res = {}
-  for ii, attrib_name in enumerate(args.attrib_names):
+  for ii, attrib_name in enumerate(config.attribute.names):
     print(attrib_name)
     print("")
     attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
@@ -157,7 +157,7 @@ def train(args, config, dataset):
   print("")
   train_annos = dataset['train_annos']
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
-  for attrib_name in args.attrib_names:
+  for attrib_name in config.attribute.names:
     print(attrib_name)
     print("")
     pos_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
