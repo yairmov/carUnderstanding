@@ -454,8 +454,7 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   
   
   # Show confusion matrix in a separate window
-#   fig = plt.figure(figsize=(15,15))
-  fig = plt.figure()
+  fig = plt.figure(figsize=(15,15))
   ax = fig.add_subplot(111)
   cax = ax.matshow(cm)
   plt.title('Confusion matrix of the classifier')
@@ -466,7 +465,8 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   ax.set_yticklabels([''] + np.array(class_names))
   plt.xlabel('Predicted')
   plt.ylabel('True')
-  plt.show()  
+  plt.show() 
+  fig.savefig('cm.pdf') 
 
 
 
