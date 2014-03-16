@@ -322,7 +322,7 @@ class BayesNet:
     nodes.extend(class_bnet_nodes.values())
     nodes.extend(theta)
     model = mc.Model(nodes)
-#     mc.graph.dag(model).write_pdf('tmp.pdf')
+    mc.graph.dag(model).write_pdf('tmp.pdf')
     MAP = mc.MAP(model)
     MAP.fit() # first do MAP estimation
     mcmc = mc.MCMC(model)
