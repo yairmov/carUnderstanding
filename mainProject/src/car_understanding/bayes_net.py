@@ -322,7 +322,7 @@ class BayesNet:
     nodes.extend(class_bnet_nodes.values())
     nodes.extend(theta)
     model = mc.Model(nodes)
-    mc.graph.dag(model).write_pdf('tmp.pdf')
+#     mc.graph.dag(model).write_pdf('tmp.pdf')
     MAP = mc.MAP(model)
     MAP.fit() # first do MAP estimation
     mcmc = mc.MCMC(model)
@@ -338,9 +338,10 @@ class BayesNet:
 #       node.summary()
 
     attrib_probs = pd.Series(np.zeros([len(attrib_names),]), index=attrib_names)
-    for attrib_name in attrib_names:
-      samples = mcmc.trace(str(attrib_name))[:]
-      attrib_probs[attrib_name] = samples.mean()
+    if not use_gt:
+      for attrib_name in attrib_names:
+        samples = mcmc.trace(str(attrib_name))[:]
+        attrib_probs[attrib_name] = samples.mean()
     
 #     print "attrib_probs:"
 #     print attrib_probs   
