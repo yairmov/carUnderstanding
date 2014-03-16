@@ -466,7 +466,8 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   plt.xlabel('Predicted')
   plt.ylabel('True')
   plt.show() 
-  fig.savefig('cm.pdf') 
+  fig.savefig('cm.pdf')
+  plt.close('all') 
 
 
 
