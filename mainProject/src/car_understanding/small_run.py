@@ -424,7 +424,7 @@ def bayes_net_generic():
                   classes, attrib_classifiers, desc=str(args))
   bnet.init_CPT()
   
-  (class_probs, attrib_probs) = bnet.predict(use_gt=True)
+  (class_probs, attrib_probs) = bnet.predict(use_gt=False)
   show_confusion_matrix(train_annos, classes, class_probs)
   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
        'bnet_res.dat')
