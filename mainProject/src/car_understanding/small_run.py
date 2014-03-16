@@ -434,11 +434,11 @@ def bayes_net_generic():
 def show_confusion_matrix(train_annos, class_meta, class_prob):
   from sklearn.metrics import confusion_matrix
   from sklearn.preprocessing import normalize
-  from mpltools import style
+#   from mpltools import style
   from sklearn.metrics import classification_report
   from sklearn.metrics import accuracy_score
   
-  style.use('ggplot')
+#   style.use('ggplot')
   
   class_true = train_annos.class_index
   y_pred_class  = class_prob.idxmax(axis=1)
@@ -454,7 +454,8 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   
   
   # Show confusion matrix in a separate window
-  fig = plt.figure(figsize=(15,15))
+#   fig = plt.figure(figsize=(15,15))
+  fig = plt.figure()
   ax = fig.add_subplot(111)
   cax = ax.matshow(cm)
   plt.title('Confusion matrix of the classifier')
