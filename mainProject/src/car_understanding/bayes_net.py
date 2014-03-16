@@ -325,7 +325,7 @@ class BayesNet:
     MAP = mc.MAP(model)
     MAP.fit() # first do MAP estimation
     mcmc = mc.MCMC(model)
-    mcmc.sample(20000, 3000)
+    mcmc.sample(10000, 3000)
     print()
 
 ##     use    
