@@ -357,12 +357,12 @@ def classify_using_attributes():
                                             res.class_index, cv=2)
   print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
-# #   clf.fit(res[attrib_names], res.class_index)
-#   
-# #   y_pred = np.array(clf.predict(res[attrib_names]))
-# #   y_true = np.array(res.class_index)
-# #   
-# #   print(classification_report(y_true, y_pred))
+  clf.fit(res[attrib_names], res.class_index)
+  
+  y_pred = np.array(clf.predict(res[attrib_names]))
+  y_true = np.array(res.class_index)
+   
+  print(classification_report(y_true, y_pred))
     
  
 
