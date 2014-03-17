@@ -355,7 +355,7 @@ def classify_using_attributes():
   
   scores = cross_validation.cross_val_score(clf, res[attrib_names], 
                                             res.class_index, cv=2)
-  print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+  print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
   clf.fit(res[attrib_names], res.class_index)
   
