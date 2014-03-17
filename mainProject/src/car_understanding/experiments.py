@@ -366,7 +366,7 @@ def classify_using_attributes():
    
   print(classification_report(y_true, y_pred, 
                               labels=classes.index, 
-                              target_names=[c in classes.class_name]))
+                              target_names=[c for c in classes.class_name]))
     
  
 
