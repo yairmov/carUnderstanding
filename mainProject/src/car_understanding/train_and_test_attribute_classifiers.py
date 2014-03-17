@@ -175,9 +175,7 @@ def train(args, config, dataset):
                                        desc=attrib_name)
   
       attrib_clf.run_training_pipeline(args.cv)
-
-    
-    AttributeClassifier.save(attrib_clf, fname)
+      AttributeClassifier.save(attrib_clf, fname)
 
 
     print( "-------------------------------------")
