@@ -355,14 +355,18 @@ def classify_using_attributes():
   
   scores = cross_validation.cross_val_score(clf, res[attrib_names], 
                                             res.class_index, cv=2)
+  print("")
   print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+  print("-------------------------------------------")
 
   clf.fit(res[attrib_names], res.class_index)
   
   y_pred = np.array(clf.predict(res[attrib_names]))
   y_true = np.array(res.class_index)
    
-  print(classification_report(y_true, y_pred))
+  print(classification_report(y_true, y_pred, 
+                              labels=classes.index, 
+                              target_names=classes))
     
  
 
