@@ -351,7 +351,7 @@ def classify_using_attributes():
   
   # define a classifier that uses the attribute scores
 #   clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
-  clf = svm.SVC(kernel='rbf', gamma=0.001)
+  clf = svm.SVC(kernel='rbf', gamma=1)
   
   scores = cross_validation.cross_val_score(clf, res[attrib_names], 
                                             res.class_index, cv=2)
