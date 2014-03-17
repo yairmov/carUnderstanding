@@ -68,6 +68,10 @@ def main(argv=None):  # IGNORE:C0111
   parser.add_argument('--plot',dest='plot',action='store_true')
   parser.add_argument('--no-plot',dest='plot',action='store_false')
   parser.set_defaults(plot=True)
+  # overwrite flag
+  parser.add_argument('--overwrite',dest='overwrite',action='store_true')
+  parser.add_argument('--no-overwrite',dest='overwrite',action='store_false')
+  parser.set_defaults(overwrite=True)
   
   # Process arguments
   args = parser.parse_args()
@@ -170,8 +174,10 @@ def train(args, config, dataset):
 
     attrib_clf.run_training_pipeline(args.cv)
     
-    AttributeClassifier.save(attrib_clf, os.path.join(config.attribute.dir,
-                                                      attrib_clf.name + '.dat'))
+    fname = os.path.join(config.attribute.dir, attrib_clf.name + '.dat')
+    
+    if (not os.path.isfile(fname)) or args.overwrite:
+      AttributeClassifier.save(attrib_clf, fname)
 
 
     print( "-------------------------------------")
