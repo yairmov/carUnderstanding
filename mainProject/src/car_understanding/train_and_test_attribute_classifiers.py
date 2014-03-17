@@ -164,20 +164,20 @@ def train(args, config, dataset):
   for attrib_name in config.attribute.names:
     print(attrib_name)
     print("")
-    pos_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
-    pos_img_ids = train_annos[train_annos.class_index.isin(pos_class_ids)].index
-    attrib_clf = AttributeClassifier(config,
-                                     train_annos,
-                                     pos_img_ids,
-                                     attrib_name,
-                                     desc=attrib_name)
-
-    attrib_clf.run_training_pipeline(args.cv)
-    
-    fname = os.path.join(config.attribute.dir, attrib_clf.name + '.dat')
-    
+    fname = os.path.join(config.attribute.dir, attrib_name + '.dat')
     if (not os.path.isfile(fname)) or args.overwrite:
-      AttributeClassifier.save(attrib_clf, fname)
+      pos_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
+      pos_img_ids = train_annos[train_annos.class_index.isin(pos_class_ids)].index
+      attrib_clf = AttributeClassifier(config,
+                                       train_annos,
+                                       pos_img_ids,
+                                       attrib_name,
+                                       desc=attrib_name)
+  
+      attrib_clf.run_training_pipeline(args.cv)
+
+    
+    AttributeClassifier.save(attrib_clf, fname)
 
 
     print( "-------------------------------------")
