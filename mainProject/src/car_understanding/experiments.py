@@ -323,6 +323,7 @@ def precision_recall():
 
 def classify_using_attributes():
   from sklearn.ensemble import RandomForestClassifier
+  from sklearn import svm
   from sklearn.metrics import classification_report
   from sklearn import cross_validation
   
@@ -349,7 +350,8 @@ def classify_using_attributes():
   res = bnet.create_attrib_res_on_images()
   
   # define a classifier that uses the attribute scores
-  clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
+#   clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
+  clf = svm.SVC(kernel='rbf')
   
   scores = cross_validation.cross_val_score(clf, res[attrib_names], 
                                             res.class_index, cv=2)
@@ -419,7 +421,7 @@ if __name__ == '__main__':
 #   bayes_net_test()
 #   classes_for_attribs()
 #   cv_for_params()
-  precision_recall()
+#   precision_recall()
 #   bayes_net_test()
-#   classify_using_attributes()
+  classify_using_attributes()
 #   feature_test()
