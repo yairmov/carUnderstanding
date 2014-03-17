@@ -340,6 +340,8 @@ def classify_using_attributes():
     attrib_classifiers.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
   
   classes = select_small_set_for_bayes_net(dataset, makes, types)
+  print classes.head()
+  return
   train_annos = dataset['train_annos']
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
