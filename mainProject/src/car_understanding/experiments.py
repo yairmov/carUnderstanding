@@ -409,13 +409,27 @@ def classify_using_sift():
   print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
   print("-------------------------------------------")
 
-  clf.fit(features, labels)
-  
-  y_pred = np.array(clf.predict(features))
-   
+#   clf.fit(features, labels)
+#   
+#   y_pred = np.array(clf.predict(features))
+#    
+#   print(classification_report(labels, y_pred, 
+#                               target_names=[c for c in classes.class_name]))
+
+  loo = cross_validation.LeaveOneOut(len(labels))
+  ii = 0
+  y_pred = np.zeros_like(labels)
+  for train_index, test_index in loo:
+    print("TRAIN:", train_index, "TEST:", test_index)
+    X_train, X_test = features[train_index], features[test_index]
+    y_train, y_test = labels[train_index], labels[test_index]
+    clf.fit(X_train, y_train)
+    y_pred[ii] = np.array(clf.predict(X_test))
+    ii +=1
+    
+
   print(classification_report(labels, y_pred, 
                               target_names=[c for c in classes.class_name]))
-    
   
  
 
