@@ -457,6 +457,7 @@ if __name__ == '__main__':
 #   bayes_net_test()
   classify_using_attributes()
 #   feature_test()
+  classify_using_sift()
 
 
 
