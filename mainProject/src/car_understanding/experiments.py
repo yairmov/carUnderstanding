@@ -18,7 +18,7 @@ from attribute_selector import AttributeSelector
 from attribute_classifier import AttributeClassifier
 from bayes_net import BayesNet
 import Bow
-from car_understanding.util import ProgressBar
+from util import ProgressBar
 
 
 def test_fg_utils():
