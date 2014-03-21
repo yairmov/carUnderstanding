@@ -409,7 +409,7 @@ def classify_using_sift():
   print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
   print("-------------------------------------------")
 
-#   clf.fit(features, labels)
+  clf.fit(features, labels)
   
   y_pred = np.array(clf.predict(features))
    
