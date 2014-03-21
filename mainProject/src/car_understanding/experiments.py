@@ -403,7 +403,7 @@ def classify_using_sift():
   
   
   labels = np.array(train_annos.class_index)  
-  clf = svm.SVC(kernel='linear')
+  clf = svm.SVC(kernel='rbf')
   
   scores = cross_validation.cross_val_score(clf, features, labels, cv=10)
   print("")
