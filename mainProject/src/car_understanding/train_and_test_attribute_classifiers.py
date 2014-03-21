@@ -140,6 +140,7 @@ def test(args, config, dataset):
                                                            np.array(res[str.lower(attrib_name)]))
     score = auc(recall, precision)
     print("Area Under Curve: %0.2f" % score)
+    print ("")
     if args.plot:
       # Create the plot
       plt.subplot(K,K,ii+1)

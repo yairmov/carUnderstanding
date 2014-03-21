@@ -10,12 +10,14 @@ import matplotlib.pyplot as plt
 import pymc as mc
 import time
 import pandas as pd
+import os
 
 import fgcomp_dataset_utils as fgu
 from configuration import get_config
 from attribute_selector import AttributeSelector
 from attribute_classifier import AttributeClassifier
 from bayes_net import BayesNet
+import Bow
 
 
 def test_fg_utils():
@@ -368,6 +370,32 @@ def classify_using_attributes():
                               labels=classes.index, 
                               target_names=[c for c in classes.class_name]))
     
+
+def classify_using_sift():
+  from sklearn.ensemble import RandomForestClassifier
+  from sklearn import svm
+  from sklearn.metrics import classification_report
+  from sklearn import cross_validation
+  
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types
+  config = get_config(args)
+  (dataset, config) = fgu.get_all_metadata(config)
+  
+  train_annos = dataset['train_annos']
+  
+  features = np.empty(shape=[len(train_annos), 
+                                 config.SIFT.BoW.num_clusters])
+  for ii in range(len(train_annos)):
+    img_name = train_annos.iloc[ii]['basename']
+    img_name = os.path.splitext(img_name)[0]
+    hist_filename = os.path.join(config.SIFT.BoW.hist_dir, 
+                                 img_name) + '_hist.dat'
+    hist = Bow.load(hist_filename)
+    features[ii, :] = hist
+    
+  print "features.shape", features.shape
  
 
 def test_feature_detector(detector, imfname):
@@ -429,3 +457,6 @@ if __name__ == '__main__':
 #   bayes_net_test()
   classify_using_attributes()
 #   feature_test()
+
+
+

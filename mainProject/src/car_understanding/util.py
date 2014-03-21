@@ -11,6 +11,7 @@ import scipy.misc
 import matplotlib.pyplot as plt
 from clint.textui import progress
 import sys
+import cv2 as cv
 
 def set_width_to_normalize_bb(img, xmin, xmax, to_width):
   w = xmax - xmin
