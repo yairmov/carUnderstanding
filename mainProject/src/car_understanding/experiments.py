@@ -383,8 +383,13 @@ def classify_using_sift():
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
   train_annos = dataset['train_annos']
+  train_annos = train_annos[np.array(
+                             train_annos.class_index.isin(classes.class_index))]
   
+  
+  print "Loading features."
   features = np.empty(shape=[len(train_annos), 
                                  config.SIFT.BoW.num_clusters])
   for ii in range(len(train_annos)):
@@ -394,8 +399,24 @@ def classify_using_sift():
                                  img_name) + '_hist.dat'
     hist = Bow.load(hist_filename)
     features[ii, :] = hist
+  
+  
+  labels = np.array(train_annos.class_index)  
+  clf = svm.SVC(kernel='rbf')
+  
+  scores = cross_validation.cross_val_score(clf, features, labels, cv=2)
+  print("")
+  print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+  print("-------------------------------------------")
+
+  clf.fit(features, labels)
+  
+  y_pred = np.array(clf.predict(features))
+   
+  print(classification_report(labels, y_pred, 
+                              target_names=[c for c in classes.class_name]))
     
-  print "features.shape", features.shape
+  
  
 
 def test_feature_detector(detector, imfname):
