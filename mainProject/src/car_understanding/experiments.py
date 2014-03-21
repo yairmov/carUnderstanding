@@ -18,6 +18,7 @@ from attribute_selector import AttributeSelector
 from attribute_classifier import AttributeClassifier
 from bayes_net import BayesNet
 import Bow
+from car_understanding.util import ProgressBar
 
 
 def test_fg_utils():
@@ -419,14 +420,16 @@ def classify_using_sift():
   loo = cross_validation.LeaveOneOut(len(labels))
   ii = 0
   y_pred = np.zeros_like(labels)
+  progress = ProgressBar(len(labels))
   for train_index, test_index in loo:
-    print ii
 #     print("TRAIN:", train_index, "TEST:", test_index)
     X_train, X_test = features[train_index], features[test_index]
     y_train, y_test = labels[train_index], labels[test_index]
     clf.fit(X_train, y_train)
     y_pred[ii] = np.array(clf.predict(X_test))
+    progress.animate(ii)
     ii +=1
+    
     
 
   print(classification_report(labels, y_pred, 
