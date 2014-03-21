@@ -420,7 +420,7 @@ def classify_using_sift():
   ii = 0
   y_pred = np.zeros_like(labels)
   for train_index, test_index in loo:
-    print("TRAIN:", train_index, "TEST:", test_index)
+#     print("TRAIN:", train_index, "TEST:", test_index)
     X_train, X_test = features[train_index], features[test_index]
     y_train, y_test = labels[train_index], labels[test_index]
     clf.fit(X_train, y_train)
