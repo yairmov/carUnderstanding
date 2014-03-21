@@ -404,7 +404,7 @@ def classify_using_sift():
   labels = np.array(train_annos.class_index)  
   clf = svm.SVC(kernel='linear')
   
-  scores = cross_validation.cross_val_score(clf, features, labels, cv=5)
+  scores = cross_validation.cross_val_score(clf, features, labels, cv=10)
   print("")
   print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
   print("-------------------------------------------")
