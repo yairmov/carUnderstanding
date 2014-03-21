@@ -455,7 +455,7 @@ if __name__ == '__main__':
 #   cv_for_params()
 #   precision_recall()
 #   bayes_net_test()
-  classify_using_attributes()
+#   classify_using_attributes()
 #   feature_test()
   classify_using_sift()
 
