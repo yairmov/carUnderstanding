@@ -134,7 +134,8 @@ def run_test():
   print("train_annos:")
   print(train_annos.head())
   
-  test_annos = read_image_annotations(config.dataset.test_annos_file)
+  test_annos = read_image_annotations(config.dataset.test_annos_file,
+                                      has_class_id=False)
   print("test_annos:")
   print(test_annos.head())
   
