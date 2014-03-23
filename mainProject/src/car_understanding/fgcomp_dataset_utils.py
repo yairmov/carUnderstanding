@@ -143,7 +143,7 @@ def run_test():
   
   print("Using call to get_all_metadata()")
   print("--------------------------------")
-  dataset = get_all_metadata(config)
+  (dataset, config) = get_all_metadata(config)
   
   domain_meta = dataset['domain_meta']
   print("domain_meta:")
