@@ -28,7 +28,11 @@ def get_config(args):
   config.SIFT.BoW.model_file = os.path.join(config.SIFT.dir, 'BoW_model.dat')
   config.SIFT.BoW.hist_dir = assign_dir(os.path.join(config.SIFT.dir, 
                                                      'word_hist'))
-  config.SIFT.BoW.num_clusters = 1024
+  
+  # 
+  config.SIFT.BoW.requested_n_clusters = 1024
+  # Number of clusters after clustering has been done (<= requested_n_clusters)
+  config.SIFT.BoW.num_clusters = 1024 #(TODO: find a nice way to do this)
   config.SIFT.BoW.max_desc_per_img = 1000
   config.SIFT.BoW.max_desc_total = 4e6
   
@@ -48,6 +52,7 @@ def get_config(args):
 
 
   # dataset params
+  #---------------
   # location of dataset (original one)
 #   config.dataset.name = 'fgcomp2013'
 #   config.dataset.main_path = '/usr0/home/ymovshov/Documents/Research/Data/fgcomp2013/release'
@@ -73,6 +78,10 @@ def get_config(args):
   config.dataset.test_annos_file =  os.path.join(config.dataset.main_path,
                                                   'test_annos_track1.txt')
   config.dataset.domains = [3] # cars
+  # split train set into train/dev sets as we don't have access to the
+  # test data. At some point we need to submit results to their server.
+  config.dataset.use_dev_set = True
+  config.dataset.dev_set_test_size = 10 # per class 
 
 
   # Attribute Params

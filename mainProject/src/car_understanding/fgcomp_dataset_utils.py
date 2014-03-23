@@ -109,13 +109,34 @@ def get_all_metadata(config=None, args=None):
   class_meta = class_meta[class_meta.domain_index.isin(config.dataset.domains)]
   train_annos = train_annos[train_annos.domain_index.isin(config.dataset.domains)]
   test_annos = test_annos[test_annos.domain_index.isin(config.dataset.domains)]
+  
+  
+  # Create dev set
+  dev_annos = create_dev_set(train_annos, config.dataset.dev_set.test_size)
+
+  # Should we use the dev set as the test set
+  if config.dataset.dev_set.use:
+    used = dev_annos
+  else:
+    used = test_annos
 
   return ({'train_annos': train_annos,
-           'test_annos': test_annos,
-             'class_meta': class_meta,
-             'domain_meta': domain_meta},
+           'real_test_annos': test_annos,
+           'test_annos': used,
+           'dev_annos': dev_annos, 
+            'class_meta': class_meta,
+            'domain_meta': domain_meta},
           config)
 
+def create_dev_set(train_annos, num_test=10):
+  u_ids = train_annos.class_index.unique()
+  dev_img_ids = []
+  for id in u_ids:
+    curr = train_annos[train_annos.class_index == id]
+    dev_img_ids.extend(curr.iloc[:num_test].index)
+    
+  dev_set = train_annos.loc[dev_img_ids]
+  return dev_set 
 
 
 def run_test():
