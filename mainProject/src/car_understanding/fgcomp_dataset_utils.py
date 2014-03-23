@@ -106,9 +106,9 @@ def get_all_metadata(config=None, args=None):
 
   # Filter the class meta and train annotations to just use the 
   # domains defined in config
-  class_meta = class_meta[class_meta['domain_index'].isin(config.dataset.domains[0])]
+  class_meta = class_meta[class_meta['domain_index'].isin(config.dataset.domains)]
   train_annos = train_annos[train_annos.class_index.isin(class_meta.class_index)]
-  test_annos = test_annos[test_annos.domain_index.isin(config.dataset.domains[0])]
+  test_annos = test_annos[test_annos.domain_index.isin(config.dataset.domains)]
 
   return ({'train_annos': train_annos,
            'test_annos': test_annos,
