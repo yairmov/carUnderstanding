@@ -97,10 +97,10 @@ def showboxes(img_in, boxes, is_opencv=False):
   plt.show()
 
 
-def explore_training_data(train_annos, config):
+def explore_image_data(annos, config):
   plt.ion()
-  for ii in range(0, len(train_annos), 10):
-    curr_anno = train_annos.iloc[ii]
+  for ii in range(0, len(annos), 10):
+    curr_anno = annos.iloc[ii]
     img = scipy.misc.imread(os.path.join(
                       config.dataset.main_path, curr_anno['rel_path']))
     bbox = (curr_anno['xmin'], curr_anno['xmax'],
