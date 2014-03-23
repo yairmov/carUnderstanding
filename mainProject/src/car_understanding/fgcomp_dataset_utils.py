@@ -112,7 +112,6 @@ def get_all_metadata(config=None, args=None):
   
   
   # Create dev set
-  print(config.dataset.dev_set.test_size)
   dev_annos = create_dev_set(train_annos, 
                              config.dataset.dev_set.test_size)
 
@@ -135,10 +134,7 @@ def create_dev_set(train_annos, num_test=10):
   dev_img_ids = []
   for id in u_ids:
     curr = train_annos[train_annos.class_index == id]
-#     print(curr.head(10))
-    c = curr.head(num_test).index
-    print(num_test, c)
-#     dev_img_ids.extend(list(curr.index[:num_test]))
+    dev_img_ids.extend(list(curr.index[:num_test]))
     
   dev_set = train_annos.loc[dev_img_ids]
   return dev_set 
