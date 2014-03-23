@@ -50,7 +50,11 @@ def read_domain_meta(infilename):
   return pd.read_csv(infilename,
                             header=None, index_col=1, names=['domain_name'])
 
-def read_training_data(infilename):
+
+def read_image_annotations(infilename):
+  '''
+  Reads the training/test annotations from a txt file.
+  '''
   names = ['image_index', 'rel_path', 'domain_index',
            'class_index', 'xmin', 'xmax', 'ymin', 'ymax']
   types = {'image_index': np.int32,
@@ -76,13 +80,17 @@ def get_all_metadata(config=None, args=None):
     config = get_config(args)
     
   class_meta  = read_class_meta(config.dataset.class_meta_file)
-  train_annos = read_training_data(config.dataset.train_annos_file)
+  train_annos = read_image_annotations(config.dataset.train_annos_file)
+  test_annos = read_image_annotations(config.dataset.test_annos_file)
   domain_meta = read_domain_meta(config.dataset.domain_meta_file)
 #   train_annos = pd.merge(train_annos, class_meta.iloc[:,0:2], on='class_index') # probably produces WRONG mapping
 #   train_annos.index.name = 'image_index'
   train_annos['class_name'] = np.array([class_meta.class_name[class_index] for 
                                          class_index in 
                                          train_annos.class_index])
+  test_annos['class_name'] = np.array([class_meta.class_name[class_index] for 
+                                         class_index in 
+                                         test_annos.class_index])
 
   # Filter the class meta and train annotations to just use the 
   # domains defined in config
@@ -90,6 +98,7 @@ def get_all_metadata(config=None, args=None):
   train_annos = train_annos[train_annos.class_index.isin(class_meta.class_index)]
 
   return ({'train_annos': train_annos,
+           'test_annos': test_annos,
              'class_meta': class_meta,
              'domain_meta': domain_meta},
           config)

@@ -29,7 +29,7 @@ def test_fg_utils():
   print 'before load'
   domain_meta = fgu.read_domain_meta(domain_meta_file)
   class_meta = fgu.read_class_meta(class_meta_file)
-  dataset = fgu.read_training_data(train_ann_file)
+  dataset = fgu.read_image_annotations(train_ann_file)
   print 'after load'
 
   print domain_meta.dtypes

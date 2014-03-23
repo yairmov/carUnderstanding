@@ -16,8 +16,8 @@ from sklearn.metrics import auc
 from sklearn.metrics import classification_report
 import pandas as pd
 import matplotlib.pyplot as plt
-from mpltools import style
-style.use('ggplot')
+# from mpltools import style
+# style.use('ggplot')
 
 
 from configuration import get_config
@@ -92,14 +92,14 @@ def test(args, config, dataset):
   print("Testing")
   print("========")
   print("")
-  train_annos = dataset['train_annos']
+  test_annos = dataset['test_annos']
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
   
   print "Load image Bow histograms from disk"
-  features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
-  progress = ProgressBar(len(train_annos))
-  for ii in range(len(train_annos)):
-    img_name = train_annos.iloc[ii]['basename']
+  features = np.empty(shape=[len(test_annos), config.SIFT.BoW.num_clusters])
+  progress = ProgressBar(len(test_annos))
+  for ii in range(len(test_annos)):
+    img_name = test_annos.iloc[ii]['basename']
     img_name = os.path.splitext(img_name)[0]
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
                                  img_name) + '_hist.dat'
@@ -118,8 +118,8 @@ def test(args, config, dataset):
                                             use_prob=config.attribute.use_prob)  
     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
   
-  res = pd.DataFrame(data=res, index=train_annos.index)
-  res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
+  res = pd.DataFrame(data=res, index=test_annos.index)
+  res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
   
   K = np.ceil(np.sqrt(len(args.attrib_names)))
   for ii, attrib_name in enumerate(args.attrib_names):
