@@ -162,8 +162,6 @@ def train(args, config, dataset):
   print("========")
   print("")
   train_annos = dataset['train_annos']
-  print train_annos.shape
-  sys.exit(-1)
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
   for attrib_name in config.attribute.names:
     print(attrib_name)
