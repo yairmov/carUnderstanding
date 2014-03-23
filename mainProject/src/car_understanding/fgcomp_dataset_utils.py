@@ -92,21 +92,23 @@ def get_all_metadata(config=None, args=None):
     
   class_meta  = read_class_meta(config.dataset.class_meta_file)
   train_annos = read_image_annotations(config.dataset.train_annos_file)
-  test_annos = read_image_annotations(config.dataset.test_annos_file)
+  test_annos = read_image_annotations(config.dataset.test_annos_file,
+                                      has_class_id=False)
   domain_meta = read_domain_meta(config.dataset.domain_meta_file)
 #   train_annos = pd.merge(train_annos, class_meta.iloc[:,0:2], on='class_index') # probably produces WRONG mapping
 #   train_annos.index.name = 'image_index'
   train_annos['class_name'] = np.array([class_meta.class_name[class_index] for 
                                          class_index in 
                                          train_annos.class_index])
-  test_annos['class_name'] = np.array([class_meta.class_name[class_index] for 
-                                         class_index in 
-                                         test_annos.class_index])
+#   test_annos['class_name'] = np.array([class_meta.class_name[class_index] for 
+#                                          class_index in 
+#                                          test_annos.class_index])
 
   # Filter the class meta and train annotations to just use the 
   # domains defined in config
-  class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
+  class_meta = class_meta[class_meta['domain_index'].isin(config.dataset.domains[0])]
   train_annos = train_annos[train_annos.class_index.isin(class_meta.class_index)]
+  test_annos = test_annos[test_annos.domain_index.isin(config.dataset.domains[0])]
 
   return ({'train_annos': train_annos,
            'test_annos': test_annos,
