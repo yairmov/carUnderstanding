@@ -80,8 +80,8 @@ def get_config(args):
   config.dataset.domains = [3] # cars
   # split train set into train/dev sets as we don't have access to the
   # test data. At some point we need to submit results to their server.
-  config.dataset.use_dev_set = True
-  config.dataset.dev_set_test_size = 10 # per class 
+  config.dataset.dev_set.use = True
+  config.dataset.dev_set.test_size = 10 # per class 
 
 
   # Attribute Params
