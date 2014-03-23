@@ -134,7 +134,10 @@ def create_dev_set(train_annos, num_test=10):
   for id in u_ids:
     curr = train_annos[train_annos.class_index == id]
     print(curr.head(10))
-    dev_img_ids.extend(list(curr.index[:num_test]))
+    c = curr.index[:1]
+    print(c)
+    import sys; sys.exit(-1)
+#     dev_img_ids.extend(list(curr.index[:num_test]))
     
   dev_set = train_annos.loc[dev_img_ids]
   return dev_set 
