@@ -180,7 +180,7 @@ class AttributeClassifier:
   def my_print(self, s):
     print "AttributeCLassifier(" + self.name + "):" + s
     
-  def run_training_pipeline(self, cv=False):
+  def run_training_pipeline(self, cv=False, grid_search=False):
     """ The full sequence of operations that trains an attribute classifier"""
     
     self.my_print("Loading feature-word histograms from disk, and creating " + 
@@ -194,7 +194,7 @@ class AttributeClassifier:
       self.cross_validate(features, labels)
 #     else:
     self.my_print("Training classifier")
-    self.fit(features, labels, grid_search=False)
+    self.fit(features, labels, grid_search=grid_search)
     
     
   def decision_function(self, features, use_prob=True):

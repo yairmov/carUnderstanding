@@ -54,7 +54,8 @@ def main(argv=None):  # IGNORE:C0111
   parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
   
   parser.add_argument(dest="attrib_names", help="attributes to train/test [default: %(default)s]", nargs='+', default=None)
-  parser.add_argument("-c", "--crossval", dest="cv", default=False, action='store_true')
+#   parser.add_argument("-c", "--crossval", dest="cv", default=False, action='store_true')
+  parser.add_argument("-g", "--grid_search", dest="grid_search", default=False, action='store_true')
   
   # train flag
   parser.add_argument('--train',dest='train',action='store_true')
@@ -175,7 +176,7 @@ def train(args, config, dataset):
                                        attrib_name,
                                        desc=attrib_name)
   
-      attrib_clf.run_training_pipeline(args.cv)
+      attrib_clf.run_training_pipeline(grid_search=args.grid_search)
       AttributeClassifier.save(attrib_clf, fname)
 
 
