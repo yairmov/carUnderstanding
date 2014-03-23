@@ -112,7 +112,9 @@ def get_all_metadata(config=None, args=None):
   
   
   # Create dev set
-  dev_annos = create_dev_set(train_annos, config.dataset.dev_set.test_size)
+  print(config.dataset.dev_set.test_size)
+  dev_annos = create_dev_set(train_annos, 
+                             config.dataset.dev_set.test_size)
 
   # Should we use the dev set as the test set
   if config.dataset.dev_set.use:
