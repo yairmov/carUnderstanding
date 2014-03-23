@@ -93,7 +93,8 @@ def test(args, config, dataset):
   print("Testing")
   print("========")
   print("")
-  test_annos = dataset['test_annos']
+#   test_annos = dataset['test_annos']
+  test_annos = dataset['train_annos']
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
   
   print "Load image Bow histograms from disk"
