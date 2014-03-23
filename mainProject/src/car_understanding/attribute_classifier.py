@@ -152,7 +152,7 @@ class AttributeClassifier:
                 % (mean_score, scores.std() / 2, params))
       print()
       
-      self.clf = clf
+      self.clf = clf.best_estimator_
     
     
   def cross_validate(self, features, labels):
@@ -186,8 +186,6 @@ class AttributeClassifier:
     self.my_print("Loading feature-word histograms from disk, and creating " + 
                   "matrix for attribute classification.")
     (features, labels) = self.create_feature_matrix()
-#     return
-    
     
     if cv:
       self.my_print("Training classifier [Cross Validation]")
