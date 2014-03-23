@@ -51,20 +51,31 @@ def read_domain_meta(infilename):
                             header=None, index_col=1, names=['domain_name'])
 
 
-def read_image_annotations(infilename):
+def read_image_annotations(infilename, has_class_id=True):
   '''
   Reads the training/test annotations from a txt file.
   '''
-  names = ['image_index', 'rel_path', 'domain_index',
-           'class_index', 'xmin', 'xmax', 'ymin', 'ymax']
-  types = {'image_index': np.int32,
-           'rel_path': 'str',
-           'domain_index': np.int32,
-           'class_index': np.int32,
-           'xmin': np.float64,
-           'xmax':np.float64,
-           'ymin':np.float64,
-           'ymax':np.float64}
+  if has_class_id:
+    names = ['image_index', 'rel_path', 'domain_index',
+             'class_index', 'xmin', 'xmax', 'ymin', 'ymax']
+    types = {'image_index': np.int32,
+             'rel_path': 'str',
+             'domain_index': np.int32,
+             'class_index': np.int32,
+             'xmin': np.float64,
+             'xmax':np.float64,
+             'ymin':np.float64,
+             'ymax':np.float64}
+  else:
+    names = ['image_index', 'rel_path', 'domain_index',
+             'xmin', 'xmax', 'ymin', 'ymax']
+    types = {'image_index': np.int32,
+             'rel_path': 'str',
+             'domain_index': np.int32,
+             'xmin': np.float64,
+             'xmax':np.float64,
+             'ymin':np.float64,
+             'ymax':np.float64}
   dataset =  pd.read_csv(infilename, header=None, names=names, dtype=types,
                      index_col=0)
 
