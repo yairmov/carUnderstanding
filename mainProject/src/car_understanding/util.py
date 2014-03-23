@@ -189,7 +189,7 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
 #     img_name = f
     s = html_code_image.format(img_str_64)
-    html_str += s
+    html_str += s + '\n'
     k += 1
 
     if (k % split_every == 0):
