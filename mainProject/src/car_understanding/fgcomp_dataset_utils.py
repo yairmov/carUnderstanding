@@ -134,7 +134,7 @@ def create_dev_set(train_annos, num_test=10):
   for id in u_ids:
     curr = train_annos[train_annos.class_index == id]
 #     print(curr.head(10))
-    c = curr.head()
+    c = curr.head(num_test).index
     print(c)
 #     dev_img_ids.extend(list(curr.index[:num_test]))
     
