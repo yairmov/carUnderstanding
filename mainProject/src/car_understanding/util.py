@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from clint.textui import progress
 import sys
 import cv2 as cv
+import base64
+import numpy as np
 
 def set_width_to_normalize_bb(img, xmin, xmax, to_width):
   w = xmax - xmin
@@ -169,6 +171,43 @@ def series_to_iplot(series, name=''):
     line['name'] = name
 
     return [line]
+  
+  
+def create_image_page(img_files, html_file, width=200, num_per_row=9,
+                                  split_every=np.Inf, usr_str=''):
+
+  k = 0;
+
+  html_code_image = '<img src="data:image/jpeg;base64, {}" ' + str(width) + ' style="border:1px solid white" >'
+
+  html_str = '<html><body> '
+
+  # Create HTML string
+  for f in img_files:
+    with open(f, "rb") as img_file:
+      img_str_64 = base64.b64encode(img_file.read())
+
+#     img_name = f
+    s = html_code_image.format(img_str_64)
+    html_str += s
+    k += 1
+
+    if (k % split_every == 0):
+      html_str += '<hr>' + '<center> <h2> ' + usr_str + '</h2></center> <br> <hr>'
+
+    if (k == num_per_row):
+      k = 0
+      html_str += '<hr>'
+
+  html_str += '</body></html>'
+
+  # Write to file
+  with open(html_file, "w") as out_file:
+    out_file.write(html_str)
+
+
+
+    
 
 
 if __name__ == '__main__':
