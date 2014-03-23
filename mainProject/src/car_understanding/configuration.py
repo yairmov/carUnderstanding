@@ -67,6 +67,9 @@ def get_config(args):
                                                   'domain_meta.txt')
   config.dataset.train_annos_file =  os.path.join(config.dataset.main_path,
                                                   'train_annos.txt')
+  
+  # The test annos file doesn't have class indices.
+  # To get test performance you need to submit to a server.
   config.dataset.test_annos_file =  os.path.join(config.dataset.main_path,
                                                   'test_annos_track1.txt')
   config.dataset.domains = [3] # cars
