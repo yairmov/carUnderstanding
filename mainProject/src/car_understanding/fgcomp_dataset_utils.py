@@ -112,32 +112,37 @@ def get_all_metadata(config=None, args=None):
   
   
   # Create dev set
-  dev_annos = create_dev_set(train_annos, 
-                             config.dataset.dev_set.test_size)
+  dev_annos_train, dev_annos_test = create_dev_set(train_annos, 
+                                                   config.dataset.dev_set.test_size)
 
   # Should we use the dev set as the test set
   if config.dataset.dev_set.use:
-    used = dev_annos
+    train_used, test_used = dev_annos_train, dev_annos_test 
   else:
-    used = test_annos
+    train_used, test_used = train_annos, test_annos
 
-  return ({'train_annos': train_annos,
+  return ({'real_train_annos': train_annos,
            'real_test_annos': test_annos,
-           'test_annos': used,
-           'dev_annos': dev_annos, 
+           'train_annos': train_used,
+           'test_annos': test_used,
+           'dev_annos': dev_annos_test, 
             'class_meta': class_meta,
             'domain_meta': domain_meta},
           config)
 
 def create_dev_set(train_annos, num_test=10):
   u_ids = train_annos.class_index.unique()
-  dev_img_ids = []
+  dev_img_ids_test = []
+  dev_img_ids_train = []
   for id in u_ids:
     curr = train_annos[train_annos.class_index == id]
-    dev_img_ids.extend(list(curr.index[:num_test]))
+    dev_img_ids_test.extend(list(curr.index[:num_test]))
+    dev_img_ids_train.extend(list(curr.index[num_test:]))
     
-  dev_set = train_annos.loc[dev_img_ids]
-  return dev_set 
+  dev_set_test = train_annos.loc[dev_img_ids_test]
+  dev_set_train = train_annos.loc[dev_img_ids_train]
+  
+  return dev_set_train, dev_set_test  
 
 
 def run_test():
