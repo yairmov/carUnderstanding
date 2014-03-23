@@ -104,3 +104,52 @@ def get_all_metadata(config=None, args=None):
           config)
 
 
+
+
+
+
+def run_test():
+  from configuration import get_config
+  config = get_config([])
+  
+  domain_meta = read_domain_meta(config.dataset.domain_meta_file)
+  print("domain_meta:")
+  print(domain_meta.head())
+  
+  class_meta  = read_class_meta(config.dataset.class_meta_file)
+  print("class_meta:")
+  print(class_meta.head())
+  
+  train_annos = read_image_annotations(config.dataset.train_annos_file)
+  print("train_annos:")
+  print(train_annos.head())
+  
+  test_annos = read_image_annotations(config.dataset.test_annos_file)
+  print("test_annos:")
+  print(test_annos.head())
+  
+  print("Using call to get_all_metadata()")
+  print("--------------------------------")
+  dataset = get_all_metadata(config)
+  
+  domain_meta = dataset['domain_meta']
+  print("domain_meta:")
+  print(domain_meta.head())
+  
+  class_meta  = dataset['class_meta']
+  print("class_meta:")
+  print(class_meta.head())
+  
+  train_annos = dataset['train_annos']
+  print("train_annos:")
+  print(train_annos.head())
+  
+  test_annos = dataset['test_annos']
+  print("test_annos:")
+  print(test_annos.head())
+  
+  
+  
+
+if __name__ == '__main__':
+  run_test()
