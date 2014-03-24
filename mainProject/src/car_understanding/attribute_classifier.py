@@ -16,11 +16,13 @@ from sklearn.svm import SVC
 from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
+from sklearn.ensemble import GradientBoostingClassifier
 
 import numpy as np
 import os
 
 import Bow as Bow
+from sklearn.ensemble.forest import RandomForestClassifier
 
 class AttributeClassifier:
   """A module for classifying attributes."""
@@ -42,11 +44,14 @@ class AttributeClassifier:
     self.pos_img_inds = pos_inds
     self.dataset      = dataset.copy()
     self.desc         = desc
-    self.clf          = SVC(kernel='rbf', 
-                           class_weight='auto',
-                           C=1, gamma=1e-3,
-                           probability=True)
+#     self.clf          = SVC(kernel='rbf', 
+#                            class_weight='auto',
+#                            C=1, gamma=1e-3,
+#                            probability=True)
 #     self.clf          = SVC(kernel='linear', class_weight='auto')
+    self.clf          = GradientBoostingClassifier(n_estimators=100, 
+                                                   learning_rate=1.0, 
+                                                   max_depth=1)
     self.Scaler       = StandardScaler()
     
 #     self.clf          = Pipeline([('Scaler', Scaler()), 
