@@ -171,14 +171,15 @@ def series_to_iplot(series, name=''):
     line['name'] = name
 
     return [line]
-  
-  
+
+
 def create_image_page(img_files, html_file, width=200, num_per_row=9,
                                   split_every=np.Inf, usr_str=''):
 
   k = 0;
 
-  html_code_image = '<img src="data:image/jpeg;base64, {}" ' + str(width) + ' style="border:1px solid white" >'
+  width_str = 'width = {}'.format(width)
+  html_code_image = '<img src="data:image/jpeg;base64, {}" ' + width_str + ' style="border:1px solid white" >'
 
   html_str = '<html><body> '
 
@@ -207,7 +208,7 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
 
 
-    
+
 
 
 if __name__ == '__main__':
