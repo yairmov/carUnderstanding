@@ -222,11 +222,11 @@ def plot_dataset_embedding(dataset, config, title=None):
   for ii in range(n_items):
     p_bar.animate(ii)
     img_name = dataset.iloc[ii]['basename']
-    img_name = os.path.splitext(img_name)[0]
-    hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-                                 img_name) + '_hist.dat'
-    hist = Bow.load(hist_filename) 
-    features[ii, :] = hist
+#     img_name = os.path.splitext(img_name)[0]
+#     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
+#                                  img_name) + '_hist.dat'
+#     hist = Bow.load(hist_filename) 
+#     features[ii, :] = hist
      
     
   labels = dataset.class_index
