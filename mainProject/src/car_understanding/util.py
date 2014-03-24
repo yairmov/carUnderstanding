@@ -212,7 +212,7 @@ def plot_dataset_embedding(dataset, config, labels=None, title=None):
   import Bow
   import pandas as pd
   import numpy as np
-  from sklearn import ensemble, decomposition, lda
+  from sklearn import ensemble, decomposition, manifold
   from PIL import Image
   from path import path
   
@@ -241,10 +241,10 @@ def plot_dataset_embedding(dataset, config, labels=None, title=None):
 #   pca = decomposition.TruncatedSVD(n_components=2)
 #   X_reduced = pca.fit_transform(X_transformed)
 
-  # LDA embedding
-  X2 = features.copy()
-  X2.flat[::features.shape[1] + 1] += 0.01  # Make X invertible
-  X_reduced = lda.LDA(n_components=2).fit_transform(X2, labels)
+  # LLE
+  clf = manifold.LocallyLinearEmbedding(30, n_components=2,
+                                      method='standard')
+  X_reduced = clf.fit_transform(features)
   
   # read images form disk
   p = path(config.dataset.main_path)
