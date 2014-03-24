@@ -272,7 +272,7 @@ def plot_embedding(X, y=None, images=None, title=None):
 #           marker='o', cmap=pl.cm.Set1, alpha=0.6, linewidths=1)
   for i in range(len(y)):
     pl.text(X[i, 0], X[i, 1], str(y.iloc[i]),
-            color=pl.cm.Set1(y.iloc[i] / 10.),
+            color=pl.cm.Set1(y.iloc[i] / len(y).),
             fontdict={'weight': 'bold', 'size': 9})
 
   if (not images is None) and hasattr(offsetbox, 'AnnotationBbox'):
