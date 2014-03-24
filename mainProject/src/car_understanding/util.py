@@ -206,7 +206,47 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
     out_file.write(html_str)
 
 
+#----------------------------------------------------------------------
+# Scale and visualize embedding vectors
+# X - the vectors to plot
+# y - Labels 
+def plot_embedding(X, y=None, images=None, title=None):
+  import numpy as np
+  import pylab as pl
+  from matplotlib import offsetbox
+  
+  
+  x_min, x_max = np.min(X, 0), np.max(X, 0)
+  X = (X - x_min) / (x_max - x_min)
+  if y is None:
+    y = np.ones(shape=[X.shape[0], ])
 
+  pl.figure()
+  ax = pl.subplot(111)
+  labels = np.unique(y)
+  pl.scatter(X[:,0], X[:,1], s=80, 
+          c=y / float(len(labels)), 
+          marker='o', cmap=pl.cm.Set1, alpha=0.6, linewidths=1)
+#     pl.text(X[i, 0], X[i, 1], str(digits.target[i]),
+#             color=pl.cm.Set1(y[i] / 10.),
+#             fontdict={'weight': 'bold', 'size': 9})
+
+  if hasattr(offsetbox, 'AnnotationBbox') and not(images is None):
+    # only print thumbnails with matplotlib > 1.0
+    shown_images = np.array([[1., 1.]])  # just something big
+    for i in range(X.shape[0]):
+      dist = np.sum((X[i] - shown_images) ** 2, 1)
+      if np.min(dist) < 4e-3:
+          # don't show points that are too close
+        continue
+      shown_images = np.r_[shown_images, [X[i]]]
+      imagebox = offsetbox.AnnotationBbox(
+          offsetbox.OffsetImage(images[i], cmap=pl.cm.gray_r),
+          X[i])
+      ax.add_artist(imagebox)
+  pl.xticks([]), pl.yticks([])
+  if title is not None:
+    pl.title(title)
     
 
 
