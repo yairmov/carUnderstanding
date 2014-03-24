@@ -233,7 +233,6 @@ def plot_embedding(X, y=None, images=None, title=None):
 #             fontdict={'weight': 'bold', 'size': 9})
 
   if hasattr(offsetbox, 'AnnotationBbox') and not(images is None):
-    # only print thumbnails with matplotlib > 1.0
     shown_images = np.array([[1., 1.]])  # just something big
     for i in range(X.shape[0]):
       dist = np.sum((X[i] - shown_images) ** 2, 1)
@@ -245,6 +244,7 @@ def plot_embedding(X, y=None, images=None, title=None):
           offsetbox.OffsetImage(images[i], cmap=pl.cm.gray_r),
           X[i])
       ax.add_artist(imagebox)
+  
   pl.xticks([]), pl.yticks([])
   if title is not None:
     pl.title(title)
