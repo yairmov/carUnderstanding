@@ -178,7 +178,7 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
   k = 0;
 
-  width_str = 'width = {}'.format(width)
+  width_str = 'width = ' + str(width)
   html_code_image = '<img src="data:image/jpeg;base64, {}" ' + width_str + ' style="border:1px solid white" >'
 
   html_str = '<html><body> '
