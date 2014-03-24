@@ -223,7 +223,7 @@ def plot_dataset_embedding(dataset, config, title=None):
     print(ii)
     p_bar.animate(ii)
     img_name = dataset.iloc[ii]['basename']
-#     img_name = os.path.splitext(img_name)[0]
+    img_name = os.path.splitext(img_name)[0]
 #     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
 #                                  img_name) + '_hist.dat'
 #     hist = Bow.load(hist_filename) 
