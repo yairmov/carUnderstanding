@@ -113,7 +113,7 @@ def get_all_metadata(config=None, args=None):
   
   # Create dev set
   dev_annos_train, dev_annos_test = create_dev_set(train_annos, 
-                                                   config.dataset.dev_set.test_size)
+                                                   config)
 
   # Should we use the dev set as the test set
   if config.dataset.dev_set.use:
@@ -130,14 +130,22 @@ def get_all_metadata(config=None, args=None):
             'domain_meta': domain_meta},
           config)
 
-def create_dev_set(train_annos, num_test=10):
+def create_dev_set(train_annos, config):
+  num_test = config.dataset.dev_set.test_size
   u_ids = train_annos.class_index.unique()
   dev_img_ids_test = []
   dev_img_ids_train = []
+  
+  # Set random seed for repreducibility of dev set
+  if type(config.dataset.dev_set.rand_seed) == int:
+    R = np.random.RandomState(config.dataset.dev_set.rand_seed)
+    
   for id in u_ids:
     curr = train_annos[train_annos.class_index == id]
-    dev_img_ids_test.extend(list(curr.index[:num_test]))
-    dev_img_ids_train.extend(list(curr.index[num_test:]))
+    
+    r_ids = R.permutation(curr.index)
+    dev_img_ids_test.extend(list(r_ids[:num_test]))
+    dev_img_ids_train.extend(list(r_ids[num_test:]))
     
   dev_set_test = train_annos.loc[dev_img_ids_test]
   dev_set_train = train_annos.loc[dev_img_ids_train]
