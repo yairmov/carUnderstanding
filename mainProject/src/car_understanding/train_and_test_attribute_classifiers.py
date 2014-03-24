@@ -98,7 +98,7 @@ def test(args, config, dataset):
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
   
   print "Load image Bow histograms from disk"
-  features = pd.DataFrame(np.empty(shape=[len(test_annos), config.SIFT.BoW.num_clusters]))
+  features = np.empty(shape=[len(test_annos), config.SIFT.BoW.num_clusters])
   progress = ProgressBar(len(test_annos))
   for ii in range(len(test_annos)):
     img_name = test_annos.iloc[ii]['basename']
@@ -106,7 +106,7 @@ def test(args, config, dataset):
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
                                  img_name) + '_hist.dat'
     hist = Bow.load(hist_filename) 
-    features.iloc[ii, :] = hist
+    features[ii, :] = hist
     progress.animate(ii)
   print("")
   

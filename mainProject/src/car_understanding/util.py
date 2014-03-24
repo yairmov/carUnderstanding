@@ -208,7 +208,7 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
 
 
-def plot_dataset_embedding(dataset, config, title=None):
+def plot_dataset_embedding(dataset, config, labels=None, title=None):
   import Bow
   import pandas as pd
   import numpy as np
@@ -230,7 +230,8 @@ def plot_dataset_embedding(dataset, config, title=None):
     features[ii, :] = hist
      
     
-  labels = dataset.class_index
+  if labels is None:
+    labels = dataset.class_index
   
   hasher = ensemble.RandomTreesEmbedding(n_estimators=200, random_state=0,
                                        max_depth=5)
