@@ -215,8 +215,8 @@ def plot_dataset_embedding(dataset, config, title=None):
   from sklearn import ensemble, decomposition
   from PIL import Image
   
-  features = pd.DataFrame(np.empty(shape=[len(dataset), 
-                                          config.SIFT.BoW.num_clusters]))
+  features = np.empty(shape=[len(dataset), 
+                                          config.SIFT.BoW.num_clusters])
   progress = ProgressBar(len(dataset))
   print('Loading BoW from disk')
   for ii in range(len(dataset)):
@@ -225,7 +225,7 @@ def plot_dataset_embedding(dataset, config, title=None):
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
                                  img_name) + '_hist.dat'
     hist = Bow.load(hist_filename) 
-    features.iloc[ii, :] = hist
+    features[ii, :] = hist
     progress.animate(ii) 
     
   labels = dataset.class_index
