@@ -117,7 +117,7 @@ class AttributeClassifier:
 #     string_labels[np.logical_not(labels)] = falseval
 #     labels = string_labels
     
-#     dump([features, labels], 'features_eq.tmp') 
+    dump([features, labels], 'features_eq.tmp') 
   
     return (features, labels)
     
