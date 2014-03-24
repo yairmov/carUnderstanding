@@ -66,13 +66,13 @@ class AttributeClassifier:
       # Preallocate feature matrix
       features = np.empty(shape=[len(self.dataset), 
                                  self.config.SIFT.BoW.num_clusters])
-      print self.dataset.head(2)
       for ii in range(len(self.dataset)):
         img_name = self.dataset.iloc[ii]['basename']
         img_name = os.path.splitext(img_name)[0]
         hist_filename = os.path.join(self.config.SIFT.BoW.hist_dir, 
                                      img_name) + '_hist.dat'
         hist = Bow.load(hist_filename)
+        print type(hist)
         features[ii, :] = hist
   
   
