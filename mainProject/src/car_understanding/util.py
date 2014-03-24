@@ -233,6 +233,7 @@ def plot_embedding(X, y=None, images=None, title=None):
 #             fontdict={'weight': 'bold', 'size': 9})
 
   if (not images is None) and hasattr(offsetbox, 'AnnotationBbox'):
+    print( 'lalalalalala')
     shown_images = np.array([[1., 1.]])  # just something big
     for i in range(X.shape[0]):
       dist = np.sum((X[i] - shown_images) ** 2, 1)
