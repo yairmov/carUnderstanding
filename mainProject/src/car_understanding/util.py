@@ -207,12 +207,50 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
     out_file.write(html_str)
 
 
+
+def plot_dataset_embedding(dataset, config, title=None):
+  import Bow
+  import pandas as pd
+  import numpy as np
+  from sklearn import ensemble, decomposition
+  from PIL import Image
+  
+  features = pd.DataFrame(np.empty(shape=[len(dataset), 
+                                          config.SIFT.BoW.num_clusters]))
+  progress = ProgressBar(len(dataset))
+  print('Loading BoW from disk')
+  for ii in range(len(dataset)):
+    img_name = dataset.iloc[ii]['basename']
+    img_name = os.path.splitext(img_name)[0]
+    hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
+                                 img_name) + '_hist.dat'
+    hist = Bow.load(hist_filename) 
+    features.iloc[ii, :] = hist
+    progress.animate(ii) 
+    
+  labels = dataset.class_index
+  
+  hasher = ensemble.RandomTreesEmbedding(n_estimators=200, random_state=0,
+                                       max_depth=5)
+  X_transformed = hasher.fit_transform(features)
+  pca = decomposition.TruncatedSVD(n_components=2)
+  X_reduced = pca.fit_transform(X_transformed)
+  
+  # read images form disk
+  images = []
+  for ii in range(len(dataset)):
+    img_name = dataset.iloc[ii]['basename']
+    im = Image.open(img_name)
+    im.thumbnail([30,30])
+    images.append(np.array(im))
+
+  plot_embedding(X_reduced, y=labels, title=None)
+
 #----------------------------------------------------------------------
 # Scale and visualize embedding vectors
 # X - the vectors to plot
 # y - Labels 
 def plot_embedding(X, y=None, images=None, title=None):
-  import numpy as np
   import pylab as pl
   from matplotlib import offsetbox
   
@@ -233,7 +271,6 @@ def plot_embedding(X, y=None, images=None, title=None):
 #             fontdict={'weight': 'bold', 'size': 9})
 
   if (not images is None) and hasattr(offsetbox, 'AnnotationBbox'):
-    print( 'lalalalalala')
     shown_images = np.array([[1., 1.]])  # just something big
     for i in range(X.shape[0]):
       dist = np.sum((X[i] - shown_images) ** 2, 1)
