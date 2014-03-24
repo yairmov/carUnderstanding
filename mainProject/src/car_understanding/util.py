@@ -212,7 +212,7 @@ def plot_dataset_embedding(dataset, config, labels=None, title=None):
   import Bow
   import pandas as pd
   import numpy as np
-  from sklearn import ensemble, decomposition
+  from sklearn import ensemble, decomposition, lda
   from PIL import Image
   from path import path
   
@@ -233,11 +233,18 @@ def plot_dataset_embedding(dataset, config, labels=None, title=None):
   if labels is None:
     labels = dataset.class_index
   
-  hasher = ensemble.RandomTreesEmbedding(n_estimators=200, random_state=0,
-                                       max_depth=5)
-  X_transformed = hasher.fit_transform(features)
-  pca = decomposition.TruncatedSVD(n_components=2)
-  X_reduced = pca.fit_transform(X_transformed)
+  
+  # -- randomd tree embedding
+#   hasher = ensemble.RandomTreesEmbedding(n_estimators=200, random_state=0,
+#                                        max_depth=5)
+#   X_transformed = hasher.fit_transform(features)
+#   pca = decomposition.TruncatedSVD(n_components=2)
+#   X_reduced = pca.fit_transform(X_transformed)
+
+  # LDA embedding
+  X2 = features.copy()
+  X2.flat[::features.shape[1] + 1] += 0.01  # Make X invertible
+  X_reduced = lda.LDA(n_components=2).fit_transform(X2, labels)
   
   # read images form disk
   p = path(config.dataset.main_path)
