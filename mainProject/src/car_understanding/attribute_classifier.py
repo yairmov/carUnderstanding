@@ -100,7 +100,7 @@ class AttributeClassifier:
     num_pos = sum(labels)
     num_neg = labels.shape[0] - num_pos
     print "equalized sets: num_pos: {}, num_neg: {}".format(num_pos, num_neg)
-    assert num_neg == num_pos, "num_neg == num_pos"
+#     assert num_neg == num_pos, "num_neg == num_pos"
     assert features.shape[0] == num_pos + num_neg, \
     "features.shape[0] == num_pos + num_neg"
      
