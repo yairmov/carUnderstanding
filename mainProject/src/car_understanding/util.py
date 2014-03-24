@@ -248,7 +248,7 @@ def plot_dataset_embedding(dataset, config, title=None):
     im.thumbnail([30,30])
     images.append(np.array(im))
 
-  plot_embedding(X_reduced, y=labels, title=None)
+  plot_embedding(X_reduced, y=labels, images=images, title=None)
 
 #----------------------------------------------------------------------
 # Scale and visualize embedding vectors
