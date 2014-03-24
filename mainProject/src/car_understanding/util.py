@@ -217,10 +217,9 @@ def plot_dataset_embedding(dataset, config, title=None):
   
   n_items = dataset.shape[0]
   features = np.empty(shape=[n_items, config.SIFT.BoW.num_clusters])
-  p_bar = ProgressBar(len(dataset))
+  p_bar = ProgressBar(n_items)
   print('Loading BoW from disk')
   for ii in range(n_items):
-    print(ii)
     img_name = dataset.iloc[ii]['basename']
     img_name = os.path.splitext(img_name)[0]
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
