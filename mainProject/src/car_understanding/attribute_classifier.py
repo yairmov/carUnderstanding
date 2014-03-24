@@ -72,7 +72,8 @@ class AttributeClassifier:
         hist_filename = os.path.join(self.config.SIFT.BoW.hist_dir, 
                                      img_name) + '_hist.dat'
         hist = Bow.load(hist_filename)
-        print type(hist)
+        if type(hist) == tuple:
+          hist = hist[0]
         features[ii, :] = hist
   
   
