@@ -42,10 +42,11 @@ class AttributeClassifier:
     self.pos_img_inds = pos_inds
     self.dataset      = dataset.copy()
     self.desc         = desc
-    self.clf          = SVC(kernel='rbf', 
-                           class_weight='auto',
-                           C=1, gamma=1e-3,
-                           probability=True)
+#     self.clf          = SVC(kernel='rbf', 
+#                            class_weight='auto',
+#                            C=1, gamma=1e-3,
+#                            probability=True)
+    self.clf          = SVC(kernel='linear')
     self.Scaler       = StandardScaler()
     
 #     self.clf          = Pipeline([('Scaler', Scaler()), 
