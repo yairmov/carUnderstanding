@@ -218,10 +218,6 @@ def plot_dataset_embedding(dataset, config, title=None):
   n_items = dataset.shape[0]
   features = np.empty(shape=[n_items, config.SIFT.BoW.num_clusters])
   p_bar = ProgressBar(n_items)
-  for ii in range(n_items):
-    print(ii)
-    p_bar.animate(ii)
-  
   print('Loading {} BoW from disk'.format(n_items))
   for ii in range(n_items):
     img_name = dataset.iloc[ii]['basename']
@@ -230,6 +226,7 @@ def plot_dataset_embedding(dataset, config, title=None):
                                  img_name) + '_hist.dat'
     hist = Bow.load(hist_filename) 
     features[ii, :] = hist
+    print(("\n---", ii, "---"))
     p_bar.animate(ii) 
     
   labels = dataset.class_index
