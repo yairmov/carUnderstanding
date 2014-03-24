@@ -215,11 +215,11 @@ def plot_dataset_embedding(dataset, config, title=None):
   from sklearn import ensemble, decomposition
   from PIL import Image
   
-  features = np.empty(shape=[len(dataset), 
-                                          config.SIFT.BoW.num_clusters])
+  n_items = dataset.shape[0]
+  features = np.empty(shape=[n_items, config.SIFT.BoW.num_clusters])
   progress = ProgressBar(len(dataset))
   print('Loading BoW from disk')
-  for ii in range(len(dataset)):
+  for ii in range(n_items):
     img_name = dataset.iloc[ii]['basename']
     img_name = os.path.splitext(img_name)[0]
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
