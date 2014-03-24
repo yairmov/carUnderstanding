@@ -214,6 +214,7 @@ def plot_dataset_embedding(dataset, config, title=None):
   import numpy as np
   from sklearn import ensemble, decomposition
   from PIL import Image
+  from path import path
   
   n_items = dataset.shape[0]
   features = np.empty(shape=[n_items, config.SIFT.BoW.num_clusters])
@@ -238,9 +239,11 @@ def plot_dataset_embedding(dataset, config, title=None):
   X_reduced = pca.fit_transform(X_transformed)
   
   # read images form disk
+  p = path(config.dataset.main_path)
+  img_names = dataset.rel_path.map(lambda x: p.joinpath(x))
   images = []
   for ii in range(len(dataset)):
-    img_name = dataset.iloc[ii]['basename']
+    img_name = img_names.iloc[ii]
     im = Image.open(img_name)
     im.thumbnail([30,30])
     images.append(np.array(im))
