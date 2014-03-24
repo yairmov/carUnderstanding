@@ -142,10 +142,10 @@ def create_dev_set(train_annos, config):
     
   for id in u_ids:
     curr = train_annos[train_annos.class_index == id]
-    print curr.head()
-    import sys; sys.exit(0)
     
     r_ids = R.permutation(curr.index)
+    print r_ids.index()
+    import sys; sys.exit(0)
     dev_img_ids_test.extend(list(r_ids[:num_test]))
     dev_img_ids_train.extend(list(r_ids[num_test:]))
     
