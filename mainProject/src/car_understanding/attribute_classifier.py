@@ -46,7 +46,7 @@ class AttributeClassifier:
 #                            class_weight='auto',
 #                            C=1, gamma=1e-3,
 #                            probability=True)
-    self.clf          = SVC(kernel='linear')
+    self.clf          = SVC(kernel='linear', class_weight='auto')
     self.Scaler       = StandardScaler()
     
 #     self.clf          = Pipeline([('Scaler', Scaler()), 
@@ -92,9 +92,9 @@ class AttributeClassifier:
     neg_inds = np.logical_not(labels).nonzero()[0]
     neg_inds = np.random.permutation(neg_inds)[:num_pos]
      
-    features = features[np.concatenate([pos_inds, neg_inds]), :]
-    labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
-                             np.zeros(shape=neg_inds.shape, dtype=bool)])
+#     features = features[np.concatenate([pos_inds, neg_inds]), :]
+#     labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
+#                              np.zeros(shape=neg_inds.shape, dtype=bool)])
      
      
     num_pos = sum(labels)
