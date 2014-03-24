@@ -271,10 +271,10 @@ def plot_embedding(X, y=None, images=None, title=None):
   pl.scatter(X[:,0], X[:,1], s=80, 
           c=y-m / float(len(labels)), 
           marker='o', cmap=pl.cm.Set1, alpha=0.6, linewidths=1)
-  for i in range(len(y)):
-    pl.text(X[i, 0], X[i, 1], str(y.iloc[i]),
-            color=pl.cm.Set1(float(y.iloc[i] - m) / len(labels)),
-            fontdict={'weight': 'bold', 'size': 9})
+#   for i in range(len(y)):
+#     pl.text(X[i, 0], X[i, 1], str(y.iloc[i]),
+#             color=pl.cm.Set1(float(y.iloc[i] - m) / len(labels)),
+#             fontdict={'weight': 'bold', 'size': 9})
 
   if (not images is None) and hasattr(offsetbox, 'AnnotationBbox'):
     shown_images = np.array([[1., 1.]])  # just something big
