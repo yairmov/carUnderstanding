@@ -267,12 +267,12 @@ def plot_embedding(X, y=None, images=None, title=None):
   pl.figure()
   ax = pl.subplot(111)
   labels = np.unique(y)
-  pl.scatter(X[:,0], X[:,1], s=80, 
-          c=y / float(len(labels)), 
-          marker='o', cmap=pl.cm.Set1, alpha=0.6, linewidths=1)
-#     pl.text(X[i, 0], X[i, 1], str(digits.target[i]),
-#             color=pl.cm.Set1(y[i] / 10.),
-#             fontdict={'weight': 'bold', 'size': 9})
+#   pl.scatter(X[:,0], X[:,1], s=80, 
+#           c=y / float(len(labels)), 
+#           marker='o', cmap=pl.cm.Set1, alpha=0.6, linewidths=1)
+    pl.text(X[i, 0], X[i, 1], str(y[i]),
+            color=pl.cm.Set1(y[i] / 10.),
+            fontdict={'weight': 'bold', 'size': 9})
 
   if (not images is None) and hasattr(offsetbox, 'AnnotationBbox'):
     shown_images = np.array([[1., 1.]])  # just something big
