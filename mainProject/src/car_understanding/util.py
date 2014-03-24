@@ -235,16 +235,16 @@ def plot_dataset_embedding(dataset, config, labels=None, title=None):
   
   
   # -- randomd tree embedding
-#   hasher = ensemble.RandomTreesEmbedding(n_estimators=200, random_state=0,
-#                                        max_depth=5)
-#   X_transformed = hasher.fit_transform(features)
-#   pca = decomposition.TruncatedSVD(n_components=2)
-#   X_reduced = pca.fit_transform(X_transformed)
+  hasher = ensemble.RandomTreesEmbedding(n_estimators=400, random_state=0,
+                                       max_depth=5)
+  X_transformed = hasher.fit_transform(features)
+  pca = decomposition.TruncatedSVD(n_components=2)
+  X_reduced = pca.fit_transform(X_transformed)
 
   # LLE
-  clf = manifold.LocallyLinearEmbedding(30, n_components=2,
-                                      method='standard')
-  X_reduced = clf.fit_transform(features)
+#   clf = manifold.LocallyLinearEmbedding(30, n_components=2,
+#                                       method='standard')
+#   X_reduced = clf.fit_transform(features)
   
   # read images form disk
   p = path(config.dataset.main_path)
