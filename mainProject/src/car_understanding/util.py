@@ -207,7 +207,6 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
     out_file.write(html_str)
 
 
-<<<<<<< HEAD
 #----------------------------------------------------------------------
 # Scale and visualize embedding vectors
 # X - the vectors to plot
@@ -249,12 +248,7 @@ def plot_embedding(X, y=None, images=None, title=None):
   pl.xticks([]), pl.yticks([])
   if title is not None:
     pl.title(title)
-    
-=======
-
-
->>>>>>> 85e4feb9c3cc4091bdd6ca27fbfba4679aa33122
-
+  
 
 if __name__ == '__main__':
   pass
