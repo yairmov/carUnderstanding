@@ -220,6 +220,7 @@ def plot_dataset_embedding(dataset, config, title=None):
   p_bar = ProgressBar(n_items)
   print('Loading {} BoW from disk'.format(n_items))
   for ii in range(n_items):
+    print(ii)
     p_bar.animate(ii)
     img_name = dataset.iloc[ii]['basename']
 #     img_name = os.path.splitext(img_name)[0]
