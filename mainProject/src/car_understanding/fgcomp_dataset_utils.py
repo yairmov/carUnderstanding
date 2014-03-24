@@ -142,6 +142,8 @@ def create_dev_set(train_annos, config):
     
   for id in u_ids:
     curr = train_annos[train_annos.class_index == id]
+    print curr
+    import sys; sys.exit(0)
     
     r_ids = R.permutation(curr.index)
     dev_img_ids_test.extend(list(r_ids[:num_test]))
