@@ -155,7 +155,7 @@ def load_bow(data_annos, config):
   features = np.empty(shape=[len(data_annos), config.SIFT.BoW.num_clusters])
   progress = ProgressBar(len(data_annos))
   for ii in range(len(data_annos)):
-    img_name = data_annos.iloc[ii]['basename']
+    img_name = data_annos.iloc[ii]['basename'] 
     img_name = os.path.splitext(img_name)[0]
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
                                  img_name) + '_hist.dat'
