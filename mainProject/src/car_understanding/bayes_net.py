@@ -256,7 +256,7 @@ class BayesNet:
     for ii in range(n_imgs):
       print "=================={}========================".format(ii)
       if use_gt:
-        desc = attrib_meta.loc[self.test_annos.iloc[ii]['class_index']]
+        desc = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
         key = np.array(desc) 
       else:
         desc = clf_res_descrete.iloc[ii]
