@@ -397,10 +397,16 @@ def predict_using_bayes(clf_res, prob_c, mu, sig, dataset, config):
   return posteriors
 
 def bayes_net_generic(use_gt=False):
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'SUV']
-  args = makes + types
-#   (dataset, config) = preprocess(args)
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'SUV']
+#   args = makes + types
+  
+  with open('sorted_attrib_list.txt', 'r') as f:
+    args = f.readlines()
+    
+  print args
+  return
+  
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
   
@@ -410,9 +416,10 @@ def bayes_net_generic(use_gt=False):
 #   return
   
   attrib_classifiers = []
-  for name in args:
-    filename = os.path.join(config.attribute.dir, name + '.dat')
-    attrib_classifiers.append(AttributeClassifier.load(filename))
+  if not use_gt:
+    for name in args:
+      filename = os.path.join(config.attribute.dir, name + '.dat')
+      attrib_classifiers.append(AttributeClassifier.load(filename))
     
   # Select only images from the args "world"
   classes = select_small_set_for_bayes_net(dataset, makes, types)
