@@ -422,12 +422,13 @@ def bayes_net_generic(use_gt=False):
     for name in args:
       filename = os.path.join(config.attribute.dir, name + '.dat')
       attrib_classifiers.append(AttributeClassifier.load(filename))
-    
+  
+  train_annos = dataset['train_annos']  
   # Select only images from the args "world"
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
-  train_annos = dataset['train_annos']
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
+  classes = dataset['class_meta']
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
   
   bnet = BayesNet(config, train_annos, 
                   classes, attrib_classifiers, 
@@ -436,8 +437,9 @@ def bayes_net_generic(use_gt=False):
   
   
   test_annos = dataset['test_annos']
-  test_annos = test_annos[np.array(
-                             test_annos.class_index.isin(classes.class_index))]
+  # Select only images from the args "world"
+#   test_annos = test_annos[np.array(
+#                              test_annos.class_index.isin(classes.class_index))]
   
   
   (class_probs, attrib_probs) = bnet.predict(test_annos)
