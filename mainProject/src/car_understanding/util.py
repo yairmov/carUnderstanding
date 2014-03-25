@@ -282,7 +282,7 @@ def plot_embedding(X, y=None, images=None, title=None):
   if y is None:
     y = np.ones(shape=[X.shape[0], ])
 
-  pl.figure(figsize=[10,10])
+  pl.figure(figsize=[20,20])
   ax = pl.subplot(111)
 
   if (not images is None) and hasattr(offsetbox, 'AnnotationBbox'):
