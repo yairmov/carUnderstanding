@@ -520,7 +520,7 @@ if __name__ == '__main__':
   # Using the more generic BayesNet class
   #-------------------------------------
   
-  bayes_net_generic()
+  bayes_net_generic(use_gt=True)
 
 
 #   makes = ['bmw', 'ford']
