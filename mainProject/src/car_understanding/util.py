@@ -174,9 +174,10 @@ def series_to_iplot(series, name=''):
 
 
 def create_image_page(img_files, html_file, width=200, num_per_row=9,
-                                  split_every=np.Inf, usr_str=''):
+                                  split_every=np.Inf):
 
   k = 0;
+  split_num = 0
 
   width_str = 'width = ' + str(width)
   html_code_image = '<img src="data:image/jpeg;base64, {}" ' + width_str + ' style="border:1px solid white" >'
@@ -194,7 +195,8 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
     k += 1
 
     if (k % split_every == 0):
-      html_str += '<hr>' + '<center> <h2> ' + usr_str + '</h2></center> <br> <hr>'
+      html_str += '<hr>' + '<center> <h2> ' + str(split_num) + '</h2></center> <br> <hr>'
+      split_num += 1
 
     if (k == num_per_row):
       k = 0
