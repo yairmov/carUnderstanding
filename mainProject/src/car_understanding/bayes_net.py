@@ -74,6 +74,10 @@ class BayesNet:
     This table can be used to caclulate all the Conditional Probability tables
     for the Bayes Net.
     '''
+    if self.use_gt:
+      return None
+    
+    
     # Define some conviniece pointers 
     train_annos = self.train_annos
     config = self.config
