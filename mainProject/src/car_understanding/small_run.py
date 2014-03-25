@@ -418,7 +418,14 @@ def bayes_net_generic(use_gt=False):
 #   return
   
   attrib_classifiers = []
-  if not use_gt:
+  if use_gt:
+    class dummy:
+      def __init__(self, name):
+        self.name = name
+    
+    for name in args:
+      attrib_classifiers.append(dummy(name))
+  else:
     for name in args:
       filename = os.path.join(config.attribute.dir, name + '.dat')
       attrib_classifiers.append(AttributeClassifier.load(filename))
