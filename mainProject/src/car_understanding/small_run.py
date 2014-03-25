@@ -417,6 +417,8 @@ def bayes_net_generic(use_gt=False):
   # Select only images from the args "world"
   classes = select_small_set_for_bayes_net(dataset, makes, types)
   train_annos = dataset['train_annos']
+  print train_annos.shape
+  return
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
   
