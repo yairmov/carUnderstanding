@@ -231,13 +231,13 @@ class BayesNet:
     class_inds = self.class_inds
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
                                         len(class_inds)]),
-                              index=self.test_annos.index, 
+                              index=test_annos.index, 
                               columns=class_inds)
     
     attrib_names = self.clf_names
     attrib_prob = pd.DataFrame(np.zeros([n_imgs, 
                                          len(attrib_names)]),
-                              index=self.test_annos.index, 
+                              index=test_annos.index, 
                               columns=attrib_names)
     
     if not use_gt:

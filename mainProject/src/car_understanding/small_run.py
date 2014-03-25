@@ -430,8 +430,6 @@ def bayes_net_generic(use_gt=False):
   test_annos = test_annos[np.array(
                              test_annos.class_index.isin(classes.class_index))]
   
-  print test_annos.shape
-  return
   
   (class_probs, attrib_probs) = bnet.predict(test_annos)
   show_confusion_matrix(train_annos, classes, class_probs)
