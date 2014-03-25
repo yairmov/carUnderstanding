@@ -208,7 +208,13 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
 
 
+
 def plot_dataset_embedding(dataset, config, labels=None, title=None):
+  '''
+  Display a figure that shows an 2D embedding of the BoW features for the
+  dataset. It also loads the images of the data, and displays them on the 
+  figure (when there is enough space)
+  '''
   import Bow
   import pandas as pd
   import numpy as np
@@ -272,7 +278,7 @@ def plot_embedding(X, y=None, images=None, title=None):
   if y is None:
     y = np.ones(shape=[X.shape[0], ])
 
-  pl.figure()
+  pl.figure(figsize=[10,10])
   ax = pl.subplot(111)
   labels = np.unique(y)
   m = labels.min()
