@@ -233,19 +233,7 @@ def plot_dataset_embedding(data_annos, config,
   '''
   n_items = data_annos.shape[0]
   print('Loading {} BoW from disk'.format(n_items))
-  features = Bow.load_bow(data_annos, config)
-  
-#   features = np.empty(shape=[n_items, config.SIFT.BoW.num_clusters])
-#   p_bar = ProgressBar(n_items)
-#   for ii in range(n_items):
-#     p_bar.animate(ii)
-#     img_name = data_annos.iloc[ii]['basename']
-#     img_name = os.path.splitext(img_name)[0]
-#     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-#                                  img_name) + '_hist.dat'
-#     hist = Bow.load(hist_filename) 
-#     features[ii, :] = hist
-     
+  features = Bow.load_bow(data_annos, config)     
     
   if labels is None:
     labels = data_annos.class_index
