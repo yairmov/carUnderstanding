@@ -9,11 +9,17 @@ from __future__ import print_function
 import os
 import scipy.misc
 import matplotlib.pyplot as plt
-from clint.textui import progress
+# from clint.textui import progress
 import sys
 import cv2 as cv
 import base64
 import numpy as np
+# import pandas as pd
+from sklearn import ensemble, decomposition, manifold
+from PIL import Image
+from path import path
+
+import Bow
 
 def set_width_to_normalize_bb(img, xmin, xmax, to_width):
   w = xmax - xmin
@@ -45,7 +51,9 @@ def normalize_dataset(train_annos_file, main_path, out_file, bb_width):
 
   out_fid = open(os.path.join(main_path, out_file), 'w')
   print("Resizing images such that BB is of width = %g" % bb_width)
-  for ii in progress.bar(range(len(content))):
+  progress = ProgressBar(len(content))
+  for ii in range(len(content)):
+    progress.animate(ii)
     curr_line = content[ii]
     curr_line = curr_line.strip()
     (img_index, rel_path, domain_index,
@@ -223,13 +231,6 @@ def plot_dataset_embedding(data_annos, config,
   data_annos. It also loads the images of the data, and displays them on the 
   figure (when there is enough space)
   '''
-  import Bow
-  import pandas as pd
-  import numpy as np
-  from sklearn import ensemble, decomposition, manifold
-  from PIL import Image
-  from path import path
-  
   n_items = data_annos.shape[0]
   print('Loading {} BoW from disk'.format(n_items))
   features = Bow.load_bow(data_annos, config)
