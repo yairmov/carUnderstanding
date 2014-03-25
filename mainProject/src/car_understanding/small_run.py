@@ -482,7 +482,7 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   
   
   # Show confusion matrix in a separate window
-  fig = plt.figure(figsize=(15,15))
+  fig = plt.figure(figsize=(10,10))
   ax = fig.add_subplot(111)
   cax = ax.matshow(cm)
   plt.title('Confusion matrix of the classifier')
