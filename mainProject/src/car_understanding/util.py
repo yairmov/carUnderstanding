@@ -185,6 +185,7 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
   html_str = '<html><body> '
 
   # Create HTML string
+  html_str += '<center> <h2> ' + str(split_num) + '</h2></center> <br>'
   for f in img_files:
     with open(f, "rb") as img_file:
       img_str_64 = base64.b64encode(img_file.read())
@@ -201,8 +202,9 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
     if (k == num_per_row):
       k = 0
 #       html_str += '<hr>'
-      html_str += '<hr>' + '<center> <h2> ' + str(split_num) + '</h2></center> <br> <hr>'
       split_num += 1
+      html_str += '<hr>' + '<center> <h2> ' + str(split_num) + '</h2></center> <br>'
+      
 
   html_str += '</body></html>'
 
