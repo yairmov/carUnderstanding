@@ -8,11 +8,11 @@ import numpy as np
 import pandas as pd
 
 
-def cluster(train_annos, config, K):
-  return cluster_aspect_ration(train_annos, config, K)
+def cluster(data_anno, config, K):
+  return cluster_aspect_ration(data_anno, config, K)
 
-def cluster_aspect_ration(train_annos, config, K):
-  ar = pd.DataFrame((train_annos.xmax - train_annos.xmin) / (train_annos.ymax - train_annos.ymin),
+def cluster_aspect_ration(data_anno, config, K):
+  ar = pd.DataFrame((data_anno.xmax - data_anno.xmin) / (data_anno.ymax - data_anno.ymin),
                     columns=['ar'])
   ar_model = KMeans(n_clusters=K, verbose=False)
   aa = np.array(ar)
