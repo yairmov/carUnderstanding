@@ -405,6 +405,9 @@ def bayes_net_generic(use_gt=False):
     args = f.readlines()
   args = [x.strip() for x in args]  
   
+  # use only top K
+  K = 50
+  args = args[:K]
   print args
   return
   
