@@ -403,7 +403,8 @@ def bayes_net_generic(use_gt=False):
   
   with open('sorted_attrib_list.txt', 'r') as f:
     args = f.readlines()
-    
+  args = [x.strip() for x in args]  
+  
   print args
   return
   
