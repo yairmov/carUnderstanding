@@ -152,18 +152,18 @@ def create_word_histograms_on_dataset(train_annos, config):
 
 
 def load_bow(data_annos, config):
-    features = np.empty(shape=[len(data_annos), config.SIFT.BoW.num_clusters])
-    progress = ProgressBar(len(data_annos))
-    for ii in range(len(data_annos)):
-      img_name = data_annos.iloc[ii]['basename']
-      img_name = os.path.splitext(img_name)[0]
-      hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-                                   img_name) + '_hist.dat'
-      hist = load(hist_filename)
-      features[ii, :] = hist
-      progress.animate(ii)
-      
-    return features
+  features = np.empty(shape=[len(data_annos), config.SIFT.BoW.num_clusters])
+  progress = ProgressBar(len(data_annos))
+  for ii in range(len(data_annos)):
+    img_name = data_annos.iloc[ii]['basename']
+    img_name = os.path.splitext(img_name)[0]
+    hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
+                                 img_name) + '_hist.dat'
+    hist = load(hist_filename)
+    features[ii, :] = hist
+    progress.animate(ii)
+    
+  return features
 
 if __name__ == "__main__":
   print 'la'
