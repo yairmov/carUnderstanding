@@ -215,12 +215,12 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
 
 
-def plot_dataset_embedding(dataset, config, 
+def plot_dataset_embedding(data_annos, config, 
                            labels=None, title=None,
                            show_images=True):
   '''
   Display a figure that shows an 2D embedding of the BoW features for the
-  dataset. It also loads the images of the data, and displays them on the 
+  data_annos. It also loads the images of the data, and displays them on the 
   figure (when there is enough space)
   '''
   import Bow
@@ -230,22 +230,24 @@ def plot_dataset_embedding(dataset, config,
   from PIL import Image
   from path import path
   
-  n_items = dataset.shape[0]
-  features = np.empty(shape=[n_items, config.SIFT.BoW.num_clusters])
-  p_bar = ProgressBar(n_items)
+  n_items = data_annos.shape[0]
   print('Loading {} BoW from disk'.format(n_items))
-  for ii in range(n_items):
-    p_bar.animate(ii)
-    img_name = dataset.iloc[ii]['basename']
-    img_name = os.path.splitext(img_name)[0]
-    hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-                                 img_name) + '_hist.dat'
-    hist = Bow.load(hist_filename) 
-    features[ii, :] = hist
+  features = Bow.load_bow(data_annos, config)
+  
+#   features = np.empty(shape=[n_items, config.SIFT.BoW.num_clusters])
+#   p_bar = ProgressBar(n_items)
+#   for ii in range(n_items):
+#     p_bar.animate(ii)
+#     img_name = data_annos.iloc[ii]['basename']
+#     img_name = os.path.splitext(img_name)[0]
+#     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
+#                                  img_name) + '_hist.dat'
+#     hist = Bow.load(hist_filename) 
+#     features[ii, :] = hist
      
     
   if labels is None:
-    labels = dataset.class_index
+    labels = data_annos.class_index
   
   
   # -- randomd tree embedding
@@ -264,9 +266,9 @@ def plot_dataset_embedding(dataset, config,
   images = None
   if show_images:
     p = path(config.dataset.main_path)
-    img_names = dataset.rel_path.map(lambda x: p.joinpath(x))
+    img_names = data_annos.rel_path.map(lambda x: p.joinpath(x))
     images = []
-    for ii in range(len(dataset)):
+    for ii in range(len(data_annos)):
       img_name = img_names.iloc[ii]
       im = Image.open(img_name)
       im.thumbnail([50,50])

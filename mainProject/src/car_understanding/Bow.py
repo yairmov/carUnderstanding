@@ -20,6 +20,7 @@ from sklearn.externals.joblib import Parallel, delayed
 from configuration import get_config
 # import fgcomp_dataset_utils as fgu
 import dense_SIFT
+from util import ProgressBar
 
 
 # Cluster features to create the 'words'
@@ -34,8 +35,6 @@ def cluster_to_words(features, config):
 
 
     # Mini batch KMEANS
-#     batch_size = int(np.round(float(config.SIFT.BoW.num_clusters) / 10))
-#     batch_size = 1000
     batch_size = config.SIFT.BoW.num_clusters * 10
     estimator = MiniBatchKMeans(init='k-means++',
                             n_clusters=config.SIFT.BoW.num_clusters,
@@ -150,6 +149,21 @@ def create_word_histograms_on_dataset(train_annos, config):
 #                                 os.path.splitext(train_annos.loc[ii]['basename'])[0] + '.dat'),
 #                                 bow_model,
 #                                 config)
+
+
+def load_bow(data_annos, config):
+    features = np.empty(shape=[len(data_annos), config.SIFT.BoW.num_clusters])
+    progress = ProgressBar(len(data_annos))
+    for ii in range(len(data_annos)):
+      img_name = data_annos.iloc[ii]['basename']
+      img_name = os.path.splitext(img_name)[0]
+      hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
+                                   img_name) + '_hist.dat'
+      hist = load(hist_filename)
+      features[ii, :] = hist
+      progress.animate(ii)
+      
+    return features
 
 if __name__ == "__main__":
   print 'la'

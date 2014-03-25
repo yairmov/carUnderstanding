@@ -64,7 +64,6 @@ class BayesNet:
      
     
   
-  
   def create_attrib_res_on_images(self):
     '''
     Calculates the predicion of all attribute classifiers on training images.
@@ -77,14 +76,15 @@ class BayesNet:
     attrib_classifiers = self.attrib_clfs
     
     print "Load image Bow histograms from disk"
-    features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
-    for ii in progress.bar(range(len(train_annos))):
-      img_name = train_annos.iloc[ii]['basename']
-      img_name = os.path.splitext(img_name)[0]
-      hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-                                   img_name) + '_hist.dat'
-      hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
-      features[ii, :] = hist
+    features = Bow.load_bow(train_annos, config)
+#     features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
+#     for ii in progress.bar(range(len(train_annos))):
+#       img_name = train_annos.iloc[ii]['basename']
+#       img_name = os.path.splitext(img_name)[0]
+#       hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
+#                                    img_name) + '_hist.dat'
+#       hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
+#       features[ii, :] = hist
   
     print "Apply attribute classifiers on images"
     res = {}
