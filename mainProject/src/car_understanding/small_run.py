@@ -432,7 +432,7 @@ def bayes_net_generic(use_gt=False):
   
   
   (class_probs, attrib_probs) = bnet.predict(test_annos)
-  show_confusion_matrix(train_annos, classes, class_probs)
+  show_confusion_matrix(test_annos, classes, class_probs)
   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
        'bnet_res.dat')
   
