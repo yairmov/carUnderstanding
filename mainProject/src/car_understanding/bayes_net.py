@@ -28,7 +28,8 @@ from attribute_selector import AttributeSelector
 class BayesNet:
   """A Bayes net model."""
   
-  def __init__(self, config, train_annos, class_meta, attrib_clfs, desc=""):
+  def __init__(self, config, train_annos, class_meta, attrib_clfs, 
+               desc="", use_gt=False):
     """ Ctor.
     
     Args:
@@ -37,6 +38,7 @@ class BayesNet:
           class_meta  - (see fgcomp_dataset_utils)
           attrib_clfs - A list of AttributeClassifiers
           desc        - Longer string description of attribute (optional)
+          For debugging - use ground truth labels instead of attribute classifier scores
           
     """
     self.config       = config.copy()
@@ -61,6 +63,8 @@ class BayesNet:
     
     self.attrib_selector = AttributeSelector(self.config, 
                                         self.class_meta)
+    
+    self.use_gt = use_gt
      
     
   
@@ -192,11 +196,13 @@ class BayesNet:
     class_inds  = self.class_inds
     
     
+    
     # P(attribute | res of attrib classifiers)
     #-----------------------------------------
-    for attrib_name in attrib_names:
-      self.CPT['p({}|theta)'.format(attrib_name)] = \
-        self.cpt_for_attrib(attrib_name, attrib_selector)
+    if not self.use_gt: # if using ground truth we don't need to calculate this
+      for attrib_name in attrib_names:
+        self.CPT['p({}|theta)'.format(attrib_name)] = \
+          self.cpt_for_attrib(attrib_name, attrib_selector)
         
         
     # P(class | attributes)
@@ -219,22 +225,25 @@ class BayesNet:
   fake: will use the ground truth attribute values for the middle 
   layer, to check what is the best we can hope for.
   '''
-  def predict(self, use_gt=False):
+  def predict(self):
+    n_imgs = self.train_annos.shape[0]
+    use_gt = self.use_gt
     class_inds = self.class_inds
-    class_prob = pd.DataFrame(np.zeros([self.clf_res.shape[0], 
+    class_prob = pd.DataFrame(np.zeros([n_imgs, 
                                         len(class_inds)]),
                               index=self.train_annos.index, 
                               columns=class_inds)
     
     attrib_names = self.clf_names
-    attrib_prob = pd.DataFrame(np.zeros([self.clf_res.shape[0], 
+    attrib_prob = pd.DataFrame(np.zeros([n_imgs, 
                                          len(attrib_names)]),
                               index=self.train_annos.index, 
                               columns=attrib_names)
-        
-    clf_res_descrete = self.clf_res.copy()
-    clf_res_descrete[self.clf_names] = \
-        self.clf_res[self.clf_names] > self.config.attribute.high_thresh
+    
+    if not use_gt:
+      clf_res_descrete = self.clf_res.copy()
+      clf_res_descrete[self.clf_names] = \
+          self.clf_res[self.clf_names] > self.config.attribute.high_thresh
         
     # using ground truth    
     if use_gt:
@@ -244,10 +253,10 @@ class BayesNet:
     class_prob_cache = {}
     attrrib_prob_cache = {}
     
-    for ii in range(clf_res_descrete.shape[0]):
+    for ii in range(n_imgs):
       print "=================={}========================".format(ii)
       if use_gt:
-        desc = attrib_meta.loc[clf_res_descrete.iloc[ii]['class_index']]
+        desc = attrib_meta.loc[self.train_annos.iloc[ii]['class_index']]
         key = np.array(desc) 
       else:
         desc = clf_res_descrete.iloc[ii]
@@ -256,7 +265,7 @@ class BayesNet:
       key = key.tostring()
       if (not class_prob_cache.has_key(key)):
         print "Never got this key before, computing...."
-        (class_prob_ii, attrib_prob_ii) = self.predict_one(desc, use_gt)
+        (class_prob_ii, attrib_prob_ii) = self.predict_one(desc)
         class_prob_cache[key] = class_prob_ii
         attrrib_prob_cache[key] = attrib_prob_ii
       
@@ -265,7 +274,8 @@ class BayesNet:
       
     return (class_prob, attrib_prob)
       
-  def predict_one(self, clf_res_descrete, use_gt=False):
+  def predict_one(self, clf_res_descrete):
+    use_gt = self.use_gt
     # building model
     # first start with observed variables - the results of all the classifiers 
     # on the image

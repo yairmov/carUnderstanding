@@ -396,7 +396,7 @@ def predict_using_bayes(clf_res, prob_c, mu, sig, dataset, config):
 
   return posteriors
 
-def bayes_net_generic():
+def bayes_net_generic(use_gt=False):
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
   args = makes + types
@@ -421,10 +421,11 @@ def bayes_net_generic():
                              train_annos.class_index.isin(classes.class_index))]
   
   bnet = BayesNet(config, train_annos, 
-                  classes, attrib_classifiers, desc=str(args))
+                  classes, attrib_classifiers, 
+                  desc=str(args), use_gt=use_gt)
   bnet.init_CPT()
   
-  (class_probs, attrib_probs) = bnet.predict(use_gt=False)
+  (class_probs, attrib_probs) = bnet.predict()
   show_confusion_matrix(train_annos, classes, class_probs)
   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
        'bnet_res.dat')
