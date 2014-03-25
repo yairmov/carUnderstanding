@@ -200,7 +200,9 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
     if (k == num_per_row):
       k = 0
-      html_str += '<hr>'
+#       html_str += '<hr>'
+      html_str += '<hr>' + '<center> <h2> ' + str(split_num) + '</h2></center> <br> <hr>'
+      split_num += 1
 
   html_str += '</body></html>'
 
