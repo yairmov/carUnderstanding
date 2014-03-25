@@ -209,7 +209,9 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
 
 
-def plot_dataset_embedding(dataset, config, labels=None, title=None):
+def plot_dataset_embedding(dataset, config, 
+                           labels=None, title=None,
+                           show_images=True):
   '''
   Display a figure that shows an 2D embedding of the BoW features for the
   dataset. It also loads the images of the data, and displays them on the 
@@ -253,14 +255,16 @@ def plot_dataset_embedding(dataset, config, labels=None, title=None):
 #   X_reduced = clf.fit_transform(features)
   
   # read images form disk
-  p = path(config.dataset.main_path)
-  img_names = dataset.rel_path.map(lambda x: p.joinpath(x))
-  images = []
-  for ii in range(len(dataset)):
-    img_name = img_names.iloc[ii]
-    im = Image.open(img_name)
-    im.thumbnail([40,40])
-    images.append(np.array(im))
+  images = None
+  if show_images:
+    p = path(config.dataset.main_path)
+    img_names = dataset.rel_path.map(lambda x: p.joinpath(x))
+    images = []
+    for ii in range(len(dataset)):
+      img_name = img_names.iloc[ii]
+      im = Image.open(img_name)
+      im.thumbnail([40,40])
+      images.append(np.array(im))
 
   plot_embedding(X_reduced, y=labels, images=images, title=title)
 
