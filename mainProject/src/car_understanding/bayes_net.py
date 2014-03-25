@@ -225,19 +225,19 @@ class BayesNet:
   fake: will use the ground truth attribute values for the middle 
   layer, to check what is the best we can hope for.
   '''
-  def predict(self):
-    n_imgs = self.train_annos.shape[0]
+  def predict(self, test_annos):
+    n_imgs = test_annos.shape[0]
     use_gt = self.use_gt
     class_inds = self.class_inds
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
                                         len(class_inds)]),
-                              index=self.train_annos.index, 
+                              index=self.test_annos.index, 
                               columns=class_inds)
     
     attrib_names = self.clf_names
     attrib_prob = pd.DataFrame(np.zeros([n_imgs, 
                                          len(attrib_names)]),
-                              index=self.train_annos.index, 
+                              index=self.test_annos.index, 
                               columns=attrib_names)
     
     if not use_gt:
@@ -256,7 +256,7 @@ class BayesNet:
     for ii in range(n_imgs):
       print "=================={}========================".format(ii)
       if use_gt:
-        desc = attrib_meta.loc[self.train_annos.iloc[ii]['class_index']]
+        desc = attrib_meta.loc[self.test_annos.iloc[ii]['class_index']]
         key = np.array(desc) 
       else:
         desc = clf_res_descrete.iloc[ii]

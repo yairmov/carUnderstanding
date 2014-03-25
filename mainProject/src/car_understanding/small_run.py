@@ -417,8 +417,6 @@ def bayes_net_generic(use_gt=False):
   # Select only images from the args "world"
   classes = select_small_set_for_bayes_net(dataset, makes, types)
   train_annos = dataset['train_annos']
-  print train_annos.shape
-  return
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
   
@@ -427,7 +425,14 @@ def bayes_net_generic(use_gt=False):
                   desc=str(args), use_gt=use_gt)
   bnet.init_CPT()
   
-  (class_probs, attrib_probs) = bnet.predict()
+  
+  test_annos = dataset['test_annos']
+  test_annos = test_annos[np.array(
+                             test_annos.class_index.isin(classes.class_index))]
+  
+  print test_annos.shape
+  
+  (class_probs, attrib_probs) = bnet.predict(test_annos)
   show_confusion_matrix(train_annos, classes, class_probs)
   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
        'bnet_res.dat')
