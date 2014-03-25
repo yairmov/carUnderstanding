@@ -263,7 +263,7 @@ def plot_dataset_embedding(dataset, config,
     for ii in range(len(dataset)):
       img_name = img_names.iloc[ii]
       im = Image.open(img_name)
-      im.thumbnail([40,40])
+      im.thumbnail([50,50])
       images.append(np.array(im))
 
   plot_embedding(X_reduced, y=labels, images=images, title=title)
