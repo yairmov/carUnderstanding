@@ -408,8 +408,6 @@ def bayes_net_generic(use_gt=False):
   # use only top K
   K = 50
   args = args[:K]
-  print args
-  return
   
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
