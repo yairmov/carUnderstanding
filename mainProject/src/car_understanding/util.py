@@ -296,7 +296,7 @@ def plot_embedding(X, y=None, images=None, title=None):
       imagebox = offsetbox.AnnotationBbox(
           offsetbox.OffsetImage(images[i], cmap=pl.cm.gray_r),
           X[i])
-      ax.add_artist(imagebox, alpha=0.6)
+      ax.add_artist(imagebox)
       
   labels = np.unique(y)
   m = labels.min()
