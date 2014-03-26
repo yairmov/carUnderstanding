@@ -67,7 +67,7 @@ def dense_SIFT(filename, grid_spacing=4):
   return (kp, desc)
 
 
-def normalize_sift(sift_arr, in_place=True):
+def normalize_sift(sift_arr, inplace=True):
   '''
   Normalize sift descriptors.
   Descriptors who's norm is greater than one are normalized to unit,
@@ -87,7 +87,7 @@ def normalize_sift(sift_arr, in_place=True):
   sift_arr_norm = preprocessing.normalize(sift_arr_norm, norm='l2', axis=1)
 
   # check if to make copy of the array
-  if in_place:
+  if inplace:
     ret_arr = sift_arr
   else:
     ret_arr = sift_arr.copy()
