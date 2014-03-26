@@ -406,7 +406,7 @@ def bayes_net_generic(use_gt=False):
   args = [x.strip() for x in args]  
   
   # use only top K
-  K = 50
+  K = 36
   args = args[:K]
   
   config = get_config(args)
