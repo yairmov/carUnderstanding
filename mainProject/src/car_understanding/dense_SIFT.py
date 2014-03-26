@@ -20,6 +20,8 @@ from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import cv2 as cv
 import pickle
+import numpy as np
+from sklearn import preprocessing
 
 __all__ = []
 __version__ = 0.1
@@ -63,6 +65,39 @@ def dense_SIFT(filename, grid_spacing=4):
   kp = detector.detect(img)
   (kp, desc) = descriptor.compute(img, kp)
   return (kp, desc)
+
+
+def normalize_sift(sift_arr, in_place=True):
+  '''
+  Normalize sift descriptors.
+  Descriptors who's norm is greater than one are normalized to unit,
+  then large values (>0.2) are clipped, and the vectors are renormalized.
+  '''
+  # Find indices of descriptors to be normalized (those whose norm is larger than 1)
+  normalize_ind = np.linalg.norm(sift_arr, 2, axis=1) > 1
+  sift_arr_norm = sift_arr[normalize_ind, :]
+
+  # Normalize them to 1
+  sift_arr_norm = preprocessing.normalize(sift_arr_norm, norm='l2', axis=1)
+
+  # Suppress large gradients
+  sift_arr_norm[sift_arr_norm > 0.2] = 0.2
+
+  # Finally, renormalize to unit length
+  sift_arr_norm = preprocessing.normalize(sift_arr_norm, norm='l2', axis=1)
+
+  # check if to make copy of the array
+  if in_place:
+    ret_arr = sift_arr
+  else:
+    ret_arr = sift_arr.copy()
+
+  ret_arr[normalize_ind, :] = sift_arr_norm
+
+  # Return pointer to modified array
+  return ret_arr
+
+
 
 
 def save_to_disk(kp, desc, out_filename):
@@ -140,7 +175,7 @@ USAGE dense_SIFT <input image names>
     paths = args.paths
     verbose = args.verbose
     out_path = args.out
-    
+
     # If out_path does not exist, create it (not thread safe)
     if not os.path.isdir(out_path):
       os.makedirs(out_path)
