@@ -20,6 +20,7 @@ from PIL import Image
 from path import path
 
 import Bow
+from dense_SIFT import load_from_disk, save_to_disk, normalize_sift
 
 def set_width_to_normalize_bb(img, xmin, xmax, to_width):
   w = xmax - xmin
@@ -315,7 +316,6 @@ if __name__ == '__main__':
 
 
 def run_norm_sift(dirname):
-  from dense_SIFT import load_from_disk, save_to_disk, normalize_sift
   sift_dir = path(dirname)
   pbar = ProgressBar(len(sift_dir.listfiles()))
   for ii, sift_file in enumerate(sift_dir.listfiles()):
