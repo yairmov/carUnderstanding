@@ -314,9 +314,9 @@ if __name__ == '__main__':
   pass
 
 
-def run_norm_sift(dataset, config):
+def run_norm_sift(dirname):
   from dense_SIFT import load_from_disk, save_to_disk, normalize_sift
-  sift_dir = path(config.SIFT.raw_dir)
+  sift_dir = path(dirname)
   pbar = ProgressBar(len(sift_dir.listfiles()))
   for ii, sift_file in enumerate(sift_dir.listfiles()):
     pbar.animate(ii)
