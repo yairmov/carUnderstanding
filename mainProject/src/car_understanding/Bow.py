@@ -46,18 +46,18 @@ def cluster_to_words(features, config):
 
 
     # normalize SIFT features
-    features = normalize_features(features)
+    # features = normalize_features(features)
 
     # Cluster features
     print "Clustering features into {} clusters".format(estimator.n_clusters)
     estimator.fit(features)
-    
+
     # Drop duplicate clusters (usually empty clusters)
     clusters = pd.DataFrame(data=estimator.cluster_centers_)
     clusters.drop_duplicates(inplace=True)
     estimator.cluster_centers_ = np.array(clusters)
     estimator.n_clusters = clusters.shape[0]
-    
+
     # Update config to show new number of clusters
     config.SIFT.BoW.num_clusters = estimator.n_clusters
 
@@ -77,7 +77,7 @@ def load(filename):
 
 def create_BoW_model(features, config):
   bow_model = cluster_to_words(features, config)
-  return bow_model 
+  return bow_model
 
 
 # Assign each features vector in features (row) to a cluster center from
@@ -86,25 +86,25 @@ def word_histogram(features, bow_model, config):
   from llc import LLC_encoding
 
   # normalize SIFT features
-  features = normalize_features(features)
+  # features = normalize_features(features)
 
 
   # using LLC encoding
   if config.SIFT.LLC.use:
     codebook = bow_model.cluster_centers_
     encoding = LLC_encoding(codebook, features, config.SIFT.LLC.knn, config.SIFT.LLC.beta)
-    
+
     # use max pooling for LLC
     hist = encoding.max(axis=0)
-  
-  
+
+
   else:
 
     word_ids = bow_model.predict(features)
     hist = np.histogram(word_ids, bins=config.SIFT.BoW.num_clusters,
                         range=[0, config.SIFT.BoW.num_clusters], density=True)
     hist = hist[0]
-    
+
   return hist
 
 
@@ -133,7 +133,7 @@ def create_word_histograms_on_dataset(train_annos, config):
 
   if not os.path.isdir(config.SIFT.BoW.hist_dir):
     os.makedirs(config.SIFT.BoW.hist_dir)
-        
+
   Parallel(n_jobs=-1, verbose=config.logging.verbose)(
                  delayed(create_word_histogram_on_file)(
                  os.path.join(dir_path,
@@ -155,14 +155,14 @@ def load_bow(data_annos, config):
   features = np.empty(shape=[len(data_annos), config.SIFT.BoW.num_clusters])
   progress = ProgressBar(len(data_annos))
   for ii in range(len(data_annos)):
-    img_name = data_annos.iloc[ii]['basename'] 
+    img_name = data_annos.iloc[ii]['basename']
     img_name = os.path.splitext(img_name)[0]
     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
                                  img_name) + '_hist.dat'
     hist = load(hist_filename)
     features[ii, :] = hist
     progress.animate(ii)
-    
+
   return features
 
 if __name__ == "__main__":
