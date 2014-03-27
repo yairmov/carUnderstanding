@@ -25,8 +25,8 @@ from dense_SIFT import load_from_disk, save_to_disk, normalize_sift
 
 def run_norm_sift(dirname):
   sift_dir = path(dirname)
-  pbar = ProgressBar(len(sift_dir.listfiles()))
-  for ii, sift_file in enumerate(sift_dir.listfiles()):
+  pbar = ProgressBar(len(sift_dir.listdir()))
+  for ii, sift_file in enumerate(sift_dir.listdir()):
     pbar.animate(ii)
     (kp, desc) = load_from_disk(sift_file)
     normalize_sift(desc, inplace=True)
