@@ -121,15 +121,15 @@ def load_SIFT_from_files(dataset, config):
 
   nfiles = len(train_annos)
   print 'Loading dense SIFT for %d training images ' % nfiles
-#   features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-#                  delayed(load_SIFT_from_a_file)(train_annos.iloc[ii], config)
-#                  for ii in range(nfiles))
+  features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
+                 delayed(load_SIFT_from_a_file)(train_annos.iloc[ii], config)
+                 for ii in range(nfiles))
 
-  features = []
-  pbar = ProgressBar(nfiles)
-  for ii in range(nfiles):
-    pbar.animate(ii)
-    features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
+#   features = []
+#   pbar = ProgressBar(nfiles)
+#   for ii in range(nfiles):
+#     pbar.animate(ii)
+#     features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
 
   # convert to numy arry
   features = np.concatenate(features)
