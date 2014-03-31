@@ -75,11 +75,11 @@ def calc_dense_SIFT_on_dataset(dataset, config):
   Just calls calc_dense_SIFT_one_img on all images in dataset using a
   parallel wrapper.
   '''
-  train_annos = dataset['train_annos']
+#   train_annos = dataset['train_annos']
 
   Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-                 delayed(calc_dense_SIFT_one_img)(train_annos.iloc[ii], config)
-                 for ii in range(len(train_annos)))
+                 delayed(calc_dense_SIFT_one_img)(dataset.iloc[ii], config)
+                 for ii in range(len(dataset)))
 
 def contains(box, point):
   '''
@@ -251,7 +251,7 @@ def run_attrib_training(args, cross_validation=False):
 
   #  RUN dense SIFT on alll images
 #   print "Saving Dense SIFT to disk"
-#   calc_dense_SIFT_on_dataset(dataset, config)
+#   calc_dense_SIFT_on_dataset(dataset['train_annos'], config)
 
   # Create BoW model
 #   features = load_SIFT_from_files(dataset, config)
