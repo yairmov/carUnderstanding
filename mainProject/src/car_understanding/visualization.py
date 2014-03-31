@@ -10,9 +10,12 @@ import numpy as np
 from sklearn import ensemble, decomposition, manifold
 from PIL import Image
 from path import path
+import pandas as pd
+import matplotlib.pyplot as plt
 
 import Bow
-
+from view_clustering import cluster
+from attribute_selector import AttributeSelector
 
 
 def create_image_page(img_files, html_file, width=200, num_per_row=9,
@@ -142,3 +145,55 @@ def plot_embedding(X, y=None, images=None, title=None):
   pl.xticks([]), pl.yticks([])
   if title is not None:
     pl.title(title)
+    
+    
+    
+def show_feature_matrix(annos, config, class_meta, attrib_names):
+  features = Bow.load_bow(annos, config)
+  features = pd.DataFrame(data=features, index=annos)
+  
+  K = 16
+  labels = cluster(annos, config, K)
+  # use cluster with median size
+  c = np.bincount(labels)
+  median_label = np.where(c == np.sort(c)[int(np.floor(c.shape[0] / 2))])[0][0]
+  d = annos[labels == median_label]
+#   curr_feat = features.loc[d.index]
+
+  attrib_selector = AttributeSelector(config, class_meta)
+  
+  
+  n_attrib = len(attrib_names)
+  
+  fig = plt.figure()
+  figrows = figcols = np.sqrt(n_attrib)  
+  for ii, attrib_name in enumerate(attrib_names):
+    pos_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
+    pos_img_ids = d[d.class_index.isin(pos_class_ids)].index
+    y = pd.Series(data = False, index=d.index)
+    y[pos_img_ids] = True
+    y.sort(ascending=False)
+    curr_feat = features.loc[y.index]
+    plt.subplot(figrows, figcols, ii)
+    
+    # show the feature vectors
+    plt.imshow(curr_feat); plt.axis('off'); plt.axis('normal'); plt.axis('tight')
+    plt.title(attrib_name)
+    
+    # draw a line to seperate pos/neg
+    n_pos = pos_img_ids.shape[0]
+    plt.hlines(n_pos, 0, curr_feat.shape[1], 
+               color='k', linestyle='dashed', 
+               linewidth=4)
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
