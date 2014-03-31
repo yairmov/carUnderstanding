@@ -22,7 +22,7 @@ from dense_SIFT import dense_SIFT, save_to_disk, load_from_disk
 import Bow as Bow
 from attribute_classifier import AttributeClassifier
 from bayes_net import BayesNet
-from car_understanding.util import ProgressBar
+from util import ProgressBar
 
 # def preprocess(args):
 #   config = get_config(args)
@@ -126,7 +126,6 @@ def load_SIFT_from_files(dataset, config):
 #                  for ii in range(nfiles))
 
   features = []
-#   from util import ProgressBar
   pbar = ProgressBar(nfiles)
   for ii in range(nfiles):
     pbar.animate(ii)
