@@ -166,7 +166,7 @@ def show_feature_matrix(annos, config, class_meta, attrib_names):
   n_attrib = len(attrib_names)
   
   fig = plt.figure()
-  figrows = figcols = np.sqrt(n_attrib)  
+  figrows = figcols = np.ceil(np.sqrt(n_attrib))  
   for ii, attrib_name in enumerate(attrib_names):
     pos_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
     pos_img_ids = d[d.class_index.isin(pos_class_ids)].index
