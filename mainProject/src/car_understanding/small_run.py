@@ -126,7 +126,7 @@ def load_SIFT_from_files(dataset, config):
 #                  for ii in range(nfiles))
 
   features = []
-  from util import ProgressBar
+#   from util import ProgressBar
   pbar = ProgressBar(nfiles)
   for ii in range(nfiles):
     pbar.animate(ii)
