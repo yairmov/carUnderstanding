@@ -186,6 +186,7 @@ def show_feature_matrix(annos, config, class_meta, attrib_names):
                color='k', linestyle='dashed', 
                linewidth=4)
     
+  plt.suptitle('Features from cluster: {}'.format(median_label))
   plt.show()
     
     
