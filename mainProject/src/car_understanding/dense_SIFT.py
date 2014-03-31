@@ -64,6 +64,10 @@ def dense_SIFT(filename, grid_spacing=4):
 
   kp = detector.detect(img)
   (kp, desc) = descriptor.compute(img, kp)
+  
+  # A bit hacky, but known to help classification accuracy later
+  normalize_sift(desc, inplace=True)
+  
   return (kp, desc)
 
 
