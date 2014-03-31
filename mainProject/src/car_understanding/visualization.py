@@ -174,7 +174,7 @@ def show_feature_matrix(annos, config, class_meta, attrib_names):
     y[pos_img_ids] = True
     y.sort(ascending=False)
     curr_feat = features.loc[y.index]
-    plt.subplot(figrows, figcols, ii)
+    plt.subplot(figrows, figcols, ii+1)
     
     # show the feature vectors
     plt.imshow(curr_feat); plt.axis('off'); plt.axis('normal'); plt.axis('tight')
@@ -186,6 +186,7 @@ def show_feature_matrix(annos, config, class_meta, attrib_names):
                color='k', linestyle='dashed', 
                linewidth=4)
     
+  plt.show()
     
     
   
