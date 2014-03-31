@@ -256,6 +256,7 @@ def run_attrib_training(args, cross_validation=False):
   # Create BoW model
   features = load_SIFT_from_files(dataset, config)
   print "Loaded %d SIFT features from disk" % features.shape[0]
+  return
   print "K-Means CLustering"
   bow_model = Bow.create_BoW_model(features, config)
   print("number of actual clusters found: {}".format(bow_model.n_clusters))
