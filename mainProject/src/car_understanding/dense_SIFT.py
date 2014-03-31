@@ -19,9 +19,10 @@ import os
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import cv2 as cv
-import pickle
+# import pickle
 import numpy as np
 from sklearn import preprocessing
+from sklearn.externals.joblib import load, dump
 
 __all__ = []
 __version__ = 0.1
@@ -121,12 +122,17 @@ def save_to_disk(kp, desc, out_filename):
 
   saved_data = dict(keypoints_as_dict=keypoints_as_dict, desc=desc)
 
-  with open(out_filename, 'wb') as outfile:
-    pickle.dump(saved_data, outfile, protocol=pickle.HIGHEST_PROTOCOL)
+  dump(saved_data, out_filename, compress=3)
+   
+#   with open(out_filename, 'wb') as outfile:
+#     pickle.dump(saved_data, outfile, protocol=pickle.HIGHEST_PROTOCOL)
+    
 
 def load_from_disk(infilename):
-  with open(infilename, 'rb') as infile:
-    saved_data = pickle.load(infile)
+#   with open(infilename, 'rb') as infile:
+#     saved_data = pickle.load(infile)
+
+  saved_data = load(infilename)
 
   desc = saved_data['desc']
   # now to convert the data back to opencv's cv2.Keypoint
