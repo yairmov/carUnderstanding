@@ -150,9 +150,7 @@ def plot_embedding(X, y=None, images=None, title=None):
     
 def show_feature_matrix(annos, config, class_meta, attrib_names):
   features = Bow.load_bow(annos, config)
-  print(features.shape)
-  return
-  features = pd.DataFrame(data=features, index=annos)
+  features = pd.DataFrame(data=features, index=annos.index)
   
   K = 16
   labels = cluster(annos, config, K)
