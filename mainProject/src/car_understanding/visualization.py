@@ -184,7 +184,7 @@ def show_feature_matrix(annos, config, class_meta, attrib_names):
     n_pos = pos_img_ids.shape[0]
     plt.hlines(n_pos, 0, curr_feat.shape[1], 
                color='k', linestyle='dashed', 
-               linewidth=4)
+               linewidth=2)
     
   plt.suptitle('Features from cluster: {}'.format(median_label))
   plt.show()
