@@ -188,7 +188,7 @@ class AttributeClassifier:
   def my_print(self, s):
     print "AttributeCLassifier(" + self.name + "):" + s
     
-  def run_training_pipeline(self, cv=True, grid_search=False):
+  def run_training_pipeline(self, cv=False, grid_search=False):
     """ The full sequence of operations that trains an attribute classifier"""
     
     self.my_print("Loading feature-word histograms from disk, and creating " + 
