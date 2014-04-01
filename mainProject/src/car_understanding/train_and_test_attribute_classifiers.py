@@ -55,7 +55,7 @@ def main(argv=None):  # IGNORE:C0111
   
   parser.add_argument(dest="attrib_names", help="attributes to train/test [default: %(default)s]", nargs='+', default=None)
 #   parser.add_argument("-c", "--crossval", dest="cv", default=False, action='store_true')
-  parser.add_argument("-g", "--grid-search", dest="grid-search", default=False, action='store_true')
+  parser.add_argument("-g", "--grid-search", dest="grid_search", default=False, action='store_true')
   
   # train flag
   parser.add_argument('--train',dest='train',action='store_true')
