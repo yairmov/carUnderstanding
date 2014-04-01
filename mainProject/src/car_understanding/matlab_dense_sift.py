@@ -34,4 +34,4 @@ def run_dense_sift_matlab(img_names, data_names):
                {'img_cell':img_cell, 'data_cell': data_cell})
   
   
-  matlab()
+  matlab('-nodisplay -nodesktop -nosplash -r ')
