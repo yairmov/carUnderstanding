@@ -3,7 +3,7 @@
   run('/usr0/home/ymovshov/Documents/Research/Code/thirdParty/vlfeat/toolbox/vl_setup');
   fprintf('loaded vlfeat\n')
 
-
+  tmp_dir_name = './tmp'
   % Load data from python
   fprintf('loading data\n')
   data = load(fullfile(tmp_dir_name, 'data.mat'));
