@@ -1,4 +1,5 @@
 % function dense_sift(tmp_dir_name)
+  fprintf('In MATLAB\n')
   % add vlfeat to path
   run('/usr0/home/ymovshov/Documents/Research/Code/thirdParty/vlfeat/toolbox/vl_setup');
   fprintf('loaded vlfeat\n')
