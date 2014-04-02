@@ -11,11 +11,9 @@
   data = load(fullfile(tmp_dir_name, 'data.mat'));
   img_names = data.img_cell;
   out_names = data.data_cell;
-  disp(img_names{1})
 
   n_imgs = length(img_names);
   fprintf('running dense sift on %d images\n', n_imgs)
-  return
 
   for i=1:n_imgs
     im = imread(img_names{i})
@@ -23,6 +21,7 @@
     save(out_names{i}, 'frame', 'descrs')
   end
   fprintf('done!\n')
+  return
 
 
   quit;
