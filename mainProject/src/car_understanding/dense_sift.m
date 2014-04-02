@@ -3,7 +3,7 @@
   % add vlfeat to path
   run('/usr0/home/ymovshov/Documents/Research/Code/thirdParty/vlfeat/toolbox/vl_setup');
   fprintf('loaded vlfeat\n')
-  return
+
 
   tmp_dir_name = './tmp'
   % Load data from python
@@ -11,6 +11,7 @@
   data = load(fullfile(tmp_dir_name, 'data.mat'));
   img_names = data.img_cell;
   out_names = data.data_cell;
+  return
 
   n_imgs = length(img_names)
   fprintf('running dense sift on %d images\n', n_imgs)
