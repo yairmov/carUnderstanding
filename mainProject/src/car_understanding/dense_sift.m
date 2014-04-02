@@ -5,16 +5,17 @@
   fprintf('loaded vlfeat\n')
 
 
-  tmp_dir_name = './tmp'
+  tmp_dir_name = './tmp';
   % Load data from python
   fprintf('loading data\n')
   data = load(fullfile(tmp_dir_name, 'data.mat'));
   img_names = data.img_cell;
   out_names = data.data_cell;
-  return
+
 
   n_imgs = length(img_names)
   fprintf('running dense sift on %d images\n', n_imgs)
+  return
 
   for i=1:n_imgs
     im = imread(img_names{i})
