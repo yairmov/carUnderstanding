@@ -2,6 +2,7 @@
   fprintf('In MATLAB\n')
   % add vlfeat to path
   run('/usr0/home/ymovshov/Documents/Research/Code/thirdParty/vlfeat/toolbox/vl_setup');
+  % run('/usr0/home/ymovshov/Documents/pre_2014_research/Code/3rd_Party/vlfeat/toolbox/vl_setup');
   fprintf('loaded vlfeat\n')
 
 
