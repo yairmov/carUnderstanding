@@ -17,8 +17,8 @@
 
   for i=1:n_imgs
     im = imread(img_names{i});
-    return
     [frames, descrs] = vl_phow(im2single(im), 'step', 4, 'sizes', [8 12 16 24 30]);
+    return
     save(out_names{i}, 'frame', 'descrs');
   end
   fprintf('done!\n')
