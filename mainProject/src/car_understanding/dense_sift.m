@@ -11,9 +11,9 @@
   data = load(fullfile(tmp_dir_name, 'data.mat'));
   img_names = data.img_cell;
   out_names = data.data_cell;
+  disp(img_names{1})
 
-
-  n_imgs = length(img_names)
+  n_imgs = length(img_names);
   fprintf('running dense sift on %d images\n', n_imgs)
   return
 
