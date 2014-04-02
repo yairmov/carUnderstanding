@@ -15,5 +15,5 @@ function dense_sift(tmp_dir_name)
   end
 
 
-  exit;
+  quit;
 end

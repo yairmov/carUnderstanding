@@ -24,14 +24,16 @@ def run_dense_sift_matlab(img_names, data_names):
   '''
   # convert lists to numpy object arrays. These will be loaded as cell arrays
   # in matlab.
-  
+
   img_cell = np.array(img_names, dtype=np.object)
   data_cell = np.array(data_names, dtype=np.object)
 #   directory_name = tempfile.mkdtemp()
   directory_name = './tmp'
-  
+
   sio.savemat(os.path.join(directory_name, 'data.mat'),
                {'img_cell':img_cell, 'data_cell': data_cell})
-  
-  
-  matlab('-nodisplay -nodesktop -nosplash -r ')
+
+
+  cmd_params = "-nodisplay -nodesktop -nosplash -r tmp_dir_name='{}'; dense_sift; quit;".format(directory_name)
+
+  matlab(cmd_params)
