@@ -24,5 +24,5 @@
   fprintf('done!\n')
 
 
-  % quit;
+  quit;
 % end
