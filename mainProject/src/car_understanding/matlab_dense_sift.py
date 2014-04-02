@@ -36,4 +36,6 @@ def run_dense_sift_matlab(img_names, data_names):
 
   cmd_params = "-nodisplay -nodesktop -nosplash -r tmp_dir_name='{}'; dense_sift; quit;".format(directory_name)
 
+
+  print 'claaing matlab with params: {}'.format(cmd_params)
   matlab(cmd_params)
