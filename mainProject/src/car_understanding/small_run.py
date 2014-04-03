@@ -101,9 +101,14 @@ def load_SIFT_from_a_file(curr_anno, config):
   box = (curr_anno['xmin'], curr_anno['xmax'],
          curr_anno['ymin'], curr_anno['ymax'])
 
-  inds = np.zeros(shape=[len(kp),], dtype=bool)
-  for jj in range(len(kp)):
-    inds[jj] = contains(box, kp[jj].pt)
+#   inds = np.zeros(shape=[len(kp),], dtype=bool)
+#   for jj in range(len(kp)):
+#     inds[jj] = contains(box, kp[jj].pt)
+
+  npts = kp.shape[0]
+  inds = np.zeros(shape=[(npts, )], dtype=bool)
+  for jj in range(npts):
+    inds[jj] = contains(box, kp[jj,:2])
 
   desc = desc[inds, :]
   kp = np.asarray(kp)[inds].tolist()
