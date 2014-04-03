@@ -227,6 +227,7 @@ class AttributeClassifier:
     
   @staticmethod  
   def save(attrib_classifier, filename):
+    print filename
     dump(attrib_classifier, filename)
       
   @staticmethod    
