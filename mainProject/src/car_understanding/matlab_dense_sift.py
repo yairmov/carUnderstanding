@@ -16,6 +16,7 @@ from path import path
 from sklearn.externals.joblib import dump
 
 from dense_SIFT import normalize_sift
+from util import ProgressBar
 
 def dense_sift_matlab(data_annos, config):
   p = path(config.dataset.main_path)
@@ -54,8 +55,15 @@ def run_dense_sift_matlab(img_names, data_names):
   matlab(cmd_params)
 
 
-def normalize_sift_data(data_names):
-  for name in data_names:
+def normalize_sift_data(data_annos, config):
+
+  data_names = data_annos.basename.map(lambda x: str(os.path.splitext(x)[0]))
+  p = path(config.SIFT.matlab.raw_dir)
+  data_names = np.array(data_names.map(lambda x: str(p.joinpath(x))))
+
+  pbar = ProgressBar(len(data_names))
+  for ii, name in enumerate(data_names):
+    pbar.animate(ii)
     a = sio.loadmat(name)
     desc = a['desc']
     frames = a['frames']
