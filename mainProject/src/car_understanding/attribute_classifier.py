@@ -114,12 +114,12 @@ class AttributeClassifier:
     "features.shape[0] == num_pos + num_neg"
      
      
-#     string_labels = np.empty(shape=labels.shape, dtype=np.object)
-#     trueval = self.name
-#     falseval = 'NOT-' + self.name
-#     string_labels[labels] = trueval
-#     string_labels[np.logical_not(labels)] = falseval
-#     labels = string_labels
+    string_labels = np.empty(shape=labels.shape, dtype=np.object)
+    trueval = self.name
+    falseval = 'NOT-' + self.name
+    string_labels[labels] = trueval
+    string_labels[np.logical_not(labels)] = falseval
+    labels = string_labels
     
 #     dump([features, labels], 'features_eq.tmp') 
   
@@ -228,7 +228,7 @@ class AttributeClassifier:
     
   @staticmethod  
   def save(attrib_classifier, filename):
-    dump(attrib_classifier, filename, compress=0)
+    dump(attrib_classifier, filename, compress=3)
       
   @staticmethod    
   def load(filename):
