@@ -146,7 +146,7 @@ class AttributeClassifier:
                           ]
       
       tuned_parameters = [{'penalty': ['l1'],
-                           'C': [1e-3, 1e-2, 1e-1, 1],}]
+                           'C': [1e-3, 1e-2],}]
       
       print("# Tuning hyper-parameters")
       print('')
