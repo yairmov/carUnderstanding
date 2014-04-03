@@ -12,7 +12,7 @@ car_understanding.attribute_classifier -- a single attribute classifier
 import sklearn as sk
 from sklearn.externals.joblib import dump, load
 from sklearn.grid_search import GridSearchCV
-from sklearn.svm import SVC
+from sklearn.svm import SVC, LinearSVC
 from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
@@ -49,7 +49,8 @@ class AttributeClassifier:
 #                            class_weight='auto',
 #                            C=1, gamma=1e-3,
 #                            probability=True)
-    self.clf          = SVC(kernel='linear', class_weight='auto')
+
+    self.clf          = LinearSVC(class_weight='auto')
 #     self.clf          = GradientBoostingClassifier(n_estimators=100, 
 #                                                    learning_rate=1.0, 
 #                                                    max_depth=1)
