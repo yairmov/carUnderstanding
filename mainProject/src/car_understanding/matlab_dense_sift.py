@@ -12,7 +12,18 @@ import numpy as np
 import scipy.io as sio
 import tempfile
 import os
+from path import path
 
+
+
+def dense_sift_matlab(data_annos, config):
+  p = path(config.dataset.main_path)
+  img_names = data_annos.rel_path.map(lambda x: p.joinpath(x))
+  data_names = data_annos.basename.map(lambda x: os.path.splitext(x)[0])
+  p = path(config.SIFT.matlab.raw_dir)
+  data_names = data_names.map(lambda x: p.joinpath(x))
+
+  run_dense_sift_matlab(img_names, data_names)
 
 
 def run_dense_sift_matlab(img_names, data_names):

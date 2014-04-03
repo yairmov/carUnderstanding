@@ -19,8 +19,8 @@ function dense_sift(tmp_dir_name)
   for i=1:n_imgs
     im = imread(img_names{i});
     % each col of frames is: [x, y, ???, patch_size]
-    [frames, descrs] = vl_phow(im2single(im), 'step', 4, 'sizes', [8 12 16 24 30]);
-    save(out_names{i}, 'frames', 'descrs');
+    [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', [8 12 16 24 30]);
+    save(out_names{i}, 'frames', 'desc');
   end
   fprintf('done!\n')
 
