@@ -145,7 +145,7 @@ class AttributeClassifier:
                            }
                           ]
       
-      tuned_parameters = [{'penalty': ['l2'],
+      tuned_parameters = [{'penalty': ['l1'],
                            'C': [1, 10, 100, 1000],}]
       
       print("# Tuning hyper-parameters")
@@ -154,7 +154,7 @@ class AttributeClassifier:
 #       clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
 #                           n_jobs=-1,
 #                           verbose=3)
-      clf = GridSearchCV(LinearSVC(C=1), tuned_parameters, cv=5, scoring='precision',
+      clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters, cv=5, scoring='precision',
                           n_jobs=11,
                           verbose=3)
       clf.fit(features, labels)
