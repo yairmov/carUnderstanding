@@ -106,15 +106,13 @@ def load_SIFT_from_a_file(curr_anno, config):
 #     inds[jj] = contains(box, kp[jj].pt)
 
   npts = kp.shape[0]
-  print type(npts)
-  import sys
-  sys.exit()
   inds = np.zeros(shape=[(npts, )], dtype=bool)
   for jj in range(npts):
     inds[jj] = contains(box, kp[jj,:2])
 
   desc = desc[inds, :]
-  kp = np.asarray(kp)[inds].tolist()
+#   kp = np.asarray(kp)[inds].tolist()
+  kp = kp[inds,:]
 
   # Random selection of a subset of the keypojnts/descriptors
   inds  = np.random.permutation(desc.shape[0])
@@ -130,15 +128,15 @@ def load_SIFT_from_files(dataset, config):
 
   nfiles = len(train_annos)
   print 'Loading dense SIFT for %d training images ' % nfiles
-  features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-                 delayed(load_SIFT_from_a_file)(train_annos.iloc[ii], config)
-                 for ii in range(nfiles))
+#   features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
+#                  delayed(load_SIFT_from_a_file)(train_annos.iloc[ii], config)
+#                  for ii in range(nfiles))
 
-#   features = []
-#   pbar = ProgressBar(nfiles)
-#   for ii in range(nfiles):
-#     pbar.animate(ii)
-#     features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
+  features = []
+  pbar = ProgressBar(nfiles)
+  for ii in range(nfiles):
+    pbar.animate(ii)
+    features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
 
   # convert to numy arry
   features = np.concatenate(features)
