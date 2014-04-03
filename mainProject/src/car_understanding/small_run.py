@@ -135,7 +135,8 @@ def load_SIFT_from_files(dataset, config):
   features = []
   pbar = ProgressBar(nfiles)
   for ii in range(nfiles):
-    pbar.animate(ii)
+#     pbar.animate(ii)
+    print ii
     features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
 
   # convert to numy arry
