@@ -65,10 +65,10 @@ def dense_SIFT(filename, grid_spacing=4):
 
   kp = detector.detect(img)
   (kp, desc) = descriptor.compute(img, kp)
-  
+
   # A bit hacky, but known to help classification accuracy later
   normalize_sift(desc, inplace=True)
-  
+
   return (kp, desc)
 
 
@@ -106,7 +106,6 @@ def normalize_sift(sift_arr, inplace=True):
 
 
 def save_to_disk(kp, desc, out_filename):
-
   # create a dictionary with the saved data
   # You can't just pickle cv2.Keypoint (cause opencv sucks) so I need to
   # do some manual conversions here
@@ -123,27 +122,26 @@ def save_to_disk(kp, desc, out_filename):
   saved_data = dict(keypoints_as_dict=keypoints_as_dict, desc=desc)
 
   dump(saved_data, out_filename, compress=3)
-   
-#   with open(out_filename, 'wb') as outfile:
-#     pickle.dump(saved_data, outfile, protocol=pickle.HIGHEST_PROTOCOL)
-    
 
-def load_from_disk(infilename):
-#   with open(infilename, 'rb') as infile:
-#     saved_data = pickle.load(infile)
+
+def load_from_disk(infilename, matlab_version=False):
 
   saved_data = load(infilename)
 
   desc = saved_data['desc']
-  # now to convert the data back to opencv's cv2.Keypoint
-  kp = []
-  keypoints_as_dict = saved_data['keypoints_as_dict']
-  for point in keypoints_as_dict:
-    tmp = cv.KeyPoint(x=point['pt'][0], y=point['pt'][1], _size=point['size'],
-                       _angle=point['angle'], _response=point['response'],
-                       _octave=point['octave'], _class_id=point['class_id'])
 
-    kp.append(tmp)
+  if matlab_version:
+    kp = saved_data['frames']
+  else:
+    # now to convert the data back to opencv's cv2.Keypoint
+    kp = []
+    keypoints_as_dict = saved_data['keypoints_as_dict']
+    for point in keypoints_as_dict:
+      tmp = cv.KeyPoint(x=point['pt'][0], y=point['pt'][1], _size=point['size'],
+                         _angle=point['angle'], _response=point['response'],
+                         _octave=point['octave'], _class_id=point['class_id'])
+
+      kp.append(tmp)
   return (kp, desc)
 
 

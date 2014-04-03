@@ -13,8 +13,9 @@ import scipy.io as sio
 import tempfile
 import os
 from path import path
+from sklearn.externals.joblib import dump
 
-
+from dense_SIFT import normalize_sift
 
 def dense_sift_matlab(data_annos, config):
   p = path(config.dataset.main_path)
@@ -51,3 +52,14 @@ def run_dense_sift_matlab(img_names, data_names):
 
   print 'calling matlab with params: {}'.format(cmd_params)
   matlab(cmd_params)
+
+
+def normalize_sift_data(data_names):
+  for name in data_names:
+    a = sio.loadmat(name)
+    desc = a['desc']
+    frames = a['frames']
+    normalize_sift(desc, inplace=True)
+    out_name = os.path.splitext(name)[0] + '.dat'
+    dump(dict(frames=frames, desc=desc), out_name, compress=3)
+
