@@ -104,7 +104,9 @@ def load_SIFT_from_a_file(curr_anno, config):
 #   inds = np.zeros(shape=[len(kp),], dtype=bool)
 #   for jj in range(len(kp)):
 #     inds[jj] = contains(box, kp[jj].pt)
-
+  
+  print kp.shape
+  import sys; sys.exit(0)
   npts = kp.shape[0]
   inds = np.zeros(shape=[(npts, )], dtype=bool)
   for jj in range(npts):
@@ -136,7 +138,6 @@ def load_SIFT_from_files(dataset, config):
   pbar = ProgressBar(nfiles)
   for ii in range(nfiles):
 #     pbar.animate(ii)
-    print ii
     features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
 
   # convert to numy arry
