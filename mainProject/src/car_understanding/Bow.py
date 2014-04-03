@@ -117,7 +117,8 @@ def create_word_histogram_on_file(raw_feature_file, bow_model, config):
 #   logfile = os.path.join('tmp', os.path.basename(raw_feature_file))
 #   with open(logfile, 'w') as f:
 #     f.write('Start\n')
-  (kp, desc) = dense_SIFT.load_from_disk(raw_feature_file)
+  (kp, desc) = dense_SIFT.load_from_disk(raw_feature_file,
+                                         matlab_version=True)
   hist = word_histogram(desc, bow_model, config)
   (name, ext) = os.path.splitext(os.path.split(raw_feature_file)[1])
   hist_filename = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
