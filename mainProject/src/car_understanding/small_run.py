@@ -94,7 +94,8 @@ def contains(box, point):
 
 def load_SIFT_from_a_file(curr_anno, config):
   curr_file = os.path.splitext(curr_anno['basename'])[0] + '.dat'
-  (kp, desc) = load_from_disk(os.path.join(config.SIFT.raw_dir, curr_file))
+  (kp, desc) = load_from_disk(os.path.join(config.SIFT.raw_dir, curr_file),
+                              matlab_version=True)
 
   # Only keep points that are inside the bounding box
   box = (curr_anno['xmin'], curr_anno['xmax'],
