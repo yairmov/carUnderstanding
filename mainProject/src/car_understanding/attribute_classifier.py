@@ -140,13 +140,13 @@ class AttributeClassifier:
 #                            'C': [1, 10, 100, 1000], 
 # #                            'class_weight': ['auto']
 #                            },
-                          {'kernel': ['linear'], 'C': [1e-3, 1e-2, 1e-1, 1, 10, 100, 1000],
+                          {'kernel': ['linear'], 'C': [1, 10, 100, 1000],
                             'class_weight': ['auto']
                            }
                           ]
       
       tuned_parameters = [{'penalty': ['l1'],
-                           'C': [1, 10, 100, 1000],}]
+                           'C': [1e-3, 1e-2, 1e-1, 1, 10, 100, 1000],}]
       
       print("# Tuning hyper-parameters")
       print('')
