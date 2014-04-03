@@ -48,10 +48,10 @@ class AttributeClassifier:
 #                            class_weight='auto',
 #                            C=1, gamma=1e-3,
 #                            probability=True)
-    self.clf          = SVC(kernel='linear', class_weight='auto')
-#     self.clf          = GradientBoostingClassifier(n_estimators=100, 
-#                                                    learning_rate=1.0, 
-#                                                    max_depth=1)
+#     self.clf          = SVC(kernel='linear', class_weight='auto')
+    self.clf          = GradientBoostingClassifier(n_estimators=100, 
+                                                   learning_rate=1.0, 
+                                                   max_depth=1)
     self.Scaler       = StandardScaler()
     
 #     self.clf          = Pipeline([('Scaler', Scaler()), 
