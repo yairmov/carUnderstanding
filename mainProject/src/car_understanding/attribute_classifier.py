@@ -44,6 +44,7 @@ class AttributeClassifier:
     self.pos_img_inds = pos_inds
     self.dataset      = dataset.copy()
     self.desc         = desc
+    self.probability  = config.use_prob
 #     self.clf          = SVC(kernel='rbf', 
 #                            class_weight='auto',
 #                            C=1, gamma=1e-3,
@@ -207,7 +208,7 @@ class AttributeClassifier:
     
   def decision_function(self, features, use_prob=True):
     features = self.Scaler.transform(features)
-    if self.clf.probability and use_prob:
+    if use_prob and self.probability:
       return self.clf.predict_proba(features)[:,0]
     return self.clf.decision_function(features)
     
