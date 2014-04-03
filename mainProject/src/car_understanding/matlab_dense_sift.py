@@ -66,6 +66,8 @@ def normalize_sift_data(data_annos, config):
     pbar.animate(ii)
     a = sio.loadmat(name)
     desc = a['desc']
+    print type(desc)
+    return
     frames = a['frames']
     normalize_sift(desc, inplace=True)
     out_name = os.path.splitext(name)[0] + '.dat'
