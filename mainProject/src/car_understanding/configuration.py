@@ -18,7 +18,7 @@ def get_config(args):
   config.cache_dir = assign_dir(os.path.join(config.main_path, 'cache'))
   config.bb_width = 200
   config.logging.verbose = 3
-  
+
   config.output_dir = assign_dir(os.path.join(config.main_path, 'output'))
 
   # SIFT
@@ -26,29 +26,29 @@ def get_config(args):
   config.SIFT.raw_dir = assign_dir(os.path.join(config.SIFT.dir, 'raw'))
   config.SIFT.grid_spacing = 4
   config.SIFT.BoW.model_file = os.path.join(config.SIFT.dir, 'BoW_model.dat')
-  config.SIFT.BoW.hist_dir = assign_dir(os.path.join(config.SIFT.dir, 
+  config.SIFT.BoW.hist_dir = assign_dir(os.path.join(config.SIFT.dir,
                                                      'word_hist'))
-  
+
   # Ugly hack that uses matlab code for SIFT
   config.SIFT.matlab.use = True
-  config.SIFT.matlab.raw_dir = config.SIFT.dir
-  
-  # 
+  config.SIFT.matlab.raw_dir = config.SIFT.raw_dir
+
+  #
   config.SIFT.BoW.requested_n_clusters = 1024
   # Number of clusters after clustering has been done (<= requested_n_clusters)
   config.SIFT.BoW.num_clusters = 1010 #(TODO: find a nice way to do this)
   config.SIFT.BoW.max_desc_per_img = 1000
   config.SIFT.BoW.max_desc_total = 4e6
-  
+
   # SIFT-LLC
   config.SIFT.LLC.use = True
   config.SIFT.LLC.knn = 5
   config.SIFT.LLC.beta = 3e-2
-  
+
   # HOG
   config.HOG.orientations = 9
   config.HOG.pixels_per_cell = (8, 8)
-  
+
   # LBP
   config.LPB.P = 8 # Number of circularly symmetric neighbour set points (quantization of the angular space).
   config.LPB.R = 8 # Radius of circle (spatial resolution of the operator).
@@ -76,7 +76,7 @@ def get_config(args):
                                                   'domain_meta.txt')
   config.dataset.train_annos_file =  os.path.join(config.dataset.main_path,
                                                   'train_annos.txt')
-  
+
   # The test annos file doesn't have class indices.
   # To get test performance you need to submit to a server.
   config.dataset.test_annos_file =  os.path.join(config.dataset.main_path,
@@ -86,19 +86,19 @@ def get_config(args):
   # test data. At some point we need to submit results to their server.
   config.dataset.dev_set.use = True
   config.dataset.dev_set.test_size = 10 # per class
-  config.dataset.dev_set.rand_seed = 12 
+  config.dataset.dev_set.rand_seed = 12
 
 
   # Attribute Params
   config.attribute.names = args
-  config.attribute.dir = assign_dir(os.path.join(config.main_path, 
+  config.attribute.dir = assign_dir(os.path.join(config.main_path,
                                       'attribute_classifiers'))
   config.attribute.high_thresh = 0.65
   # should classifiers be normalized to output probabilities
-  config.attribute.use_prob = False 
-  
-  
-  
+  config.attribute.use_prob = False
+
+
+
   return config
 
 
@@ -110,13 +110,13 @@ def get_main_path(hostname):
     main_path = '/Volumes/palfrey/Documents/Research/Code/carUnderstanding'
   else:
     raise Exception("Unknown hostname! please define config.main_path")
-  
-  return main_path 
+
+  return main_path
 
 def assign_dir(dir_name):
   if not os.path.isdir(dir_name):
     os.makedirs(dir_name)
-  
+
   return dir_name
 
 if __name__ == '__main__':
