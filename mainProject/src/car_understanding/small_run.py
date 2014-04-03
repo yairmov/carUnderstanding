@@ -106,6 +106,9 @@ def load_SIFT_from_a_file(curr_anno, config):
 #     inds[jj] = contains(box, kp[jj].pt)
 
   npts = kp.shape[0]
+  print type(npts)
+  import sys
+  sys.exit()
   inds = np.zeros(shape=[(npts, )], dtype=bool)
   for jj in range(npts):
     inds[jj] = contains(box, kp[jj,:2])
