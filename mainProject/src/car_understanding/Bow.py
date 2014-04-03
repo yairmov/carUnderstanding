@@ -17,7 +17,7 @@ from sklearn import preprocessing
 from sklearn.externals.joblib import Parallel, delayed
 
 # Import my code
-from configuration import get_config
+# from configuration import get_config
 # import fgcomp_dataset_utils as fgu
 import dense_SIFT
 from util import ProgressBar
