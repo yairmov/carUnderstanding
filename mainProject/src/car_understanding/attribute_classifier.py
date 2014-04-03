@@ -228,8 +228,7 @@ class AttributeClassifier:
     
   @staticmethod  
   def save(attrib_classifier, filename):
-    print filename
-    dump(attrib_classifier, filename)
+    dump(attrib_classifier, filename, compression=3)
       
   @staticmethod    
   def load(filename):
