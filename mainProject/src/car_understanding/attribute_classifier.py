@@ -97,13 +97,13 @@ class AttributeClassifier:
     
     
     # make pos/neg sets of equal size
-    pos_inds = labels.nonzero()[0]
-    neg_inds = np.logical_not(labels).nonzero()[0]
-    neg_inds = np.random.permutation(neg_inds)[:num_pos]
-      
-    features = features[np.concatenate([pos_inds, neg_inds]), :]
-    labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
-                             np.zeros(shape=neg_inds.shape, dtype=bool)])
+#     pos_inds = labels.nonzero()[0]
+#     neg_inds = np.logical_not(labels).nonzero()[0]
+#     neg_inds = np.random.permutation(neg_inds)[:num_pos]
+#       
+#     features = features[np.concatenate([pos_inds, neg_inds]), :]
+#     labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
+#                              np.zeros(shape=neg_inds.shape, dtype=bool)])
      
      
     num_pos = sum(labels)
@@ -114,12 +114,12 @@ class AttributeClassifier:
     "features.shape[0] == num_pos + num_neg"
      
      
-    string_labels = np.empty(shape=labels.shape, dtype=np.object)
-    trueval = self.name
-    falseval = 'NOT-' + self.name
-    string_labels[labels] = trueval
-    string_labels[np.logical_not(labels)] = falseval
-    labels = string_labels
+#     string_labels = np.empty(shape=labels.shape, dtype=np.object)
+#     trueval = self.name
+#     falseval = 'NOT-' + self.name
+#     string_labels[labels] = trueval
+#     string_labels[np.logical_not(labels)] = falseval
+#     labels = string_labels
     
 #     dump([features, labels], 'features_eq.tmp') 
   
