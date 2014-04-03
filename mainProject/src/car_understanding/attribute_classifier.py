@@ -44,7 +44,7 @@ class AttributeClassifier:
     self.pos_img_inds = pos_inds
     self.dataset      = dataset.copy()
     self.desc         = desc
-    self.probability  = config.use_prob
+    self.probability  = config.attribute.use_prob
 #     self.clf          = SVC(kernel='rbf', 
 #                            class_weight='auto',
 #                            C=1, gamma=1e-3,
