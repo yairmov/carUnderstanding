@@ -29,16 +29,16 @@ def get_config(args):
   config.SIFT.BoW.hist_dir = assign_dir(os.path.join(config.SIFT.dir,
                                                      'word_hist'))
 
-  # Ugly hack that uses matlab code for SIFT
-  config.SIFT.matlab.use = True
-  config.SIFT.matlab.raw_dir = config.SIFT.raw_dir
-
   #
   config.SIFT.BoW.requested_n_clusters = 4000
   # Number of clusters after clustering has been done (<= requested_n_clusters)
   config.SIFT.BoW.num_clusters = 4000 #(TODO: find a nice way to do this)
   config.SIFT.BoW.max_desc_per_img = 1000
-  config.SIFT.BoW.max_desc_total = 4e6
+  config.SIFT.BoW.max_desc_total = 4e5
+
+  # Ugly hack that uses matlab code for SIFT
+  config.SIFT.matlab.use = True
+  config.SIFT.matlab.raw_dir = config.SIFT.raw_dir
 
   # SIFT-LLC
   config.SIFT.LLC.use = True
