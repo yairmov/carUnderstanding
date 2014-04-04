@@ -12,7 +12,7 @@ import json
 
 def save_to_file(config, fname):
   with open(fname, 'w') as f:
-    json.dump(config.convertTo('nested_dict'), f)
+    json.dump(config.convertTo('nested_dict'), f, indent=2)
     
 def load_From_file(fname):
   with open(fname, 'r') as f:
