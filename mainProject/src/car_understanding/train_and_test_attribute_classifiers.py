@@ -79,7 +79,7 @@ def main(argv=None):  # IGNORE:C0111
   print("Got arguments: ")
   print(args)
 
-  config = get_config(args.attrib_names)
+  config = get_config([str.lower(x) for x in args.attrib_names])
   (dataset, config) = fgu.get_all_metadata(config)
   
   if args.train:
@@ -93,7 +93,6 @@ def test(args, config, dataset):
   print("========")
   print("")
   test_annos = dataset['test_annos']
-#   test_annos = dataset['train_annos']
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
   
   print "Load image Bow histograms from disk"
