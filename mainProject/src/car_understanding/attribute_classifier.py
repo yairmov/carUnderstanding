@@ -50,7 +50,7 @@ class AttributeClassifier:
 #                            C=1, gamma=1e-3,
 #                            probability=True)
 
-    self.clf          = LinearSVC(class_weight='auto', loss='l2', c=1e-2)
+    self.clf          = LinearSVC(class_weight='auto', loss='l2', C=1e-2)
 #     self.clf          = GradientBoostingClassifier(n_estimators=100, 
 #                                                    learning_rate=1.0, 
 #                                                    max_depth=1)
