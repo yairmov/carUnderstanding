@@ -5,6 +5,9 @@ function dense_sift(tmp_dir_name)
   % run('/usr0/home/ymovshov/Documents/pre_2014_research/Code/3rd_Party/vlfeat/toolbox/vl_setup');
   fprintf('loaded vlfeat\n')
 
+  % open matlab worker pool
+  matlabpool open 12
+
 
   % tmp_dir_name = './tmp';
   % Load data from python
@@ -27,5 +30,7 @@ function dense_sift(tmp_dir_name)
   fprintf('done!\n')
 
 
+  % close pool
+  matlabpool close force
   quit;
 % end

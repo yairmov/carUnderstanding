@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 # from clint.textui import progress
 import sys
 import cv2 as cv
+from path import path
+
 # import base64
 # import numpy as np
 # import pandas as pd
@@ -180,6 +182,12 @@ def series_to_iplot(series, name=''):
     line['name'] = name
 
     return [line]
+
+
+def makedir_if_needed(name):
+  p = path(name)
+  if not p.isdir():
+    p.makedirs()
 
 
 # def create_image_page(img_files, html_file, width=200, num_per_row=9,

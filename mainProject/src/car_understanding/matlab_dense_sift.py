@@ -10,13 +10,13 @@ Created on Apr 1, 2014
 from sh import matlab
 import numpy as np
 import scipy.io as sio
-import tempfile
 import os
 from path import path
 from sklearn.externals.joblib import dump
+import shutil
 
 from dense_SIFT import normalize_sift
-from util import ProgressBar
+import util
 
 def dense_sift_matlab(data_annos, config):
   p = path(config.dataset.main_path)
@@ -24,6 +24,9 @@ def dense_sift_matlab(data_annos, config):
   data_names = data_annos.basename.map(lambda x: str(os.path.splitext(x)[0]))
   p = path(config.SIFT.matlab.raw_dir)
   data_names = data_names.map(lambda x: str(p.joinpath(x)))
+  
+  print data_names.head()
+  return
 
   run_dense_sift_matlab(img_names, data_names)
 
@@ -40,19 +43,21 @@ def run_dense_sift_matlab(img_names, data_names):
 
   img_cell = np.array(img_names, dtype=np.object)
   data_cell = np.array(data_names, dtype=np.object)
-#   directory_name = tempfile.mkdtemp()
   directory_name = './tmp'
+  util.makedir_if_needed(directory_name)
 
   sio.savemat(os.path.join(directory_name, 'data.mat'),
                {'img_cell':img_cell, 'data_cell': data_cell})
 
 
   cmd_params = '''-nodisplay -nodesktop -nosplash -r "dense_sift('{}'); quit" '''.format(directory_name)
-  # cmd_params = '-nodisplay -nodesktop -nosplash -r "dense_sift; quit" '
 
 
   print 'calling matlab with params: {}'.format(cmd_params)
   matlab(cmd_params)
+  
+  # remove the tmp dir
+  shutil.rmtree(directory_name)
 
 
 def normalize_sift_data(data_annos, config):
@@ -61,7 +66,7 @@ def normalize_sift_data(data_annos, config):
   p = path(config.SIFT.matlab.raw_dir)
   data_names = np.array(data_names.map(lambda x: str(p.joinpath(x))))
 
-  pbar = ProgressBar(len(data_names))
+  pbar = util.ProgressBar(len(data_names))
   for ii, name in enumerate(data_names):
     a = sio.loadmat(name)
     desc = a['desc']
