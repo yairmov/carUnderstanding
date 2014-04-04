@@ -16,8 +16,7 @@ from sklearn.metrics import auc
 from sklearn.metrics import classification_report
 import pandas as pd
 import matplotlib.pyplot as plt
-# from mpltools import style
-# style.use('ggplot')
+from prettytable import PrettyTable
 
 
 from configuration import get_config
@@ -124,6 +123,9 @@ def test(args, config, dataset):
   res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
   
   K = np.ceil(np.sqrt(len(args.attrib_names)))
+  table = PrettyTable(['Attribute', 'Area Under Curve'])
+  table.align['Attribute'] = 'l'
+  table.padding_width = 1
   for ii, attrib_name in enumerate(args.attrib_names):
     pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
     true_labels = np.array(res.class_index.isin(pos_classes))
@@ -141,6 +143,7 @@ def test(args, config, dataset):
     precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
     score = auc(recall, precision)
+    table.add_row([attrib_name, score])
     print("Area Under Curve: %0.2f" % score)
     print ("")
     if args.plot:
@@ -151,6 +154,8 @@ def test(args, config, dataset):
       plt.xlabel('Recall')
       plt.ylabel('Precision')
       plt.legend(['area = {}'.format(score)])
+  
+  print table
     
   if args.plot:
     plt.draw()
