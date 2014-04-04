@@ -8,6 +8,17 @@ Created on Jan 16, 2014
 from treedict import TreeDict
 import os
 import socket
+import json
+
+def save_to_file(config, fname):
+  with open(fname, 'w') as f:
+    json.dump(config.convertTo('nested_dict'), f)
+    
+def load_From_file(fname):
+  with open(fname, 'r') as f:
+    d = json.load(f)
+    
+  return TreeDict.fromdict(d, expand_nested=True)
 
 def get_config(args):
   config = TreeDict()
@@ -94,7 +105,7 @@ def get_config(args):
   config.attribute.names = args
   config.attribute.dir = assign_dir(os.path.join(config.main_path,
                                       'attribute_classifiers'))
-  config.attribute.high_thresh = 2
+  config.attribute.high_thresh = 0
   # should classifiers be normalized to output probabilities
   config.attribute.use_prob = False
 
