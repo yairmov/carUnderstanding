@@ -30,9 +30,9 @@ def get_config(args):
                                                      'word_hist'))
 
   #
-  config.SIFT.BoW.requested_n_clusters = 4000
+  config.SIFT.BoW.requested_n_clusters = 3516
   # Number of clusters after clustering has been done (<= requested_n_clusters)
-  config.SIFT.BoW.num_clusters = 4000 #(TODO: find a nice way to do this)
+  config.SIFT.BoW.num_clusters = 3516 #(TODO: find a nice way to do this)
   config.SIFT.BoW.max_desc_per_img = 1000
   config.SIFT.BoW.max_desc_total = 4e5
 
