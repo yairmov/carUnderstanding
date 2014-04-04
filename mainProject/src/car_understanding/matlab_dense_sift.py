@@ -25,13 +25,10 @@ def dense_sift_matlab(data_annos, config):
   p = path(config.SIFT.matlab.raw_dir)
   data_names = data_names.map(lambda x: str(p.joinpath(x + '.mat')))
   
-  print data_names.head()
-  return
-
-  run_dense_sift_matlab(img_names, data_names)
+  run_dense_sift_matlab(img_names, data_names, config.SIFT.matlab.sizes)
 
 
-def run_dense_sift_matlab(img_names, data_names):
+def run_dense_sift_matlab(img_names, data_names, sizes):
   '''
   Calculates dense sift using matlab.
   img_names - list of paths to images.
@@ -47,7 +44,8 @@ def run_dense_sift_matlab(img_names, data_names):
   util.makedir_if_needed(directory_name)
 
   sio.savemat(os.path.join(directory_name, 'data.mat'),
-               {'img_cell':img_cell, 'data_cell': data_cell})
+               {'img_cell':img_cell, 'data_cell': data_cell,
+                'sizes': sizes})
 
 
   cmd_params = '''-nodisplay -nodesktop -nosplash -r "dense_sift('{}'); quit" '''.format(directory_name)
@@ -64,7 +62,7 @@ def normalize_sift_data(data_annos, config):
 
   data_names = data_annos.basename.map(lambda x: str(os.path.splitext(x)[0]))
   p = path(config.SIFT.matlab.raw_dir)
-  data_names = np.array(data_names.map(lambda x: str(p.joinpath(x))))
+  data_names = np.array(data_names.map(lambda x: str(p.joinpath(x + '.mat'))))
 
   pbar = util.ProgressBar(len(data_names))
   for ii, name in enumerate(data_names):

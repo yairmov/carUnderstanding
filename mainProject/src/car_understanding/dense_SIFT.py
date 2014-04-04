@@ -142,6 +142,7 @@ def load_from_disk(infilename, matlab_version=False):
                          _octave=point['octave'], _class_id=point['class_id'])
 
       kp.append(tmp)
+            
   return (kp, desc)
 
 

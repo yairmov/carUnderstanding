@@ -30,15 +30,16 @@ def get_config(args):
                                                      'word_hist'))
 
   #
-  config.SIFT.BoW.requested_n_clusters = 3516
+  config.SIFT.BoW.requested_n_clusters = 1000
   # Number of clusters after clustering has been done (<= requested_n_clusters)
-  config.SIFT.BoW.num_clusters = 3516 #(TODO: find a nice way to do this)
-  config.SIFT.BoW.max_desc_per_img = 1000
+  config.SIFT.BoW.num_clusters = 1000 #(TODO: find a nice way to do this)
+#   config.SIFT.BoW.max_desc_per_img = 1000
   config.SIFT.BoW.max_desc_total = 4e5
 
   # Ugly hack that uses matlab code for SIFT
   config.SIFT.matlab.use = True
   config.SIFT.matlab.raw_dir = config.SIFT.raw_dir
+  config.SIFT.matlab.sizes = [8, 12, 16, 24, 30]
 
   # SIFT-LLC
   config.SIFT.LLC.use = True

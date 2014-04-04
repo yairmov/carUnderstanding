@@ -15,15 +15,15 @@ function dense_sift(tmp_dir_name)
   data = load(fullfile(tmp_dir_name, 'data.mat'));
   img_names = data.img_cell;
   out_names = data.data_cell;
+  sizes = data.sizes;
 
   n_imgs = length(img_names);
   fprintf('running dense sift on %d images\n', n_imgs)
 
   for i=1:n_imgs
     im = imread(img_names{i});
-    % each col of frames is: [x, y, ???, patch_size]
-    [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', [8 12 16 24 30], 'FloatDescriptors', true);
-    frames = frames';
+    [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
+    frames = frames'; % now each row of frames is: [x, y, ???, patch_size]
     desc = desc';
     save(out_names{i}, 'frames', 'desc', '-v7');
   end

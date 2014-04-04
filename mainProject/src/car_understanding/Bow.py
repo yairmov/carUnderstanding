@@ -21,6 +21,87 @@ from sklearn.externals.joblib import Parallel, delayed
 # import fgcomp_dataset_utils as fgu
 import dense_SIFT
 from util import ProgressBar
+from dense_SIFT import load_from_disk
+
+def fit_model(train_annos, config):
+  features = load_SIFT_from_files(train_annos, config)
+  print "Loaded %d SIFT features from disk" % features.shape[0]
+  print "K-Means CLustering"
+  return cluster_to_words(features, config)
+  
+
+
+def contains(box, point):
+  '''
+  box = (xmin, xmax, ymin, ymax)
+  point = (x, y)
+  '''
+  return (box[0] <= point[0] and box[1] >= point[0] and
+          box[2] <= point[1] and box[3] >= point[1])
+
+
+
+def load_SIFT_from_a_file(curr_anno, config):
+  curr_file = os.path.splitext(curr_anno['basename'])[0] + '.dat'
+  (kp, desc) = load_from_disk(os.path.join(config.SIFT.raw_dir, curr_file),
+                              matlab_version=True)
+
+  # Only keep points that are inside the bounding box
+  box = (curr_anno['xmin'], curr_anno['xmax'],
+         curr_anno['ymin'], curr_anno['ymax'])
+
+#   inds = np.zeros(shape=[len(kp),], dtype=bool)
+#   for jj in range(len(kp)):
+#     inds[jj] = contains(box, kp[jj].pt)
+  
+  n_pts = int(kp.shape[0])
+  inds = np.zeros(shape=[n_pts,], dtype=bool)
+  for jj in range(n_pts):
+    inds[jj] = contains(box, kp[jj,:2])
+
+  desc = desc[inds, :]
+#   kp = np.asarray(kp)[inds].tolist()
+  kp = kp[inds,:]
+
+  # Random selection of a subset of the keypojnts/descriptors
+  # Select one patch size and get all descriptors from it
+  patch_size = np.random.choice(np.unique(kp[:,-1]), 1)[0]
+  inds = np.where(kp[:,-1] == patch_size)[0]
+  desc = desc[inds,:]
+  kp = kp[inds,:]
+  
+  
+#   inds  = np.random.permutation(desc.shape[0])
+#   desc = desc[inds, :]
+#   desc = desc[:config.SIFT.BoW.max_desc_per_img, :]
+# #   kp    = [kp[i] for i in inds]
+# #   kp    = kp[:config.SIFT.BoW.max_desc_per_img]
+
+  return desc
+
+def load_SIFT_from_files(train_annos, config):
+
+  nfiles = len(train_annos)
+  print 'Loading dense SIFT for %d training images ' % nfiles
+  features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
+                 delayed(load_SIFT_from_a_file)(train_annos.iloc[ii], config)
+                 for ii in range(nfiles))
+
+#   features = []
+#   pbar = ProgressBar(nfiles)
+#   for ii in range(nfiles):
+#     pbar.animate(ii)
+#     features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
+
+  # convert to numy arry
+  features = np.concatenate(features)
+
+  # sample max_desc features
+  inds  = np.random.permutation(features.shape[0])
+  features = features[inds, :]
+  features = features[:config.SIFT.BoW.max_desc_total, :]
+
+  return features  
 
 
 # Cluster features to create the 'words'
@@ -75,13 +156,14 @@ def load(filename):
   return joblib.load(filename)
 
 
-def create_BoW_model(features, config):
-  bow_model = cluster_to_words(features, config)
-  return bow_model
+# def create_BoW_model(features, config):
+#   bow_model = cluster_to_words(features, config)
+#   return bow_model
 
 
 # Assign each features vector in features (row) to a cluster center from
-# bow_model, and return count histogram
+# bow_model, and return count histogram.
+# Can also apply LLC enocoding to use more than one cluster center. 
 def word_histogram(features, bow_model, config):
   from llc import LLC_encoding
 
@@ -114,17 +196,12 @@ def normalize_features(features):
 
 
 def create_word_histogram_on_file(raw_feature_file, bow_model, config):
-#   logfile = os.path.join('tmp', os.path.basename(raw_feature_file))
-#   with open(logfile, 'w') as f:
-#     f.write('Start\n')
   (kp, desc) = dense_SIFT.load_from_disk(raw_feature_file,
                                          matlab_version=True)
   hist = word_histogram(desc, bow_model, config)
   (name, ext) = os.path.splitext(os.path.split(raw_feature_file)[1])
   hist_filename = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
   save(hist, hist_filename)
-#   with open(logfile, 'w') as f:
-#     f.write('Done\n')
 
 def create_word_histograms_on_dataset(train_annos, config):
   bow_model = load(config.SIFT.BoW.model_file)

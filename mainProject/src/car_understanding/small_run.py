@@ -268,13 +268,15 @@ def run_attrib_training(args, cross_validation=False):
 #   calc_dense_SIFT_on_dataset(dataset['train_annos'], config)
 
   # Create BoW model
-#   features = load_SIFT_from_files(dataset, config)
-#   print "Loaded %d SIFT features from disk" % features.shape[0]
-#   print "K-Means CLustering"
-#   bow_model = Bow.create_BoW_model(features, config)
-#   print("number of actual clusters found: {}".format(bow_model.n_clusters))
-#   Bow.save(bow_model, config.SIFT.BoW.model_file)
-#   return
+##   features = load_SIFT_from_files(dataset, config)
+##   print "Loaded %d SIFT features from disk" % features.shape[0]
+##   print "K-Means CLustering"
+##   bow_model = Bow.create_BoW_model(features, config)
+  
+  bow_model = Bow.fit_model(dataset['train_annos'], config)
+  print("number of actual clusters found: {}".format(bow_model.n_clusters))
+  Bow.save(bow_model, config.SIFT.BoW.model_file)
+  return
 
   # Assign cluster labels to all images
 #   print "Assigning to histograms"
