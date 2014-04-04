@@ -93,7 +93,7 @@ def get_config(args):
   config.attribute.names = args
   config.attribute.dir = assign_dir(os.path.join(config.main_path,
                                       'attribute_classifiers'))
-  config.attribute.high_thresh = 3
+  config.attribute.high_thresh = 1
   # should classifiers be normalized to output probabilities
   config.attribute.use_prob = False
 
