@@ -9,6 +9,7 @@ from treedict import TreeDict
 import os
 import socket
 import json
+from path import path
 
 def save_to_file(config, fname):
   with open(fname, 'w') as f:
@@ -152,10 +153,15 @@ def get_main_path(hostname):
   return main_path
 
 def assign_dir(dir_name):
-  if not os.path.isdir(dir_name):
-    os.makedirs(dir_name)
-
-  return dir_name
+  dir_path = path(dir_name)
+  if not dir_path.isdir():
+    dir_path.makedirs()
+    
+  return dir_path
+#   if not os.path.isdir(dir_name):
+#     os.makedirs(dir_name)
+# 
+#   return dir_name
 
 if __name__ == '__main__':
     config = get_config()
