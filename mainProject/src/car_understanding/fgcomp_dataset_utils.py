@@ -172,6 +172,7 @@ def create_flipped_images(train_annos, config):
   
   n_imgs = train_annos.shape[0]
   pbar = ProgressBar(n_imgs)
+  print('Creating flipped copies of train images')
   for ii in range(n_imgs):
     parts = cache_dir.joinpath(train_annos.basename.iloc[ii]).splitext()
     flipped_file = parts[0] + fp_suffix + parts[1]
