@@ -12,6 +12,7 @@ import os
 from configuration import get_config
 from path import path
 import Image
+from util import ProgressBar
 
 # Use this function to create a pandas array for the classes.
 # You can't just use pd.read_csv cause the file has names with commas in them...
@@ -169,20 +170,20 @@ def create_flipped_images(train_annos, config):
   fp_suffix = config.flip_suffix
   rel_to_cache = path(config.dataset.main_path).relpathto(config.cache_dir)
   
-  for ii in range(train_annos.shape[0]):
+  n_imgs = train_annos.shape[0]
+  pbar = ProgressBar(n_imgs)
+  for ii in range(n_imgs):
     parts = cache_dir.joinpath(train_annos.basename.iloc[ii]).splitext()
     flipped_file = parts[0] + fp_suffix + parts[1]
-    print "flipped_file: ", flipped_file
+#     print "flipped_file: ", flipped_file
     
     img_file = config.dataset.main_path.joinpath(train_annos.rel_path.iloc[ii]) 
     img = Image.open(img_file)
     (width, height) = img.size
-    print "width = ", width
     
     # We might need to create the flipped image if it is not in 
     # cache already.
     if not flipped_file.isfile():
-      print "creating flipped image"
       f_img = img.transpose(Image.FLIP_LEFT_RIGHT)
       f_img.save(flipped_file)
       
@@ -196,6 +197,8 @@ def create_flipped_images(train_annos, config):
     flipped_annos.xmax.iloc[ii] = xmax
     flipped_annos.ymin.iloc[ii] = ymin
     flipped_annos.ymax.iloc[ii] = ymax
+    
+    pbar.animate(ii)
     
     
   print train_annos.head(1)
