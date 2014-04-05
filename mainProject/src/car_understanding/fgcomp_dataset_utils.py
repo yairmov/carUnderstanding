@@ -178,7 +178,7 @@ def create_flipped_images(train_annos, config):
     # cache already.
     if not flipped_file.isfile():
       print "creating flipped image"
-      img_file = config.dataset.main_path + train_annos.rel_path.iloc[ii] 
+      img_file = config.dataset.main_path.joinpath(train_annos.rel_path.iloc[ii]) 
       img = Image.open(img_file)
       f_img = img.transpose(Image.FLIP_LEFT_RIGHT)
       f_img.save(flipped_file)
