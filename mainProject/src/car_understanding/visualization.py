@@ -12,10 +12,60 @@ from PIL import Image
 from path import path
 import pandas as pd
 import matplotlib.pyplot as plt
+import scipy.misc
+import cv2 as cv
+import os
 
 import Bow
 from view_clustering import cluster
 from attribute_selector import AttributeSelector
+
+# boxes should be a tuple/list of tuples. each inner tuple should be
+# of format (xmin, xmax, ymin, ymax)
+def showboxes(img_in, boxes, is_opencv=False):
+
+  if is_opencv:
+    img = cv.cvtColor(img_in, cv.COLOR_BGR2RGB)
+  else:
+    img = img_in
+
+  ax = plt.axes()
+  ax.imshow(img)
+  ax.axis('off')
+
+  for box in boxes:
+    xmin, xmax = box[0], box[1]
+    ymin, ymax = box[2], box[3]
+    r = plt.Rectangle((xmin, ymin),
+                   xmax-xmin, ymax-ymin,
+                     edgecolor='red', facecolor='none')
+    ax.add_patch(r)
+
+  plt.draw()
+  plt.show()
+
+
+def explore_image_data(annos, config):
+  plt.ion()
+  for ii in range(0, len(annos)):
+    curr_anno = annos.iloc[ii]
+    img = scipy.misc.imread(os.path.join(
+                      config.dataset.main_path, curr_anno['rel_path']))
+    bbox = (curr_anno['xmin'], curr_anno['xmax'],
+            curr_anno['ymin'], curr_anno['ymax'])
+    print('BB width: %g' % (bbox[1] - bbox[0]))
+    boxes = (bbox,) # create a tuple, as it is expected by showboxes
+    showboxes(img, boxes, is_opencv=False)
+    c = raw_input('Press any key to continue\n')
+    plt.clf()
+    if c.startswith('q'):
+      plt.close()
+      return
+
+
+  plt.close()
+
+
 
 
 def create_image_page(img_files, html_file, width=200, num_per_row=9,
