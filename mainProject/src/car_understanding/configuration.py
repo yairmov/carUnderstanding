@@ -18,8 +18,28 @@ def load_from_file(fname):
   with open(fname, 'r') as f:
     d = json.load(f)
     
-  return TreeDict.fromdict(d, expand_nested=True)
+  return make_directories(TreeDict.fromdict(d, expand_nested=True))
 
+
+def make_directories(config):
+  '''
+  process the ocnfig file to create directories if needed.
+  right now you have to manually add new dir names 
+  '''
+  config.main_path = assign_dir(config.main_path)
+  config.cache_dir = assign_dir(config.cache_dir)
+  config.output_dir = assign_dir(config.output_dir)
+  config.attribute.dir = assign_dir(config.attribute.dir)
+  config.dataset.main_path = assign_dir(config.dataset.main_path)
+  config.SIFT.dir = assign_dir(config.SIFT.dir)
+  config.SIFT.raw_dir = assign_dir(config.SIFT.raw_dir)
+  config.SIFT.BoW.hist_dir = assign_dir(config.SIFT.BoW.hist_dir)
+  config.SIFT.matlab.raw_dir = assign_dir(config.SIFT.matlab.raw_dir)
+  
+  return config
+  
+  
+  
 
 def get_config(config_file='config.json'):
   return load_from_file(config_file)
