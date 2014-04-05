@@ -196,6 +196,9 @@ def create_flipped_images(train_annos, config):
     flipped_annos.iloc[ii].ymin = ymin
     flipped_annos.iloc[ii].ymax = ymax
     
+    
+  print train_annos.head(1)
+  print flipped_annos.head(1)  
   return pd.concat([train_annos, flipped_annos], axis=0)
     
 def flip_box_LR(box, width):
