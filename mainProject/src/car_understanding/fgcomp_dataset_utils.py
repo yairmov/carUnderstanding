@@ -192,10 +192,10 @@ def create_flipped_images(train_annos, config):
     box = (train_annos.iloc[ii].xmin, train_annos.iloc[ii].ymin,
            train_annos.iloc[ii].xmax, train_annos.iloc[ii].ymax)
     (xmin, ymin, xmax, ymax) = flip_box_LR(box, width)
-    flipped_annos.iloc[ii].xmin = xmin
-    flipped_annos.iloc[ii].xmax = xmax
-    flipped_annos.iloc[ii].ymin = ymin
-    flipped_annos.iloc[ii].ymax = ymax
+    flipped_annos.xmin.iloc[ii] = xmin
+    flipped_annos.xmax.iloc[ii] = xmax
+    flipped_annos.ymin.iloc[ii] = ymin
+    flipped_annos.ymax.iloc[ii] = ymax
     
     
   print train_annos.head(1)
