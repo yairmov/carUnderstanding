@@ -47,7 +47,8 @@ def showboxes(img_in, boxes, is_opencv=False):
 
 def explore_image_data(annos, config):
   plt.ion()
-  for ii in range(0, len(annos)):
+  n_imgs = len(annos)
+  for ii in reversed(range(n_imgs)):
     curr_anno = annos.iloc[ii]
     img = scipy.misc.imread(os.path.join(
                       config.dataset.main_path, curr_anno['rel_path']))
