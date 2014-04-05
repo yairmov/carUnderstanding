@@ -198,8 +198,10 @@ def create_flipped_images(train_annos, config):
     
     
   print train_annos.head(1)
+  print "---------------------"
+  print "---------------------"
   print flipped_annos.head(1)  
-  return pd.concat([train_annos, flipped_annos], axis=0)
+#   return pd.concat([train_annos, flipped_annos], axis=0)
     
 def flip_box_LR(box, width):
   '''
