@@ -22,7 +22,7 @@ def load_from_file(fname):
 
 
 def get_config(config_file='config.json'):
-  config = load_from_file(config_file)
+  return load_from_file(config_file)
   
   
 
