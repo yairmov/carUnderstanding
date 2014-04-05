@@ -10,6 +10,8 @@ import pandas as pd
 import numpy as np
 import os
 from configuration import get_config
+from path import path
+import Image
 
 # Use this function to create a pandas array for the classes.
 # You can't just use pd.read_csv cause the file has names with commas in them...
@@ -120,6 +122,10 @@ def get_all_metadata(config=None, args=None):
     train_used, test_used = dev_annos_train, dev_annos_test 
   else:
     train_used, test_used = train_annos, test_annos
+    
+    
+  if config.flip_images:
+    create_flipped_images(train_used, config)
 
   return ({'real_train_annos': train_annos,
            'real_test_annos': test_annos,
@@ -152,6 +158,54 @@ def create_dev_set(train_annos, config):
   
   return dev_set_train, dev_set_test  
 
+
+def create_flipped_images(train_annos, config):
+  flipped_annos = train_annos.copy()
+  
+  # Create new ids for the flipped images
+  flipped_annos.index += 1e5
+  
+  cache_dir = config.cache_dir
+  fp_suffix = config.flip_suffix
+  rel_to_cache = path(config.dataset.main_path).relpathto(config.cache_dir)
+  
+  for ii in train_annos.shape[0]:
+    parts = cache_dir.joinpath(train_annos.basename.iloc[ii]).splitext()
+    flipped_file = parts[0] + fp_suffix + parts[1]
+    
+    # We might need to create the flipped image if it is not in 
+    # cache already.
+    if not flipped_file.isfile():
+      img_file = config.dataset.main_path + train_annos.rel_path.iloc[ii] 
+      img = Image.open(img_file)
+      f_img = img.transpose(Image.FLIP_LEFT_RIGHT)
+      f_img.save(flipped_file)
+      
+    # Modify the annotations for it
+    (width, height) = img.size
+    flipped_annos.rel_path.iloc[0] = rel_to_cache + flipped_file.basename()
+    flipped_annos.basename.iloc[0] = flipped_file.basename()
+    box = (train_annos.iloc[ii].xmin, train_annos.iloc[ii].ymin,
+           train_annos.iloc[ii].xmax, train_annos.iloc[ii].ymax)
+    (xmin, ymin, xmax, ymax) = flip_box_LR(box, width)
+    train_annos.iloc[ii].xmin = xmin
+    train_annos.iloc[ii].xmax = xmax
+    train_annos.iloc[ii].ymin = ymin
+    train_annos.iloc[ii].ymax = ymax
+    
+  return pd.concat([train_annos, flipped_annos], axis=0)
+    
+def flip_box_LR(box, width):
+  '''
+  box = (xmin, ymin, xmax, ymax)
+  '''
+  xmin, ymin, xmax, ymax = box    
+  n_xmax = width - xmin
+  n_xmin = width - xmax
+  
+  return (n_xmin, ymin, n_xmax, ymax)
+  
+  
 
 def run_test():
   from configuration import get_config
