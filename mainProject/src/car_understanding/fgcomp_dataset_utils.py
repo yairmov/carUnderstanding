@@ -126,7 +126,7 @@ def get_all_metadata(config=None, args=None):
     
     
   if config.flip_images:
-    create_flipped_images(train_used, config)
+    train_used = create_flipped_images(train_used, config)
 
   return ({'real_train_annos': train_annos,
            'real_test_annos': test_annos,
@@ -202,11 +202,7 @@ def create_flipped_images(train_annos, config):
     pbar.animate(ii)
     
     
-  print train_annos.head(1)
-  print "---------------------"
-  print "---------------------"
-  print flipped_annos.head(1)  
-#   return pd.concat([train_annos, flipped_annos], axis=0)
+  return pd.concat([train_annos, flipped_annos], axis=0)
     
 def flip_box_LR(box, width):
   '''
