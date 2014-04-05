@@ -185,7 +185,7 @@ def create_flipped_images(train_annos, config):
       
     # Modify the annotations for it
     (width, height) = img.size
-    flipped_annos.rel_path.iloc[0] = rel_to_cache + flipped_file.basename()
+    flipped_annos.rel_path.iloc[0] = rel_to_cache.joinpath(flipped_file.basename())
     flipped_annos.basename.iloc[0] = flipped_file.basename()
     box = (train_annos.iloc[ii].xmin, train_annos.iloc[ii].ymin,
            train_annos.iloc[ii].xmax, train_annos.iloc[ii].ymax)
