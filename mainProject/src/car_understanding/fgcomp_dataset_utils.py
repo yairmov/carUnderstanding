@@ -169,13 +169,15 @@ def create_flipped_images(train_annos, config):
   fp_suffix = config.flip_suffix
   rel_to_cache = path(config.dataset.main_path).relpathto(config.cache_dir)
   
-  for ii in train_annos.shape[0]:
+  for ii in range(train_annos.shape[0]):
     parts = cache_dir.joinpath(train_annos.basename.iloc[ii]).splitext()
     flipped_file = parts[0] + fp_suffix + parts[1]
+    print "flipped_file: ", flipped_file
     
     # We might need to create the flipped image if it is not in 
     # cache already.
     if not flipped_file.isfile():
+      print "creating flipped image"
       img_file = config.dataset.main_path + train_annos.rel_path.iloc[ii] 
       img = Image.open(img_file)
       f_img = img.transpose(Image.FLIP_LEFT_RIGHT)

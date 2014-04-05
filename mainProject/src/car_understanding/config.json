@@ -61,7 +61,7 @@
     "output_dir":"../../../output",
     "main_path":"../../../",
     "bb_width":200,
-    "fp_suffix":"_fp",
+    "flip_suffix":"_fp",
     "LPB":{
         "P":8,
         "R":8
