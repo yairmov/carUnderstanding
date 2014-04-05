@@ -130,7 +130,7 @@ def test(args, config, dataset):
     true_labels = np.array(res.class_index.isin(pos_classes))
     print("--------------{}-------------".format(attrib_name)) 
     
-    print(classification_report(true_labels, np.array(res[str.lower(attrib_name)]) > config.attribute.high_thresh, 
+    print(classification_report(true_labels, np.array(res[str.lower(attrib_name)]) < config.attribute.high_thresh, 
                                 target_names=['not-{}'.format(attrib_name),
                                               attrib_name]))
     
