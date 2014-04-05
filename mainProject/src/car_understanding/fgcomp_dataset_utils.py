@@ -164,7 +164,7 @@ def create_flipped_images(train_annos, config):
   flipped_annos = train_annos.copy()
   
   # Create new ids for the flipped images
-  flipped_annos.index += 1e5
+  flipped_annos.index = 1e5 + flipped_annos.index
   
   cache_dir = config.cache_dir
   fp_suffix = config.flip_suffix
