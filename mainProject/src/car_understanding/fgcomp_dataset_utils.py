@@ -177,6 +177,7 @@ def create_flipped_images(train_annos, config):
     img_file = config.dataset.main_path.joinpath(train_annos.rel_path.iloc[ii]) 
     img = Image.open(img_file)
     (width, height) = img.size
+    print "width = ", width
     
     # We might need to create the flipped image if it is not in 
     # cache already.
