@@ -174,17 +174,18 @@ def create_flipped_images(train_annos, config):
     flipped_file = parts[0] + fp_suffix + parts[1]
     print "flipped_file: ", flipped_file
     
+    img_file = config.dataset.main_path.joinpath(train_annos.rel_path.iloc[ii]) 
+    img = Image.open(img_file)
+    (width, height) = img.size
+    
     # We might need to create the flipped image if it is not in 
     # cache already.
     if not flipped_file.isfile():
       print "creating flipped image"
-      img_file = config.dataset.main_path.joinpath(train_annos.rel_path.iloc[ii]) 
-      img = Image.open(img_file)
       f_img = img.transpose(Image.FLIP_LEFT_RIGHT)
       f_img.save(flipped_file)
       
     # Modify the annotations for it
-    (width, height) = img.size
     flipped_annos.rel_path.iloc[0] = rel_to_cache.joinpath(flipped_file.basename())
     flipped_annos.basename.iloc[0] = flipped_file.basename()
     box = (train_annos.iloc[ii].xmin, train_annos.iloc[ii].ymin,
