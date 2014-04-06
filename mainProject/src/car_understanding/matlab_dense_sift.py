@@ -12,7 +12,7 @@ import numpy as np
 import scipy.io as sio
 import os
 from path import path
-from sklearn.externals.joblib import dump
+from sklearn.externals.joblib import Parallel, delayed, dump
 import shutil
 
 from dense_SIFT import normalize_sift
@@ -29,7 +29,7 @@ def dense_sift_matlab(data_annos, config):
   run_dense_sift_matlab(img_names, data_names, config.SIFT.matlab.sizes)
   
   print('Normalizing SIFT descriptors')
-#   normalize_sift_data(data_annos, config)
+  normalize_sift_data(data_annos, config)
 
 
 def run_dense_sift_matlab(img_names, data_names, sizes):
@@ -60,7 +60,7 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
   print res
   
   # remove the tmp dir
-#   shutil.rmtree(directory_name)
+  shutil.rmtree(directory_name)
 
 
 def normalize_sift_data(data_annos, config):
@@ -69,13 +69,26 @@ def normalize_sift_data(data_annos, config):
   p = path(config.SIFT.matlab.raw_dir)
   data_names = np.array(data_names.map(lambda x: str(p.joinpath(x + '.mat'))))
 
-  pbar = util.ProgressBar(len(data_names))
-  for ii, name in enumerate(data_names):
+
+  def normalize_one(ii, name):
     a = sio.loadmat(name)
     desc = a['desc']
     frames = a['frames']
     normalize_sift(desc, inplace=True)
     out_name = os.path.splitext(name)[0] + '.dat'
     dump(dict(frames=frames, desc=desc), out_name, compress=3)
-    pbar.animate(ii)
+
+  Parallel(n_jobs=11, verbose=config.logging.verbose)(
+                 delayed(normalize_one)(ii, name)
+                 for ii, name in enumerate(data_names))
+
+#   pbar = util.ProgressBar(len(data_names))
+#   for ii, name in enumerate(data_names):
+#     a = sio.loadmat(name)
+#     desc = a['desc']
+#     frames = a['frames']
+#     normalize_sift(desc, inplace=True)
+#     out_name = os.path.splitext(name)[0] + '.dat'
+#     dump(dict(frames=frames, desc=desc), out_name, compress=3)
+#     pbar.animate(ii)
 
