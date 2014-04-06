@@ -94,3 +94,6 @@ def normalize_sift_data(data_annos, config):
 #       dump(dict(frames=frames, desc=desc), out_name, compress=3)
 #       pbar.animate(ii)
 
+
+if __name__ == '__main__':
+  print ''
