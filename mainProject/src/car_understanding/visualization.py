@@ -142,7 +142,7 @@ def plot_dataset_embedding(data_annos, config,
   images = None
   if show_images:
     p = path(config.dataset.main_path)
-    img_names = data_annos.rel_path.map(lambda x: p.joinpath(x))
+    img_names = data_annos.img_path
     images = []
     for ii in range(len(data_annos)):
       img_name = img_names.iloc[ii]
