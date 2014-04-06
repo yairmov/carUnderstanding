@@ -79,8 +79,8 @@ def normalize_sift_data(data_annos, config):
     dump(dict(frames=frames, desc=desc), out_name, compress=3)
  
   Parallel(n_jobs=11, verbose=config.logging.verbose)(
-                 delayed(normalize_one)(ii, name)
-                 for ii, name in enumerate(data_names))
+                 delayed(normalize_one)(ii, data_names[ii])
+                 for ii in len(data_names))
 
 #   pbar = util.ProgressBar(len(data_names))
 #   for ii, name in enumerate(data_names):
