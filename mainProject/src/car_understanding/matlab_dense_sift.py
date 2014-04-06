@@ -56,7 +56,8 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
 
 
   print 'calling matlab with params: {}'.format(cmd_params)
-  matlab(cmd_params)
+  res = matlab(cmd_params)
+  print res
   
   # remove the tmp dir
   shutil.rmtree(directory_name)
