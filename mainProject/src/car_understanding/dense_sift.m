@@ -7,6 +7,7 @@ function dense_sift(tmp_dir_name)
 
   % open matlab worker pool
   matlabpool open 12
+  overwrite = false;
 
 
   % tmp_dir_name = './tmp';
@@ -21,12 +22,13 @@ function dense_sift(tmp_dir_name)
   fprintf('running dense sift on %d images\n', n_imgs)
 
   for i=1:n_imgs
-    fprintf('%s\n', img_names{i})
-    im = imread(img_names{i});
-    [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
-    frames = frames'; % now each row of frames is: [x, y, ???, patch_size]
-    desc = desc';
-    save(out_names{i}, 'frames', 'desc', '-v7');
+    if overwrite || ~exist(out_names{i})
+      im = imread(img_names{i});
+      [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
+      frames = frames'; % now each row of frames is: [x, y, ???, patch_size]
+      desc = desc';
+      save(out_names{i}, 'frames', 'desc', '-v7');
+    end
   end
   fprintf('done!\n')
 
