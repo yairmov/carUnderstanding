@@ -24,9 +24,7 @@ function dense_sift(tmp_dir_name)
   for i=1:1
     fprintf('%s\n', img_names{i})
     im = imread(img_names{i});
-    try
-      [frames, desc] = vl_phow(im, 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
-    end
+    [frames, desc] = vl_phow(im, 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
     return
     frames = frames'; % now each row of frames is: [x, y, ???, patch_size]
     desc = desc';
