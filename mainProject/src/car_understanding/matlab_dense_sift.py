@@ -29,7 +29,7 @@ def dense_sift_matlab(data_annos, config):
   run_dense_sift_matlab(img_names, data_names, config.SIFT.matlab.sizes)
   
   print('Normalizing SIFT descriptors')
-  normalize_sift_data(data_annos, config)
+#   normalize_sift_data(data_annos, config)
 
 
 def run_dense_sift_matlab(img_names, data_names, sizes):
