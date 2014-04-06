@@ -82,7 +82,7 @@ def read_image_annotations(infilename, has_class_id=True):
   dataset =  pd.read_csv(infilename, header=None, names=names, dtype=types,
                      index_col=0)
 
-  dataset['basename'] = dataset.rel_path.apply(os.path.basename)
+  dataset['basename'] = dataset.img_path.apply(os.path.basename)
 
   return dataset
 
