@@ -60,7 +60,7 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
   print res
   
   # remove the tmp dir
-  shutil.rmtree(directory_name)
+#   shutil.rmtree(directory_name)
 
 
 def normalize_sift_data(data_annos, config):
