@@ -6,7 +6,7 @@ function dense_sift(tmp_dir_name)
   fprintf('loaded vlfeat\n')
 
   % open matlab worker pool
-  % matlabpool open 12
+  matlabpool open 12
 
 
   % tmp_dir_name = './tmp';
@@ -20,8 +20,7 @@ function dense_sift(tmp_dir_name)
   n_imgs = length(img_names);
   fprintf('running dense sift on %d images\n', n_imgs)
 
-  % for i=1:n_imgs
-  for i=1:1
+  for i=1:n_imgs
     fprintf('%s\n', img_names{i})
     im = imread(img_names{i});
     [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
@@ -33,6 +32,6 @@ function dense_sift(tmp_dir_name)
 
 
   % close pool
-  % matlabpool close force
+  matlabpool close force
   quit;
 % end
