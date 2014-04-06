@@ -50,8 +50,7 @@ def explore_image_data(annos, config):
   n_imgs = len(annos)
   for ii in reversed(range(n_imgs)):
     curr_anno = annos.iloc[ii]
-    img = scipy.misc.imread(os.path.join(
-                      config.dataset.main_path, curr_anno['rel_path']))
+    img = scipy.misc.imread(curr_anno['img_path'])
     bbox = (curr_anno['xmin'], curr_anno['xmax'],
             curr_anno['ymin'], curr_anno['ymax'])
     print('BB width: %g' % (bbox[1] - bbox[0]))
