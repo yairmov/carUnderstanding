@@ -62,7 +62,7 @@ def read_image_annotations(infilename, has_class_id=True):
     names = ['image_index', 'img_path', 'domain_index',
              'class_index', 'xmin', 'xmax', 'ymin', 'ymax']
     types = {'image_index': np.int32,
-             'rel_path': 'str',
+             'img_path': 'str',
              'domain_index': np.int32,
              'class_index': np.int32,
              'xmin': np.float64,
@@ -73,7 +73,7 @@ def read_image_annotations(infilename, has_class_id=True):
     names = ['image_index', 'img_path', 'domain_index',
              'xmin', 'xmax', 'ymin', 'ymax']
     types = {'image_index': np.int32,
-             'rel_path': 'str',
+             'img_path': 'str',
              'domain_index': np.int32,
              'xmin': np.float64,
              'xmax':np.float64,
