@@ -62,7 +62,7 @@
     "main_path":"../../../",
     "bb_width":200,
     "flip_suffix":"_fp",
-    "flip_images":false,
+    "flip_images":true,
     "LPB":{
         "P":8,
         "R":8
