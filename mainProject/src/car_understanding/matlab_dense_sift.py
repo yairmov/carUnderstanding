@@ -49,7 +49,7 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
   
   import sys
   print type(sizes)
-  sys.exit(0)
+  sys.exit(-1)
 
   sio.savemat(os.path.join(directory_name, 'data.mat'),
                {'img_cell':img_cell, 'data_cell': data_cell,
