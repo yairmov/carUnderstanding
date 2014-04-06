@@ -6,7 +6,7 @@ function dense_sift(tmp_dir_name)
   fprintf('loaded vlfeat\n')
 
   % open matlab worker pool
-  matlabpool open 12
+  % matlabpool open 12
 
 
   % tmp_dir_name = './tmp';
@@ -31,6 +31,6 @@ function dense_sift(tmp_dir_name)
 
 
   % close pool
-  matlabpool close force
+  % matlabpool close force
   quit;
 % end
