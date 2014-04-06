@@ -98,14 +98,15 @@ def get_all_metadata(config=None, args=None):
   test_annos = read_image_annotations(config.dataset.test_annos_file,
                                       has_class_id=False)
   domain_meta = read_domain_meta(config.dataset.domain_meta_file)
-#   train_annos = pd.merge(train_annos, class_meta.iloc[:,0:2], on='class_index') # probably produces WRONG mapping
-#   train_annos.index.name = 'image_index'
   train_annos['class_name'] = np.array([class_meta.class_name[class_index] for 
                                          class_index in 
                                          train_annos.class_index])
 #   test_annos['class_name'] = np.array([class_meta.class_name[class_index] for 
 #                                          class_index in 
 #                                          test_annos.class_index])
+
+  # Prepand path to the dataset to each img_path
+  train_annos.img_path.map(lambda x: config.dataset.main_path.joinpath(x))
 
   # Filter the class meta and train/test annotations to just use the 
   # domains defined in config
