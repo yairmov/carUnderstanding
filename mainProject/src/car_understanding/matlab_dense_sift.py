@@ -84,11 +84,12 @@ def normalize_sift_data(data_annos, config):
 
   pbar = util.ProgressBar(len(data_names))
   for ii, name in enumerate(data_names):
-    a = sio.loadmat(name)
-    desc = a['desc']
-    frames = a['frames']
-    normalize_sift(desc, inplace=True)
     out_name = os.path.splitext(name)[0] + '.dat'
-    dump(dict(frames=frames, desc=desc), out_name, compress=3)
-    pbar.animate(ii)
+    if not path(out_name).isfile():
+      a = sio.loadmat(name)
+      desc = a['desc']
+      frames = a['frames']
+      normalize_sift(desc, inplace=True)
+      dump(dict(frames=frames, desc=desc), out_name, compress=3)
+      pbar.animate(ii)
 
