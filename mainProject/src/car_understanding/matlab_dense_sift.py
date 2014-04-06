@@ -21,7 +21,7 @@ import util
 def dense_sift_matlab(data_annos, config):
   print('Calling MATLAB to calculate SIFT')
   p = path(config.dataset.main_path)
-  img_names = np.array(data_annos.img_path)
+  img_names = np.array(data_annos.img_path.apply(lambda x : str(x)))
   data_names = data_annos.basename.map(lambda x: str(os.path.splitext(x)[0]))
   p = path(config.SIFT.matlab.raw_dir)
   data_names = data_names.map(lambda x: str(p.joinpath(x + '.mat')))
@@ -43,8 +43,6 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
   # in matlab.
 
   img_cell = np.array(img_names, dtype=np.object)
-  print img_cell
-  import sys; sys.exit(-1)
   data_cell = np.array(data_names, dtype=np.object)
   directory_name = './tmp'
   util.makedir_if_needed(directory_name)
