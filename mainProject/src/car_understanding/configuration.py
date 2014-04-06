@@ -40,10 +40,14 @@ def make_directories(config):
   return config
   
   
-  
+def update_config(config, location, value):
+  config[location] = value
+  save_to_file(config, config.config_file)
 
 def get_config(config_file='config.json'):
-  return load_from_file(config_file)
+  config =  load_from_file(config_file)
+  config.config_file = config_file
+  return config
   
   
 

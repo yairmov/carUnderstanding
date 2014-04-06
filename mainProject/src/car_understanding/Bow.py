@@ -118,10 +118,10 @@ def cluster_to_words(features, config):
     # Mini batch KMEANS
     batch_size = config.SIFT.BoW.num_clusters * 10
     estimator = MiniBatchKMeans(init='k-means++',
-                            n_clusters=config.SIFT.BoW.num_clusters,
+                            n_clusters=config.SIFT.BoW.requested_num_clusters,
                             batch_size=batch_size,
                             tol=0.001,
-                            init_size=10*config.SIFT.BoW.requested_n_clusters,
+                            init_size=10*config.SIFT.BoW.requested_num_clusters,
                             n_init = 10,
                             verbose=True)
 

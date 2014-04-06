@@ -41,9 +41,9 @@
         "BoW":{
             "max_desc_per_img":1000,
             "model_file":"../../../SIFT/BoW_model.dat",
-            "requested_n_clusters":3516,
+            "requested_num_clusters":1000,
             "hist_dir":"../../../SIFT/word_hist",
-            "num_clusters":3516,
+            "num_clusters":1000,
             "max_desc_total":400000.0
         },
         "matlab":{
