@@ -20,6 +20,7 @@ function dense_sift(tmp_dir_name)
 
   n_imgs = length(img_names);
   fprintf('running dense sift on %d images\n', n_imgs)
+  quit;
 
   % for i=1:n_imgs
   for i=1:1
