@@ -20,11 +20,12 @@ function dense_sift(tmp_dir_name)
 
   n_imgs = length(img_names);
   fprintf('running dense sift on %d images\n', n_imgs)
-  quit;
 
   % for i=1:n_imgs
   for i=1:1
+    disp img_names{i}
     im = imread(img_names{i});
+    quit
     [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
     frames = frames'; % now each row of frames is: [x, y, ???, patch_size]
     desc = desc';
