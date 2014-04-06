@@ -15,7 +15,7 @@ function dense_sift(tmp_dir_name)
   data = load(fullfile(tmp_dir_name, 'data.mat'));
   img_names = data.img_cell;
   out_names = data.data_cell;
-  sizes = data.sizes;
+  sizes = double(data.sizes);
 
   n_imgs = length(img_names);
   fprintf('running dense sift on %d images\n', n_imgs)
