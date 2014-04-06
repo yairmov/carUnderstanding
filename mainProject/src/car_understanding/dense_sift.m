@@ -16,7 +16,7 @@ function dense_sift(tmp_dir_name)
   img_names = data.img_cell;
   out_names = data.data_cell;
   sizes = data.sizes;
-  disp len(sizes)
+  fprintf('%d\n', sizes)
 
 
   n_imgs = length(img_names);
