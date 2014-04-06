@@ -1,71 +1,78 @@
 {
-    "HOG":{
-        "pixels_per_cell":[
-            8,
-            8
-        ],
-        "orientations":9
-    },
-    "logging":{
-        "verbose":3
-    },
-    "attribute":{
-        "high_thresh":2,
-        "names":[
-            
-        ],
-        "dir":"../../../attribute_classifiers",
-        "use_prob":false
-    },
-    "hostname":"palfrey.vasc.ri.cmu.edu",
-    "dataset":{
-        "test_annos_file":"../../../fgcomp2013_normed/release/test_annos_track1.txt",
-        "name":"fgcomp2013_normed",
-        "dev_set":{
-            "test_size":10,
-            "use":true,
-            "rand_seed":12
-        },
-        "main_path":"../../../fgcomp2013_normed/release",
-        "domains":[
-            3
-        ],
-        "train_annos_file":"../../../fgcomp2013_normed/release/train_annos.txt",
-        "domain_meta_file":"../../../fgcomp2013_normed/release/domain_meta.txt",
-        "class_meta_file":"../../../fgcomp2013_normed/release/class_meta.txt",
-        "index_str":"FGCOMP_{:>07}"
-    },
-    "SIFT":{
-        "raw_dir":"../../../SIFT/raw",
-        "grid_spacing":4,
-        "BoW":{
-            "model_file":"../../../SIFT/BoW_model.dat",
-            "requested_num_clusters":1000,
-            "hist_dir":"../../../SIFT/word_hist",
-            "num_clusters":1000,
-            "max_desc_total":400000
-        },
-        "matlab":{
-            "raw_dir":"../../../SIFT/raw",
-            "use":true,
-            "sizes": [8, 12, 16, 24, 30]
-        },
-        "LLC":{
-            "knn":5,
-            "use":true,
-            "beta":0.03
-        },
-        "dir":"../../../SIFT"
-    },
-    "cache_dir":"../../../cache",
-    "output_dir":"../../../output",
-    "main_path":"../../../",
-    "bb_width":200,
-    "flip_suffix":"_fp",
-    "flip_images":true,
-    "n_cores":11,
-    "LPB":{
-        "P":8,
-        "R":8
-    }
+  "HOG": {
+    "pixels_per_cell": [
+      8, 
+      8
+    ], 
+    "orientations": 9
+  }, 
+  "logging": {
+    "verbose": 3
+  }, 
+  "attrib_names": [
+    "sedan"
+  ], 
+  "flip_images": true, 
+  "attribute": {
+    "high_thresh": 2, 
+    "names": [], 
+    "dir": "../../../attribute_classifiers", 
+    "use_prob": false
+  }, 
+  "hostname": "palfrey.vasc.ri.cmu.edu", 
+  "dataset": {
+    "test_annos_file": "../../../fgcomp2013_normed/release/test_annos_track1.txt", 
+    "name": "fgcomp2013_normed", 
+    "dev_set": {
+      "test_size": 10, 
+      "use": true, 
+      "rand_seed": 12
+    }, 
+    "main_path": "../../../fgcomp2013_normed/release", 
+    "domains": [
+      3
+    ], 
+    "train_annos_file": "../../../fgcomp2013_normed/release/train_annos.txt", 
+    "domain_meta_file": "../../../fgcomp2013_normed/release/domain_meta.txt", 
+    "class_meta_file": "../../../fgcomp2013_normed/release/class_meta.txt", 
+    "index_str": "FGCOMP_{:>07}"
+  }, 
+  "flip_suffix": "_fp", 
+  "SIFT": {
+    "raw_dir": "../../../SIFT/raw", 
+    "grid_spacing": 4, 
+    "BoW": {
+      "hist_dir": "../../../SIFT/word_hist", 
+      "model_file": "../../../SIFT/BoW_model.dat", 
+      "requested_num_clusters": 1000, 
+      "num_clusters": 945, 
+      "max_desc_total": 400000.0
+    }, 
+    "matlab": {
+      "raw_dir": "../../../SIFT/raw", 
+      "use": true, 
+      "sizes": [
+        8, 
+        12, 
+        16, 
+        24, 
+        30
+      ]
+    }, 
+    "LLC": {
+      "knn": 5, 
+      "use": true, 
+      "beta": 0.03
+    }, 
+    "dir": "../../../SIFT"
+  }, 
+  "cache_dir": "../../../cache", 
+  "output_dir": "../../../output", 
+  "main_path": "../../../", 
+  "bb_width": 200, 
+  "config_file": "config.json", 
+  "LPB": {
+    "P": 8, 
+    "R": 8
+  }
 }
