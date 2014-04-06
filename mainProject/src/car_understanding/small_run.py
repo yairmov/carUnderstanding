@@ -280,7 +280,8 @@ def run_attrib_training(args, cross_validation=False):
 
   # Assign cluster labels to all images
   print "Assigning to histograms"
-  Bow.create_word_histograms_on_dataset(dataset['real_train_annos'], config)
+  annos = pd.concat([dataset['train_anos'], dataset['test_anos']], axis=0)
+  Bow.create_word_histograms_on_dataset(annos, config)
   return
 
   # Train attribute classifiers
