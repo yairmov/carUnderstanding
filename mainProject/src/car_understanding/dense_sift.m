@@ -16,8 +16,6 @@ function dense_sift(tmp_dir_name)
   img_names = data.img_cell;
   out_names = data.data_cell;
   sizes = data.sizes;
-  fprintf('%d\n', sizes)
-
 
   n_imgs = length(img_names);
   fprintf('running dense sift on %d images\n', n_imgs)
@@ -26,6 +24,7 @@ function dense_sift(tmp_dir_name)
   for i=1:1
     fprintf('%s\n', img_names{i})
     im = imread(img_names{i});
+    fprintf('%d\n', size(im))
     return
     [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
     frames = frames'; % now each row of frames is: [x, y, ???, patch_size]
