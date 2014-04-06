@@ -47,6 +47,8 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
   directory_name = './tmp'
   util.makedir_if_needed(directory_name)
   
+  print sizes
+  
   sio.savemat(os.path.join(directory_name, 'data.mat'),
                {'img_cell':img_cell, 'data_cell': data_cell,
                 'sizes': sizes})
