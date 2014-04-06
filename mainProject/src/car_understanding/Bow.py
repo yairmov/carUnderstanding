@@ -215,21 +215,21 @@ def create_word_histograms_on_dataset(train_annos, config):
   if not os.path.isdir(config.SIFT.BoW.hist_dir):
     os.makedirs(config.SIFT.BoW.hist_dir)
 
-  Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
-                 delayed(create_word_histogram_on_file)(
-                 os.path.join(dir_path,
-                              os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
-                 bow_model,
-                 config)
-                 for ii in range(n_files))
+#   Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
+#                  delayed(create_word_histogram_on_file)(
+#                  os.path.join(dir_path,
+#                               os.path.splitext(train_annos.iloc[ii]['basename'])[0] + '.dat'),
+#                  bow_model,
+#                  config)
+#                  for ii in range(n_files))
 
-#   for ii in range(n_files):
+  for ii in range(n_files):
 #   for ii in [13714]:
-#     print ii
-#     create_word_histogram_on_file(os.path.join(dir_path,
-#                                 os.path.splitext(train_annos.loc[ii]['basename'])[0] + '.dat'),
-#                                 bow_model,
-#                                 config)
+    print ii
+    create_word_histogram_on_file(os.path.join(dir_path,
+                                os.path.splitext(train_annos.loc[ii]['basename'])[0] + '.dat'),
+                                bow_model,
+                                config)
 
 
 def load_bow(data_annos, config):
