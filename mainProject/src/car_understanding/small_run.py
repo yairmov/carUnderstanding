@@ -56,8 +56,7 @@ def img_ids_for_classes(class_ids, train_annos):
 
 
 def calc_dense_SIFT_one_img(annotation, config):
-  rel_path = annotation['rel_path']
-  img_file = os.path.join(config.dataset.main_path, rel_path)
+  img_file = os.path.join(config.dataset.main_path, annotation['img_path'])
 
   # Replace extension to .dat and location in config.SIFT.raw_dir
   (name, ext) = os.path.splitext(os.path.split(img_file)[1])

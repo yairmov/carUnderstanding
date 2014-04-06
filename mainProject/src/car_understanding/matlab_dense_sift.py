@@ -20,7 +20,7 @@ import util
 
 def dense_sift_matlab(data_annos, config):
   p = path(config.dataset.main_path)
-  img_names = data_annos.rel_path.map(lambda x: str(p.joinpath(x)))
+  img_names = np.array(data_annos.img_path)
   data_names = data_annos.basename.map(lambda x: str(os.path.splitext(x)[0]))
   p = path(config.SIFT.matlab.raw_dir)
   data_names = data_names.map(lambda x: str(p.joinpath(x + '.mat')))
