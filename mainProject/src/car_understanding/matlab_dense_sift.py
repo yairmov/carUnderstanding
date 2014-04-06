@@ -78,7 +78,7 @@ def normalize_sift_data(data_annos, config):
 #     out_name = os.path.splitext(name)[0] + '.dat'
 #     dump(dict(frames=frames, desc=desc), out_name, compress=3)
 #  
-#   Parallel(n_jobs=11, verbose=config.logging.verbose)(
+#   Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
 #                  delayed(normalize_one)(ii, data_names[ii])
 #                  for ii in len(data_names))
 

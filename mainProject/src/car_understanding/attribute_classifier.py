@@ -45,6 +45,7 @@ class AttributeClassifier:
     self.dataset      = dataset.copy()
     self.desc         = desc
     self.probability  = config.attribute.use_prob
+    self.n_cores      = config.n_cores
 #     self.clf          = SVC(kernel='rbf', 
 #                            class_weight='auto',
 #                            C=1, gamma=1e-3,
@@ -153,10 +154,10 @@ class AttributeClassifier:
       print('')
     
 #       clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
-#                           n_jobs=-1,
+#                           n_jobs=self.n_cores,
 #                           verbose=3)
       clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters, cv=5, scoring='precision',
-                          n_jobs=11,
+                          n_jobs=self.n_cores,
                           verbose=3)
       clf.fit(features, labels)
     
@@ -183,7 +184,7 @@ class AttributeClassifier:
     scores = sk.cross_validation.cross_val_score(self.clf, 
                                                  features, 
                                                  labels,
-                                                 n_jobs=min(cv, 12), 
+                                                 n_jobs=min(cv, self.n_cores), 
                                                  verbose=1,
                                                  cv=cv,
                                                  scoring=score_method)

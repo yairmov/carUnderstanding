@@ -203,6 +203,7 @@ def create_flipped_images(train_annos, config):
     
     pbar.animate(ii)
     
+  print()
     
   return pd.concat([train_annos, flipped_annos], axis=0)
     
