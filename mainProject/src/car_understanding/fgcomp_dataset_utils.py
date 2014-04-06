@@ -106,7 +106,8 @@ def get_all_metadata(config=None, args=None):
 #                                          test_annos.class_index])
 
   # Prepand path to the dataset to each img_path
-  train_annos.img_path.apply(lambda x: config.dataset.main_path.joinpath(x))
+  train_annos.img_path = train_annos.img_path.apply(lambda x: config.dataset.main_path.joinpath(x).abspath())
+  test_annos.img_path = test_annos.img_path.apply(lambda x: config.dataset.main_path.joinpath(x).abspath())
 
   # Filter the class meta and train/test annotations to just use the 
   # domains defined in config
