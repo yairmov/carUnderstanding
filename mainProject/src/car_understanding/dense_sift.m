@@ -23,7 +23,7 @@ function dense_sift(tmp_dir_name)
 
   % for i=1:n_imgs
   for i=1:1
-    disp img_names{i}
+    fprintf('%s\n', img_names{i})
     im = imread(img_names{i});
     quit
     [frames, desc] = vl_phow(im2single(im), 'step', 4, 'sizes', sizes, 'FloatDescriptors', true);
