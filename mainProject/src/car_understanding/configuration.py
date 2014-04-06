@@ -43,6 +43,7 @@ def make_directories(config):
 def update_config(config, location, value):
   config[location] = value
   save_to_file(config, config.config_file)
+  return config
 
 def get_config(config_file='config.json'):
   config =  load_from_file(config_file)

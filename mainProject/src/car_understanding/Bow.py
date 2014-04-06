@@ -17,11 +17,10 @@ from sklearn import preprocessing
 from sklearn.externals.joblib import Parallel, delayed
 
 # Import my code
-# from configuration import get_config
-# import fgcomp_dataset_utils as fgu
 import dense_SIFT
 from util import ProgressBar
 from dense_SIFT import load_from_disk
+import configuration
 
 def fit_model(train_annos, config):
   features = load_SIFT_from_files(train_annos, config)
@@ -140,7 +139,11 @@ def cluster_to_words(features, config):
     estimator.n_clusters = clusters.shape[0]
 
     # Update config to show new number of clusters
-    config.SIFT.BoW.num_clusters = estimator.n_clusters
+    configuration.update_config(config, 
+                                'SIFT.BoW.num_clusters', 
+                                estimator.n_clusters)
+#     config.SIFT.BoW.num_clusters = estimator.n_clusters
+    
 
     return estimator
 
