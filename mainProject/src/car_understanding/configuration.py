@@ -11,6 +11,7 @@ import socket
 import json
 from path import path
 
+
 def save_to_file(config, fname):
   with open(fname, 'w') as f:
     json.dump(config.convertTo('nested_dict'), f, indent=2)
