@@ -19,6 +19,7 @@ from dense_SIFT import normalize_sift
 import util
 
 def dense_sift_matlab(data_annos, config):
+  print('Calling MATLAB to calculate SIFT')
   p = path(config.dataset.main_path)
   img_names = np.array(data_annos.img_path)
   data_names = data_annos.basename.map(lambda x: str(os.path.splitext(x)[0]))
@@ -26,6 +27,9 @@ def dense_sift_matlab(data_annos, config):
   data_names = data_names.map(lambda x: str(p.joinpath(x + '.mat')))
   
   run_dense_sift_matlab(img_names, data_names, config.SIFT.matlab.sizes)
+  
+  print('Normalizing SIFT descriptors')
+  normalize_sift_data(data_annos, config)
 
 
 def run_dense_sift_matlab(img_names, data_names, sizes):

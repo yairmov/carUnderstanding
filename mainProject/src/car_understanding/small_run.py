@@ -259,8 +259,9 @@ def print_output(clf, scores, config):
 
 def run_attrib_training(args, cross_validation=False):
 #   (dataset, config) = preprocess(args)
-  config = get_config(args)
+  config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
+  config.attrib_names = args
 
   #  RUN dense SIFT on alll images
 #   print "Saving Dense SIFT to disk"
