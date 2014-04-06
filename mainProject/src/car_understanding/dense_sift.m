@@ -34,4 +34,3 @@ function dense_sift(tmp_dir_name)
   % close pool
   matlabpool close force
   quit;
-% end
