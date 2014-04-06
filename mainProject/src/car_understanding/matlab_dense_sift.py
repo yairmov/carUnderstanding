@@ -43,7 +43,9 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
   # in matlab.
 
   img_cell = np.array(img_names, dtype=np.object)
+  print "bla"
   data_cell = np.array(data_names, dtype=np.object)
+  print "lolololo"
   directory_name = './tmp'
   util.makedir_if_needed(directory_name)
 
