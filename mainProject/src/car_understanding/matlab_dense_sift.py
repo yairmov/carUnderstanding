@@ -87,6 +87,8 @@ def normalize_sift_data(data_annos, config):
     a = sio.loadmat(name)
     desc = a['desc']
     frames = a['frames']
+    print type(desc)
+    import sys; sys.exit(-1)
     normalize_sift(desc, inplace=True)
     out_name = os.path.splitext(name)[0] + '.dat'
     dump(dict(frames=frames, desc=desc), out_name, compress=3)
