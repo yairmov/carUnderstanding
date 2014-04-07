@@ -12,7 +12,7 @@ import numpy as np
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import auc
+from sklearn.metrics import auc, average_precision_score
 from sklearn.metrics import classification_report
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -123,7 +123,7 @@ def test(args, config, dataset):
   res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
   
   K = np.ceil(np.sqrt(len(args.attrib_names)))
-  table = PrettyTable(['Attribute', 'Area Under Curve'])
+  table = PrettyTable(['Attribute', 'AP', 'AP random'])
   table.align['Attribute'] = 'l'
   table.padding_width = 1
   for ii, attrib_name in enumerate(args.attrib_names):
@@ -143,17 +143,29 @@ def test(args, config, dataset):
     precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
     score = auc(recall, precision)
-    table.add_row([attrib_name, score])
+    
+    # random prediction
+    y_random = np.random.uniform(-1, 1, size=true_labels.shape)
+    precision_r, recall_r, thresholds_r = precision_recall_curve(true_labels, 
+                                                           y_random)
+    score_r = auc(recall_r, precision_r)
+    
+#     score_random = average_precision_score(true_labels, y_random)
+    
+    table.add_row([attrib_name, score, score_r])
     print("Area Under Curve: %0.2f" % score)
     print ("")
     if args.plot:
       # Create the plot
       plt.subplot(K,K,ii+1)
       plt.plot(recall, precision, label='Precision-Recall curve')
+      plt.hold('on')
+      plt.plot(recall, precision, label='Precision-Recall random')
       plt.title('Precision-Recall: {}'.format(attrib_name))
       plt.xlabel('Recall')
       plt.ylabel('Precision')
-      plt.legend(['area = {}'.format(score)])
+      plt.legend(['AP = {}'.format(score), 
+                  'AP = {}'.format(score_r)])
   
   print table
     
