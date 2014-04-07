@@ -14,7 +14,7 @@
   ], 
   "flip_images": true, 
   "attribute": {
-    "high_thresh": 2, 
+    "high_thresh": 0, 
     "names": [], 
     "dir": "../../../attribute_classifiers", 
     "use_prob": false
