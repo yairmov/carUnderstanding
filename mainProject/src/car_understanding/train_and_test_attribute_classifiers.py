@@ -160,7 +160,7 @@ def test(args, config, dataset):
       plt.subplot(K,K,ii+1)
       plt.plot(recall, precision, label='Precision-Recall curve')
       plt.hold('on')
-      plt.plot(recall, precision, label='Precision-Recall random')
+      plt.plot(recall_r, precision_r, label='Precision-Recall random')
       plt.title('Precision-Recall: {}'.format(attrib_name))
       plt.xlabel('Recall')
       plt.ylabel('Precision')
