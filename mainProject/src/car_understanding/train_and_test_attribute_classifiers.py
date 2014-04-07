@@ -12,7 +12,7 @@ import numpy as np
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import auc
+from sklearn.metrics import auc, average_precision_score
 from sklearn.metrics import classification_report
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -142,6 +142,8 @@ def test(args, config, dataset):
     
     precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
+    print average_precision_score(true_labels, 
+                                  np.array(res[str.lower(attrib_name)]))
     score = auc(recall, precision)
     table.add_row([attrib_name, score])
     print("Area Under Curve: %0.2f" % score)
