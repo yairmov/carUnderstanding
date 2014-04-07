@@ -79,7 +79,8 @@ def main(argv=None):  # IGNORE:C0111
   print("Got arguments: ")
   print(args)
 
-  config = get_config([str.lower(x) for x in args.attrib_names])
+  config = get_config()
+  config.attribute.names = [str.lower(x) for x in args.attrib_names]
   (dataset, config) = fgu.get_all_metadata(config)
   
   if args.train:
