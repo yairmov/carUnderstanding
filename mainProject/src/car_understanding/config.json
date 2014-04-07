@@ -7,7 +7,7 @@
     "orientations": 9
   }, 
   "logging": {
-    "verbose": 3
+    "verbose": 4
   }, 
   "attrib_names": [
     "sedan"
