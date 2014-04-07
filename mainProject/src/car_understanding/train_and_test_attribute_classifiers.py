@@ -164,8 +164,8 @@ def test(args, config, dataset):
       plt.title('Precision-Recall: {}'.format(attrib_name))
       plt.xlabel('Recall')
       plt.ylabel('Precision')
-      plt.legend(['AP = {}'.format(score), 
-                  'AP = {}'.format(score_r)])
+      plt.legend(['Our method (ap): {}'.format(score), 
+                  'Random (ap): {}'.format(score_r)])
   
   print table
     
