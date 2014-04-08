@@ -196,7 +196,7 @@ class BayesNet:
     attrib_selector = self.attrib_selector
     
     attrib_names = self.clf_names
-    print attrib_names
+    print '\n-------' + str(attrib_names) + '\n--------'
     class_inds  = self.class_inds
     
     
