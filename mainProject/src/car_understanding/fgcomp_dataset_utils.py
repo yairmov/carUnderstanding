@@ -13,6 +13,7 @@ from configuration import get_config
 from path import path
 import Image
 from util import ProgressBar
+from joblib import Memory
 
 # Use this function to create a pandas array for the classes.
 # You can't just use pd.read_csv cause the file has names with commas in them...
@@ -128,6 +129,7 @@ def get_all_metadata(config=None, args=None):
     
     
   if config.flip_images:
+    memory = Memory(cachedir=config.cache_dir, verbose=config.logging.verbose)
     train_used = create_flipped_images(train_used, config)
 
   return ({'real_train_annos': train_annos,
@@ -161,7 +163,7 @@ def create_dev_set(train_annos, config):
   
   return dev_set_train, dev_set_test  
 
-
+@memory.cache
 def create_flipped_images(train_annos, config):
   flipped_annos = train_annos.copy()
   
