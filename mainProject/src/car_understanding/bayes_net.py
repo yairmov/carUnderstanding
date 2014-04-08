@@ -288,18 +288,20 @@ class BayesNet:
   def predict_one_ebayes(self, clf_res_descrete):
     from bayesian.bbn import build_bbn
     
-    #------- Dynamically rename a function ---------
-    def bind_function(name, func):
-      func.__name__ = name
-      return func
-    #------- Dynamically rename a function ---------
+#     #------- Dynamically rename a function ---------
+#     def bind_function(name, func):
+#       func.__name__ = name
+#       return func
+#     #------- Dynamically rename a function ---------
+
+    
     
     # building model
     # first start with observed variables - the results of all the classifiers 
     # on the image
     clf_nodes = {}
     for clf_name in self.clf_names:
-      
+      print 'jhf'
     
     return    
   

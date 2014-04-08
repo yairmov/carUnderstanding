@@ -561,7 +561,7 @@ if __name__ == '__main__':
   # Using the more generic BayesNet class
   #-------------------------------------
   
-#   bayes_net_generic(use_gt=True)
+  bayes_net_generic(use_gt=False)
 
 
 
