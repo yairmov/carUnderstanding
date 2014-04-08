@@ -130,8 +130,8 @@ def get_all_metadata(config=None, args=None):
     
   if config.flip_images:
     memory = Memory(cachedir=config.cache_dir, verbose=config.logging.verbose)
-    memory.cache(create_flipped_images)
-    train_used = create_flipped_images(train_used, config)
+    flip_func = memory.cache(create_flipped_images)
+    train_used = flip_func(train_used, config)
 
   return ({'real_train_annos': train_annos,
            'real_test_annos': test_annos,
