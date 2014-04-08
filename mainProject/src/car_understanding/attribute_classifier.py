@@ -160,12 +160,12 @@ class AttributeClassifier:
 #       clf = GridSearchCV(SVC(C=1), tuned_parameters_SVC, cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=3)
-#       clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters_LinearSVC, cv=5, scoring='precision',
-#                           n_jobs=self.n_cores,
-#                           verbose=3)
-      clf = GridSearchCV(GradientBoostingClassifier(), tuned_parameters_GradientBoosting, cv=5, scoring='precision',
+      clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters_LinearSVC, cv=5, scoring='precision',
                           n_jobs=self.n_cores,
-                          verbose=1)
+                          verbose=3)
+#       clf = GridSearchCV(GradientBoostingClassifier(), tuned_parameters_GradientBoosting, cv=5, scoring='precision',
+#                           n_jobs=self.n_cores,
+#                           verbose=1)
       clf.fit(features, labels)
     
       print("Best parameters set found on development set:")
@@ -222,6 +222,9 @@ class AttributeClassifier:
     self.fit(features, labels, grid_search=grid_search)
     
     
+  def predict(self, features):
+    return self.clf.predict(features)
+  
   def decision_function(self, features, use_prob=True):
     features = self.Scaler.transform(features)
     if use_prob and self.probability:

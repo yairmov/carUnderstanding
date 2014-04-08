@@ -15,7 +15,7 @@ predict the car class.
 import numpy as np
 import os
 import itertools
-from clint.textui import progress
+from util import ProgressBar
 import pandas as pd
 import pymc as mc
 # from sklearn.externals.joblib import Parallel, delayed
@@ -52,6 +52,7 @@ class BayesNet:
        
     self.desc         = desc
     self.clf_res      = None
+    self.clf_res_descrete = None
     self.CPT          = {}
     self.clf_names    = [self.attrib_clfs[ii].name for 
                                   ii in range(len(self.attrib_clfs))]
@@ -85,29 +86,28 @@ class BayesNet:
     
     print "Load image Bow histograms from disk"
     features = Bow.load_bow(train_annos, config)
-#     features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
-#     for ii in progress.bar(range(len(train_annos))):
-#       img_name = train_annos.iloc[ii]['basename']
-#       img_name = os.path.splitext(img_name)[0]
-#       hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-#                                    img_name) + '_hist.dat'
-#       hist = Bow.load(hist_filename) # hist[0] = values, hist[1] = bin edges
-#       features[ii, :] = hist
   
     print "Apply attribute classifiers on images"
     res = {}
-#     for attrib_clf in attrib_classifiers:
-    for ii in progress.bar(range(len(attrib_classifiers))):
+    res_descrete = {}
+    pbar = ProgressBar(len(attrib_classifiers))
+    for ii in range(len(attrib_classifiers)):
       attrib_clf = attrib_classifiers[ii]
       curr_res = attrib_clf.decision_function(features,
                                               use_prob=config.attribute.use_prob)
+      curr_res_d = attrib_clf.predict(features)
+      
       res[attrib_clf.name] = curr_res.reshape(len(curr_res))
+      res_descrete[attrib_clf.name] = curr_res_d.reshape(len(curr_res_d))
+      pbar.animate(ii)
   
     res = pd.DataFrame(data=res, index=train_annos.index)
+    res_descrete = pd.DataFrame(data=res_descrete, index=train_annos.index)
   
   
     res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
-    return res
+    res_descrete = pd.concat([res_descrete, train_annos.ix[:, ['class_index']]], axis=1)
+    return res, res_descrete
   
   
   def cpt_for_attrib(self, attrib_name, attrib_selector):
@@ -191,7 +191,7 @@ class BayesNet:
     in the net.
     '''
     if self.clf_res == None:
-      self.clf_res = self.create_attrib_res_on_images()
+      self.clf_res, self.clf_res_descrete = self.create_attrib_res_on_images()
     
     attrib_selector = self.attrib_selector
     
@@ -245,9 +245,10 @@ class BayesNet:
                               columns=attrib_names)
     
     if not use_gt:
-      clf_res_descrete = self.clf_res.copy()
-      clf_res_descrete[self.clf_names] = \
-          self.clf_res[self.clf_names] > self.config.attribute.high_thresh
+      clf_res_descrete = self.clf_res_descrete
+#       clf_res_descrete = self.clf_res.copy()
+#       clf_res_descrete[self.clf_names] = \
+#           self.clf_res[self.clf_names] > self.config.attribute.high_thresh
         
     # using ground truth    
     if use_gt:
@@ -277,8 +278,32 @@ class BayesNet:
       attrib_prob.iloc[ii] = attrrib_prob_cache[key]
       
     return (class_prob, attrib_prob)
+  
+  def predict_one(self, clf_res_descrete, method='pymc'):
+    if method == 'pymc':
+      self.predict_one_pymc(clf_res_descrete)
+    else:
+      self.predict_one_ebayes(clf_res_descrete)
+    
+  def predict_one_ebayes(self, clf_res_descrete):
+    from bayesian.bbn import build_bbn
+    
+    #------- Dynamically rename a function ---------
+    def bind_function(name, func):
+      func.__name__ = name
+      return func
+    #------- Dynamically rename a function ---------
+    
+    # building model
+    # first start with observed variables - the results of all the classifiers 
+    # on the image
+    clf_nodes = {}
+    for clf_name in self.clf_names:
       
-  def predict_one(self, clf_res_descrete):
+    
+    return    
+  
+  def predict_one_pymc(self, clf_res_descrete):
     use_gt = self.use_gt
     # building model
     # first start with observed variables - the results of all the classifiers 
