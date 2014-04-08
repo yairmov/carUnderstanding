@@ -426,7 +426,8 @@ def bayes_net_generic(use_gt=False):
   K = 36
   args = args[:K]
   
-  config = get_config(args)
+  config = get_config()
+  config.attribute.names = args
   (dataset, config) = fgu.get_all_metadata(config)
   
 #   print "training attrib classifiers"
@@ -521,9 +522,9 @@ if __name__ == '__main__':
 #           "chevrolet", "coupe", "hatchback", "dodge", "hyundai"]
   
 #   args = ["sedan", "SUV", "bmw", "ford"]
-  args = ["sedan"]
-
-  run_attrib_training(args, cross_validation=True) 
+#   args = ["sedan"]
+# 
+#   run_attrib_training(args, cross_validation=True) 
 
 #   # Small Bayes net (naive bayes...)
 #   makes = ['bmw', 'ford']
