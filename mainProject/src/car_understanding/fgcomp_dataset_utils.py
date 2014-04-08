@@ -130,6 +130,7 @@ def get_all_metadata(config=None, args=None):
     
   if config.flip_images:
     memory = Memory(cachedir=config.cache_dir, verbose=config.logging.verbose)
+    memory.cache(create_flipped_images)
     train_used = create_flipped_images(train_used, config)
 
   return ({'real_train_annos': train_annos,
@@ -163,7 +164,7 @@ def create_dev_set(train_annos, config):
   
   return dev_set_train, dev_set_test  
 
-@memory.cache
+# @memory.cache
 def create_flipped_images(train_annos, config):
   flipped_annos = train_annos.copy()
   
