@@ -203,15 +203,21 @@ class BayesNet:
     
     # P(attribute | res of attrib classifiers)
     #-----------------------------------------
+    print('Building CPT for attributes')
     if not self.use_gt: # if using ground truth we don't need to calculate this
-      for attrib_name in attrib_names:
+      pbar = ProgressBar(len(attrib_names))
+      for ii, attrib_name in enumerate(attrib_names):
         self.CPT['p({}|theta)'.format(attrib_name)] = \
           self.cpt_for_attrib(attrib_name, attrib_selector)
+        pbar.animate(ii)
+      print ''
         
         
     # P(class | attributes)
     #----------------------
-    for class_index in class_inds:
+    print('Building CPT classes')
+    pbar = ProgressBar(len(class_inds))
+    for ii, class_index in enumerate(class_inds):
       # figure out which attributes does this class have
       attrib_list = attrib_selector.prune_attributes(class_index, attrib_names)
       
@@ -221,12 +227,14 @@ class BayesNet:
       self.CPT[class_key] = self.cpt_for_class(class_index, 
                                                attrib_list, 
                                                attrib_selector)
+      pbar.animate(ii)
+    print ''
     
     print self.class_meta
         
   
   '''
-  fake: will use the ground truth attribute values for the middle 
+  use_gt: will use the ground truth attribute values for the middle 
   layer, to check what is the best we can hope for.
   '''
   def predict(self, test_annos):
