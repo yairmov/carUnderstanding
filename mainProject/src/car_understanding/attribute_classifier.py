@@ -136,7 +136,7 @@ class AttributeClassifier:
       self.clf.fit(features, labels)
     else:
       # Set the parameters by cross-validation
-      tuned_parameters = [
+      tuned_parameters_SVC = [
 #                           {'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
 #                            'C': [1, 10, 100, 1000], 
 # #                            'class_weight': ['auto']
@@ -146,19 +146,26 @@ class AttributeClassifier:
                            }
                           ]
       
-      tuned_parameters = [{'penalty': ['l2', 'l1'],
+      tuned_parameters_LinearSVC = [{'penalty': ['l2', 'l1'],
                            'C': [1e-4, 1e-3, 1e-2, 1e-1, 1],
                            'class_weight': ['auto']}]
+      
+      tuned_parameters_GradientBoosting = [{'n_estimators': [100, 1000],
+                           'learning_rate=1.0': [1, 0.1, 0.01],
+                           'max_depth': [1, 2, 3]}]
       
       print("# Tuning hyper-parameters")
       print('')
     
-#       clf = GridSearchCV(SVC(C=1), tuned_parameters, cv=5, scoring='precision',
+#       clf = GridSearchCV(SVC(C=1), tuned_parameters_SVC, cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=3)
-      clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters, cv=5, scoring='precision',
+#       clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters_LinearSVC, cv=5, scoring='precision',
+#                           n_jobs=self.n_cores,
+#                           verbose=3)
+      clf = GridSearchCV(GradientBoostingClassifier(), tuned_parameters_GradientBoosting, cv=5, scoring='precision',
                           n_jobs=self.n_cores,
-                          verbose=3)
+                          verbose=1)
       clf.fit(features, labels)
     
       print("Best parameters set found on development set:")
