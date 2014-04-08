@@ -42,6 +42,9 @@ class CPT(object):
       self.index.add(row_ind)
   
   def add_count(self, row_ind, column):
+    if self.is_normalized:
+      raise StandardError('CPT has been normalized. No more values can be added.')
+    
     row_ind = str(row_ind)
     if not self.has_row(row_ind):
       raise LookupError()
