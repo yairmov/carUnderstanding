@@ -151,7 +151,7 @@ class AttributeClassifier:
                            'class_weight': ['auto']}]
       
       tuned_parameters_GradientBoosting = [{'n_estimators': [100, 1000],
-                           'learning_rate=1.0': [1, 0.1, 0.01],
+                           'learning_rate': [1, 0.1, 0.01],
                            'max_depth': [1, 2, 3]}]
       
       print("# Tuning hyper-parameters")
