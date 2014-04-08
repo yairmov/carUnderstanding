@@ -13,7 +13,7 @@ from configuration import get_config
 from path import path
 import Image
 from util import ProgressBar
-from joblib import Memory
+from sklearn.externals.joblib import Memory
 
 # Use this function to create a pandas array for the classes.
 # You can't just use pd.read_csv cause the file has names with commas in them...
