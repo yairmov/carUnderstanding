@@ -120,8 +120,6 @@ class BayesNet:
     # intersect attrib_class_ids with clf_res.class_index
     attrib_class_ids = \
     [val for val in attrib_class_ids if val in list(clf_res_descrete.class_index)]
-    print 'here'
-    import sys; sys.exit(-1)
     
 #     clf_res_descrete = clf_res.copy()
 #     clf_res_descrete.ix[:, clf_names] = \
@@ -132,6 +130,9 @@ class BayesNet:
                                     ii in range(len(clf_names))]))
     cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
                        index=rows, columns=['True', 'False'])
+    
+    print 'here'
+    import sys; sys.exit(-1)
     
     
     for ii in range(clf_res_descrete.shape[0]):
