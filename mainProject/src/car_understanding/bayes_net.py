@@ -111,18 +111,20 @@ class BayesNet:
   
   
   def cpt_for_attrib(self, attrib_name, attrib_selector):
+    print 'here'
     clf_names = np.array(self.clf_names)
-    clf_res = self.clf_res
+#     clf_res = self.clf_res
+    clf_res_descrete = self.clf_res_descrete
     
     
     attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
     # intersect attrib_class_ids with clf_res.class_index
     attrib_class_ids = \
-    [val for val in attrib_class_ids if val in list(clf_res.class_index)]
+    [val for val in attrib_class_ids if val in list(clf_res_descrete.class_index)]
     
-    clf_res_descrete = clf_res.copy()
-    clf_res_descrete.ix[:, clf_names] = \
-                  clf_res.ix[:, clf_names] > self.config.attribute.high_thresh
+#     clf_res_descrete = clf_res.copy()
+#     clf_res_descrete.ix[:, clf_names] = \
+#                   clf_res.ix[:, clf_names] > self.config.attribute.high_thresh
     
     # Create all tuples of True/False classifier score
     rows = list(itertools.product(*[(1, 0) for 
