@@ -62,7 +62,7 @@ class CPT(object):
     return self.cpt.ix[row_ind, column]
   
   def __str__(self):
-    return self.cpt.head().__str__()
+    return self.cpt.__str__()
     
   def normalize_rows(self):
     '''
