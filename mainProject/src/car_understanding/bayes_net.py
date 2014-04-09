@@ -149,7 +149,7 @@ class BayesNet:
     cpt.normalize_rows()
     print "CPT for attrib: {}".format(attrib_name)
     print "----------------------------"
-    print cpt
+#     print cpt
     return cpt
     
   
@@ -195,7 +195,7 @@ class BayesNet:
                         
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
     print "---------------------------------"
-    print cpt
+#     print cpt
     return cpt
     
       
@@ -246,7 +246,7 @@ class BayesNet:
 #       pbar.animate(ii)
 #     print ''
     
-    print self.class_meta
+#     print self.class_meta
         
   
   '''
