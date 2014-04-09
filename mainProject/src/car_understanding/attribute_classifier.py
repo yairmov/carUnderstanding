@@ -51,12 +51,12 @@ class AttributeClassifier:
 #                            C=1, gamma=1e-3,
 #                            probability=True)
 
-#     self.clf          = LinearSVC(class_weight='auto', loss='l2', C=1e-3)
-    self.clf          = RandomForestClassifier(n_estimators=100, max_depth=4,
-                                               min_samples_split=1,
-                                               min_samples_leaf=1,
-                                               oob_score=True,
-                                               n_jobs=self.n_cores)
+    self.clf          = LinearSVC(class_weight='auto', loss='l2', C=1e-3)
+#     self.clf          = RandomForestClassifier(n_estimators=100, max_depth=4,
+#                                                min_samples_split=1,
+#                                                min_samples_leaf=1,
+#                                                oob_score=True,
+#                                                n_jobs=self.n_cores)
 #     self.clf          = GradientBoostingClassifier(n_estimators=1000, 
 #                                                    learning_rate=1.0, 
 #                                                    max_depth=1)
