@@ -17,7 +17,7 @@ class CPT(object):
   '''
 
 
-  def __init__(self, smooth_value=0, name=''):
+  def __init__(self, smooth_value=0, default_true_value=0.5, name=''):
     '''
     Constructor
     smooth_value: 'fake' counts to add to values. Used to give non zero probabilities
@@ -28,6 +28,7 @@ class CPT(object):
     self.smooth_value = smooth_value
     self.cpt = pd.DataFrame(columns=columns)
     self.is_normalized = False
+    self.default_true_value = default_true_value
     
   
   def has_row(self, row_ind):
@@ -40,6 +41,13 @@ class CPT(object):
       self.cpt.loc[row_ind] = pd.Series(data=np.array([0,0]), 
                                         index=['True', 'False'])
       self.index.add(row_ind)
+  
+  def set_value(self, row_ind, column, value):
+    row_ind = str(row_ind)
+    if not self.has_row(row_ind):
+      raise LookupError()
+    
+    self.cpt.ix[row_ind, column] = value
   
   def add_count(self, row_ind, column):
     if self.is_normalized:
@@ -55,7 +63,7 @@ class CPT(object):
     row_ind = str(row_ind)
     if not self.has_row(row_ind):
       if self.is_normalized:
-        return 0.5
+        return self.default_true_value if column else 1 - self.default_true_value
       else:
         return 0
     

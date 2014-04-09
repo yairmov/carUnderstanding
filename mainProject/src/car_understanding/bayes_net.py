@@ -150,7 +150,6 @@ class BayesNet:
     print "CPT for attrib: {}".format(attrib_name)
     print "----------------------------"
     print cpt
-    import sys; sys.exit(-1)
     return cpt
     
   
@@ -158,12 +157,14 @@ class BayesNet:
   def cpt_for_class(self, class_index, attrib_list, attribute_selector):    
 
     # Create all tuples of True/False for indicator variable
-    rows = list(itertools.product(*[(1, 0) for 
-                                    ii in range(len(attrib_list))]))
+#     rows = list(itertools.product(*[(1, 0) for 
+#                                     ii in range(len(attrib_list))]))
     
     min_prob = 1e-2
-    cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2], dtype=np.float64), 
-                       index=rows, columns=['True', 'False'])
+#     cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2], dtype=np.float64), 
+#                        index=rows, columns=['True', 'False'])
+
+    cpt = CPT(name='class_cpt', default_true_value=min_prob)
     
     # All rows except the one that has ALL the attributes should have p(true)=min_prob.
     # The one in which all attribs are true, should be the proportion of this class
@@ -180,10 +181,15 @@ class BayesNet:
     print "attrib_list: {}".format(attrib_list)
     print "num_classes_with_attribs: {}".format(num_classes_with_attrib)
     p = 1.0 / num_classes_with_attrib
-    cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
-                        dtype=int))], 'True'] = p
-    cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
-                        dtype=int))], 'False'] = 1 - p
+#     row = tuple(*np.ones(shape=[1, len(attrib_list)], dtype=int))
+    row = tuple(True for ii in range(len(attrib_list)))
+    cpt.create_row(row)
+    cpt.set_value(row, 'True', p)
+    cpt.normalize_rows()
+#     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
+#                         dtype=int))], 'True'] = p
+#     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
+#                         dtype=int))], 'False'] = 1 - p
                         
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
     print "---------------------------------"
