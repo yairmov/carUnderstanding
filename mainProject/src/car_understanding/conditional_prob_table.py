@@ -55,6 +55,7 @@ class CPT(object):
     
     row_ind = str(tuple(row_ind))
     if not self.has_row(row_ind):
+      print '{{' + row_ind + '}}'
       raise LookupError()
     
     self.cpt.ix[row_ind, column] += 1
