@@ -59,7 +59,7 @@ class CPT(object):
     
     self.cpt.ix[row_ind, column] += 1
     
-  def get_count(self, row_ind, column):
+  def get_value(self, row_ind, column):
     row_ind = str(row_ind)
     if not self.has_row(row_ind):
       if self.is_normalized:
