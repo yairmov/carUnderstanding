@@ -431,7 +431,7 @@ class BayesNet:
   
   def prob_function_builder_for_mid_layer(self, cpt, theta):    
 #     return lambda theta=theta: np.float(cpt.ix[[tuple(theta)],'True'])
-    return lambda theta=theta: np.float(cpt.get_value(tuple(theta),'True')
+    return lambda theta=theta: np.float(cpt.get_value(tuple(theta),'True'))
        
   
   
