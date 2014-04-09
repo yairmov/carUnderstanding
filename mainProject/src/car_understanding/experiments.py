@@ -393,8 +393,9 @@ def classify_using_sift():
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
   args = makes + types
-  config = get_config(args)
+  config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
+  config.attribute.names = args
 
   classes = select_small_set_for_bayes_net(dataset, makes, types)
   train_annos = dataset['train_annos']
