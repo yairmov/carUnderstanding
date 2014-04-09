@@ -387,7 +387,7 @@ def classify_using_attributes():
 def classify_using_sift():
   from sklearn.ensemble import RandomForestClassifier
   from sklearn import svm
-  from sklearn.metrics import classification_report
+  from sklearn.metrics import classification_report, accuracy_score
   from sklearn import cross_validation
 
   makes = ['bmw', 'ford']
@@ -450,6 +450,8 @@ def classify_using_sift():
 
   print(classification_report(labels_test, y_pred,
                               target_names=[c for c in classes.class_name]))
+  
+  print("Accuracy: {}".format(accuracy_score(labels_test, y_pred)))
 
 #   loo = cross_validation.LeaveOneOut(len(labels))
 #   ii = 0
