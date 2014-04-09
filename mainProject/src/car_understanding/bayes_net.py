@@ -127,26 +127,26 @@ class BayesNet:
 #                   clf_res.ix[:, clf_names] > self.config.attribute.high_thresh
     
     # Create all tuples of True/False classifier score
-    rows = list(itertools.product(*[(1, 0) for 
-                                    ii in range(len(clf_names))]))
-    cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
-                       index=rows, columns=['True', 'False'])
+#     rows = list(itertools.product(*[(1, 0) for 
+#                                     ii in range(len(clf_names))]))
+#     cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
+#                        index=rows, columns=['True', 'False'])
     
-#     cpt = CPT(smooth_value=1, name='attribute_cpt')
+    cpt = CPT(smooth_value=1, name='attribute_cpt')
     
     for ii in range(clf_res_descrete.shape[0]):
       cc = clf_res_descrete.iloc[ii]
       row = tuple(cc[clf_names])
       has_attrib = cc['class_index'] in attrib_class_ids
-#       if not cpt.has_row(row):
-#           cpt.create_row(row)
-#       cpt.add_count(row, str(has_attrib))
-      cpt.ix[row, str(has_attrib)] += 1
+      if not cpt.has_row(row):
+          cpt.create_row(row)
+      cpt.add_count(row, str(has_attrib))
+#       cpt.ix[row, str(has_attrib)] += 1
     
     
     # normalize all the rows, to create a probability function
-    cpt = cpt.divide(cpt.sum(axis=1), axis='index')
-#     cpt.normalize_rows()
+#     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
+    cpt.normalize_rows()
     print "CPT for attrib: {}".format(attrib_name)
     print "----------------------------"
     print cpt
@@ -157,19 +157,19 @@ class BayesNet:
   def cpt_for_class(self, class_index, attrib_list, attribute_selector):    
 
     # Create all tuples of True/False for indicator variable
-    rows = list(itertools.product(*[(1, 0) for 
-                                    ii in range(len(attrib_list))]))
+#     rows = list(itertools.product(*[(1, 0) for 
+#                                     ii in range(len(attrib_list))]))
     
     min_prob = 1e-2
-    cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2], dtype=np.float64), 
-                       index=rows, columns=['True', 'False'])
+#     cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2], dtype=np.float64), 
+#                        index=rows, columns=['True', 'False'])
     
-    #     cpt = CPT(name='class_cpt', default_true_value=min_prob)
+    cpt = CPT(name='class_cpt', default_true_value=min_prob)
 
     # All rows except the one that has ALL the attributes should have p(true)=min_prob.
     # The one in which all attribs are true, should be the proportion of this class
     # with respect to all classes that have all these attributes.
-    cpt['False'] = 1-min_prob
+#     cpt['False'] = 1-min_prob
     
 
     
@@ -183,15 +183,15 @@ class BayesNet:
     print "attrib_list: {}".format(attrib_list)
     print "num_classes_with_attribs: {}".format(num_classes_with_attrib)
     p = 1.0 / num_classes_with_attrib
-#     row = tuple(True for ii in range(len(attrib_list)))
-#     cpt.create_row(row)
-#     cpt.set_value(row, 'True', p)
-#     cpt.set_value(row, 'False', 1-p)
-#     cpt.normalize_rows()
-    cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
-                        dtype=int))], 'True'] = p
-    cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
-                        dtype=int))], 'False'] = 1 - p
+    row = tuple(True for ii in range(len(attrib_list)))
+    cpt.create_row(row)
+    cpt.set_value(row, 'True', p)
+    cpt.set_value(row, 'False', 1-p)
+    cpt.normalize_rows()
+#     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
+#                         dtype=int))], 'True'] = p
+#     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
+#                         dtype=int))], 'False'] = 1 - p
                         
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
     print "---------------------------------"
