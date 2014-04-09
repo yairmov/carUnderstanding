@@ -32,18 +32,18 @@ class CPT(object):
     
   
   def has_row(self, row_ind):
-    row_ind = str(row_ind)
+    row_ind = str(tuple(row_ind))
     return row_ind in self.index
     
   def create_row(self, row_ind):
-    row_ind = str(row_ind)
+    row_ind = str(tuple(row_ind))
     if not self.has_row(row_ind):
       self.cpt.loc[row_ind] = pd.Series(data=np.array([0,0]), 
                                         index=['True', 'False'])
       self.index.add(row_ind)
   
   def set_value(self, row_ind, column, value):
-    row_ind = str(row_ind)
+    row_ind = str(tuple(row_ind))
     if not self.has_row(row_ind):
       raise LookupError()
     
@@ -53,14 +53,14 @@ class CPT(object):
     if self.is_normalized:
       raise StandardError('CPT has been normalized. No more values can be added.')
     
-    row_ind = str(row_ind)
+    row_ind = str(tuple(row_ind))
     if not self.has_row(row_ind):
       raise LookupError()
     
     self.cpt.ix[row_ind, column] += 1
     
   def get_value(self, row_ind, column):
-    row_ind = str(row_ind)
+    row_ind = str(tuple(row_ind))
     if not self.has_row(row_ind):
       print '{{' + row_ind + '}}'
       raise LookupError()
