@@ -426,12 +426,10 @@ class BayesNet:
   def prob_function_builder_for_class_layer(self, cpt, attribs):
 #     return lambda attribs=attribs: np.float(cpt.ix[[tuple([int(a) for a in attribs])],
 #                                                         'True'])
-    print 'Class layer function builder'
     return lambda attribs=attribs: np.float(cpt.get_value(tuple([a for a in attribs]), 'True'))
   
   def prob_function_builder_for_mid_layer(self, cpt, theta):    
 #     return lambda theta=theta: np.float(cpt.ix[[tuple(theta)],'True'])
-    print 'Mid layer function builder'
     return lambda theta=theta: np.float(cpt.get_value([bool(v) for v in tuple(theta)],'True'))
        
   
