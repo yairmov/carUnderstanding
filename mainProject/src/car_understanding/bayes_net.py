@@ -193,7 +193,8 @@ class BayesNet:
                         
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
     print "---------------------------------"
-    print cpt                        
+    print cpt
+    import sys; sys.exit(-1)                        
     return cpt
     
       
