@@ -37,7 +37,7 @@ class CPT(object):
 #     if type(row_ind) == tuple:
 #       return str(row_ind)
     else:
-      return str(tuple(row_ind))
+      return str(tuple([bool(v) for v in row_ind]))
   
   def has_row(self, row_ind):
     return self.make_key(row_ind) in self.index
