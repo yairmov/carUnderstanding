@@ -163,13 +163,15 @@ class BayesNet:
     min_prob = 1e-2
     cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2], dtype=np.float64), 
                        index=rows, columns=['True', 'False'])
+    
+    #     cpt = CPT(name='class_cpt', default_true_value=min_prob)
 
     # All rows except the one that has ALL the attributes should have p(true)=min_prob.
     # The one in which all attribs are true, should be the proportion of this class
     # with respect to all classes that have all these attributes.
     cpt['False'] = 1-min_prob
     
-    cpt = CPT(name='class_cpt', default_true_value=min_prob)
+
     
     num_classes_with_attrib = 0
     for cind in self.class_meta.index:
