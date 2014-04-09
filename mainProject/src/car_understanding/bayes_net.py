@@ -195,7 +195,6 @@ class BayesNet:
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
     print "---------------------------------"
     print cpt
-    import sys; sys.exit(-1)                        
     return cpt
     
       
@@ -247,6 +246,7 @@ class BayesNet:
 #     print ''
     
     print self.class_meta
+    import sys; sys.exit(-1)  
         
   
   '''
