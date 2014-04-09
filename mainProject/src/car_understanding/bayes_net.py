@@ -185,6 +185,7 @@ class BayesNet:
     row = tuple(True for ii in range(len(attrib_list)))
     cpt.create_row(row)
     cpt.set_value(row, 'True', p)
+    cpt.set_value(row, 'False', 1-p)
     cpt.normalize_rows()
 #     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
 #                         dtype=int))], 'True'] = p
