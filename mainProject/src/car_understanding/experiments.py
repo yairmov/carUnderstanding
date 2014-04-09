@@ -415,37 +415,42 @@ def classify_using_sift():
 
 
   labels = np.array(train_annos.class_index)
-  clf = svm.SVC(kernel='rbf')
+  clf = RandomForestClassifier(n_estimators=200, 
+                               max_depth=4,
+                               min_samples_split=1,
+                               min_samples_leaf=1,
+                               oob_score=True,
+                               n_jobs=11)
 
-  scores = cross_validation.cross_val_score(clf, features, labels, cv=10)
-  print("")
-  print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-  print("-------------------------------------------")
+#   clf = svm.SVC(kernel='rbf')
 
-#   clf.fit(features, labels)
-#
-#   y_pred = np.array(clf.predict(features))
-#
-#   print(classification_report(labels, y_pred,
-#                               target_names=[c for c in classes.class_name]))
+#   scores = cross_validation.cross_val_score(clf, features, labels, cv=10)
+#   print("")
+#   print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+#   print("-------------------------------------------")
 
-  loo = cross_validation.LeaveOneOut(len(labels))
-  ii = 0
-  y_pred = np.zeros_like(labels)
-  progress = ProgressBar(len(labels))
-  for train_index, test_index in loo:
-#     print("TRAIN:", train_index, "TEST:", test_index)
-    X_train, X_test = features[train_index], features[test_index]
-    y_train, y_test = labels[train_index], labels[test_index]
-    clf.fit(X_train, y_train)
-    y_pred[ii] = np.array(clf.predict(X_test))
-    progress.animate(ii)
-    ii +=1
+  clf.fit(features, labels)
 
-
+  y_pred = np.array(clf.predict(features))
 
   print(classification_report(labels, y_pred,
                               target_names=[c for c in classes.class_name]))
+
+#   loo = cross_validation.LeaveOneOut(len(labels))
+#   ii = 0
+#   y_pred = np.zeros_like(labels)
+#   progress = ProgressBar(len(labels))
+#   for train_index, test_index in loo:
+# #     print("TRAIN:", train_index, "TEST:", test_index)
+#     X_train, X_test = features[train_index], features[test_index]
+#     y_train, y_test = labels[train_index], labels[test_index]
+#     clf.fit(X_train, y_train)
+#     y_pred[ii] = np.array(clf.predict(X_test))
+#     progress.animate(ii)
+#     ii +=1
+# 
+#   print(classification_report(labels, y_pred,
+#                               target_names=[c for c in classes.class_name]))
 
 
 
