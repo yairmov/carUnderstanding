@@ -410,6 +410,8 @@ def classify_using_sift():
   features_train = Bow.load_bow(train_annos, config)
   features_test  = Bow.load_bow(test_annos, config)
   
+  print 'features_train.shape', features_train.shape
+  print 'features_test.shape', features_test.shape
   assert features_train.shape[1] == features_test.shape[1], 'test and train features not of same dim'
   
 #   features = np.empty(shape=[len(train_annos),
