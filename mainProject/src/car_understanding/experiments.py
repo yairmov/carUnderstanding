@@ -431,7 +431,7 @@ def classify_using_sift():
                         np.unique(labels_test)), 'test labels not equal train labels'
   
   clf = RandomForestClassifier(n_estimators=1000, 
-                               max_depth=4,
+                               max_depth=10,
                                min_samples_split=1,
                                min_samples_leaf=1,
                                oob_score=True,
