@@ -413,18 +413,23 @@ def predict_using_bayes(clf_res, prob_c, mu, sig, dataset, config):
 
   return posteriors
 
-def bayes_net_generic(use_gt=False):
-#   makes = ['bmw', 'ford']
-#   types = ['sedan', 'SUV']
-#   args = makes + types
-  
-  with open('sorted_attrib_list.txt', 'r') as f:
+
+def get_args_from_file(fname='sorted_attrib_list.txt'):
+  with open(fname, 'r') as f:
     args = f.readlines()
   args = [str.lower(x.strip()) for x in args]  
   
   # use only top K
   K = 36
   args = args[:K]
+  return args
+  
+def bayes_net_generic(use_gt=False):
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'suv']
+  args = makes + types
+  
+  
   
   config = get_config()
   config.attribute.names = args
