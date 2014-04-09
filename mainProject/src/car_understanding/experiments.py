@@ -422,6 +422,7 @@ def classify_using_sift():
 
   labels = np.array(train_annos.class_index)
   print np.unique(np.array(test_annos.class_index))
+  print labels
   assert np.array_equal(np.unique(np.array(test_annos.class_index)), labels), 'test labels not equal train labels'
   clf = RandomForestClassifier(n_estimators=200, 
                                max_depth=4,
