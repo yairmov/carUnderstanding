@@ -52,7 +52,7 @@ class AttributeClassifier:
 #                            probability=True)
 
 #     self.clf          = LinearSVC(class_weight='auto', loss='l2', C=1e-3)
-    self.clf          = RandomForestClassifier(n_estimators=100, max_depth=5,
+    self.clf          = RandomForestClassifier(n_estimators=500, max_depth=10,
                                                min_samples_split=1,
                                                min_samples_leaf=1,
                                                oob_score=True,
