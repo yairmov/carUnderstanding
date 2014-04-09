@@ -430,8 +430,8 @@ def classify_using_sift():
   assert np.array_equal(np.unique(labels_train), 
                         np.unique(labels_test)), 'test labels not equal train labels'
   
-  clf = RandomForestClassifier(n_estimators=10000, 
-                               max_depth=10,
+  clf = RandomForestClassifier(n_estimators=1000, 
+                               max_depth=50,
                                min_samples_split=1,
                                min_samples_leaf=1,
                                oob_score=True,
