@@ -401,11 +401,11 @@ def classify_using_sift():
 
   classes = select_small_set_for_bayes_net(dataset, makes, types)
   train_annos = dataset['train_annos']
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
   test_annos = dataset['test_annos']
-  test_annos = test_annos[np.array(
-                             test_annos.class_index.isin(classes.class_index))]
+#   test_annos = test_annos[np.array(
+#                              test_annos.class_index.isin(classes.class_index))]
 
 
   print "Loading features."
