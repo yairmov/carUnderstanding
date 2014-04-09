@@ -233,7 +233,7 @@ class AttributeClassifier:
     features = self.Scaler.transform(features)
     import sklearn
     if (use_prob and self.probability) or type(self.clf) == sklearn.ensemble.forest.RandomForestClassifier:
-      return self.clf.predict_proba(features)[:,0]
+      return self.clf.predict_proba(features)[:,1]
     return self.clf.decision_function(features)
     
   
