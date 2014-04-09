@@ -103,13 +103,13 @@ class AttributeClassifier:
     
     
     # make pos/neg sets of equal size
-#     pos_inds = labels.nonzero()[0]
-#     neg_inds = np.logical_not(labels).nonzero()[0]
-#     neg_inds = np.random.permutation(neg_inds)[:num_pos]
-#         
-#     features = features[np.concatenate([pos_inds, neg_inds]), :]
-#     labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
-#                              np.zeros(shape=neg_inds.shape, dtype=bool)])
+  #     pos_inds = labels.nonzero()[0]
+  #     neg_inds = np.logical_not(labels).nonzero()[0]
+  #     neg_inds = np.random.permutation(neg_inds)[:num_pos]
+  #         
+  #     features = features[np.concatenate([pos_inds, neg_inds]), :]
+  #     labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
+  #                              np.zeros(shape=neg_inds.shape, dtype=bool)])
      
      
     num_pos = sum(labels)
@@ -160,8 +160,8 @@ class AttributeClassifier:
                            'max_depth': [1, 2, 3]}]
 
       tuned_parameters_RandomForest = [{'n_estimators': [100, 200, 1000],
-                                        'max_depth': [1, 3, 5],
-                                        'min_samples_split': [1, 4]}]
+                                        'max_depth': [1, 10, 20],
+                                        'min_samples_split': [1, 2, 5]}]
 
       
       print("# Tuning hyper-parameters")
