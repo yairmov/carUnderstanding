@@ -421,6 +421,8 @@ def classify_using_sift():
 
 
   labels = np.array(train_annos.class_index)
+  print np.unique(labels)
+  return
   clf = RandomForestClassifier(n_estimators=200, 
                                max_depth=4,
                                min_samples_split=1,
