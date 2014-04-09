@@ -409,6 +409,9 @@ def classify_using_sift():
   print "Loading features."
   features_train = Bow.load_bow(train_annos, config)
   features_test  = Bow.load_bow(test_annos, config)
+  
+  assert features_train.shape[1] == features_test.shape[1], 'test and train features not of same dim'
+  
 #   features = np.empty(shape=[len(train_annos),
 #                                  config.SIFT.BoW.num_clusters])
 #   for ii in range(len(train_annos)):
@@ -421,10 +424,9 @@ def classify_using_sift():
 
 
   labels = np.array(train_annos.class_index)
-  print np.unique(np.array(test_annos.class_index))
-  print np.unique(labels)
   assert np.array_equal(np.unique(np.array(test_annos.class_index)), 
                         np.unique(labels)), 'test labels not equal train labels'
+  
   clf = RandomForestClassifier(n_estimators=200, 
                                max_depth=4,
                                min_samples_split=1,
