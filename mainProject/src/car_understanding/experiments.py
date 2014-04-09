@@ -408,10 +408,10 @@ def classify_using_sift():
 
   print "Loading features."
   features_train = Bow.load_bow(train_annos, config)
+  
   features_test  = Bow.load_bow(test_annos, config)
   
-  print 'features_train.shape', features_train.shape
-  print 'features_test.shape', features_test.shape
+  
   assert features_train.shape[1] == features_test.shape[1], 'test and train features not of same dim'
   
 #   features = np.empty(shape=[len(train_annos),
@@ -425,9 +425,10 @@ def classify_using_sift():
 #     features[ii, :] = hist
 
 
-  labels = np.array(train_annos.class_index)
-  assert np.array_equal(np.unique(np.array(test_annos.class_index)), 
-                        np.unique(labels)), 'test labels not equal train labels'
+  labels_train = np.array(train_annos.class_index)
+  labels_test = np.array(test_annos.class_index)
+  assert np.array_equal(np.unique(labels_train), 
+                        np.unique(labels_test)), 'test labels not equal train labels'
   
   clf = RandomForestClassifier(n_estimators=200, 
                                max_depth=4,
@@ -443,11 +444,11 @@ def classify_using_sift():
 #   print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 #   print("-------------------------------------------")
 
-  clf.fit(features_train, labels)
+  clf.fit(features_train, labels_train)
 
   y_pred = np.array(clf.predict(features_test))
 
-  print(classification_report(labels, y_pred,
+  print(classification_report(labels_test, y_pred,
                               target_names=[c for c in classes.class_name]))
 
 #   loo = cross_validation.LeaveOneOut(len(labels))
