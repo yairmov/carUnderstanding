@@ -246,7 +246,6 @@ class BayesNet:
 #     print ''
     
     print self.class_meta
-    import sys; sys.exit(-1)  
         
   
   '''

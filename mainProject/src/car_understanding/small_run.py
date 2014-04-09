@@ -470,8 +470,8 @@ def bayes_net_generic(use_gt=False):
   
   test_annos = dataset['test_annos']
   # Select only images from the args "world"
-#   test_annos = test_annos[np.array(
-#                              test_annos.class_index.isin(classes.class_index))]
+  test_annos = test_annos[np.array(
+                             test_annos.class_index.isin(classes.class_index))]
   
   print 'predicting!!!'
   
