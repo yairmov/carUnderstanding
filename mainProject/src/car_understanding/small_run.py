@@ -474,7 +474,7 @@ def bayes_net_generic(use_gt=False):
                              test_annos.class_index.isin(classes.class_index))]
   
   print 'TESTING ON TRAINING!!!!!!!'
-  test_annos = train_annos
+  test_annos = train_annos.iloc[:train_annos.shape[0]/2]
   
   print 'predicting!!!'
   
