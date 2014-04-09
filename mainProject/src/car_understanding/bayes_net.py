@@ -23,6 +23,7 @@ import sys
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
+from conditional_prob_table import CPT
 
 
 class BayesNet:
@@ -131,8 +132,7 @@ class BayesNet:
     cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
                        index=rows, columns=['True', 'False'])
     
-    from conditional_prob_table import CPT
-    cpt = CPT(smooth_value=1, name='attribute_cpt')
+#     cpt = CPT(smooth_value=1, name='attribute_cpt')
     
     for ii in range(clf_res_descrete.shape[0]):
       cc = clf_res_descrete.iloc[ii]
