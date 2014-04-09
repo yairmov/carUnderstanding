@@ -304,9 +304,9 @@ class BayesNet:
   
   def predict_one(self, clf_res_descrete, method='pymc'):
     if method == 'pymc':
-      self.predict_one_pymc(clf_res_descrete)
+      return self.predict_one_pymc(clf_res_descrete)
     else:
-      self.predict_one_ebayes(clf_res_descrete)
+      return self.predict_one_ebayes(clf_res_descrete)
     
   def predict_one_ebayes(self, clf_res_descrete):
     from bayesian.bbn import build_bbn
