@@ -145,7 +145,8 @@ class BayesNet:
     
     
     # normalize all the rows, to create a probability function
-    cpt = cpt.divide(cpt.sum(axis=1), axis='index')
+#     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
+    cpt.normalize_rows()
     print "CPT for attrib: {}".format(attrib_name)
     print "----------------------------"
     print cpt
