@@ -390,6 +390,7 @@ def classify_using_sift():
   from sklearn.metrics import classification_report, accuracy_score
   from sklearn import cross_validation
   from sklearn.grid_search import GridSearchCV
+  from sklearn.dummy import DummyClassifier
 
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
@@ -485,6 +486,24 @@ def classify_using_sift():
                               target_names=[c for c in classes.class_name]))
   
   print("Accuracy: {}".format(accuracy_score(labels_test, y_pred)))
+  print("Mean Accuracy: {}".format(clf.score(features_test, labels_test)))
+  
+  dummy_1 = DummyClassifier(strategy='most_frequent')
+  dummy_2 = DummyClassifier(strategy='stratified')
+  dummy_3 = DummyClassifier(strategy='stratified')
+  
+  print 'Dummy Classifiers:'
+  print '-----------------'
+  print("Accuracy - most_frequent: {}".format(accuracy_score(labels_test, dummy_1.predict(features_test))))
+  print("Accuracy - stratified: {}".format(accuracy_score(labels_test, dummy_2.predict(features_test))))
+  print("Accuracy - uniform: {}".format(accuracy_score(labels_test, dummy_2.predict(features_test))))
+  
+  print("Mean Accuracy - most_frequent: {}".format(dummy_1.score(features_test, labels_test)))
+  print("Mean Accuracy - stratified: {}".format(dummy_2.score(features_test, labels_test)))
+  print("Mean Accuracy - uniform: {}".format(dummy_3.score(features_test, labels_test)))
+  
+  
+  
 
 #   loo = cross_validation.LeaveOneOut(len(labels))
 #   ii = 0
