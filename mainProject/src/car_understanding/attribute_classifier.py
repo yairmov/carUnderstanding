@@ -16,13 +16,13 @@ from sklearn.svm import SVC, LinearSVC
 from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import GradientBoostingClassifier
-
+# from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble.forest import RandomForestClassifier
 import numpy as np
 import os
 
 import Bow as Bow
-from sklearn.ensemble.forest import RandomForestClassifier
+
 
 class AttributeClassifier:
   """A module for classifying attributes."""
@@ -52,9 +52,13 @@ class AttributeClassifier:
 #                            probability=True)
 
 #     self.clf          = LinearSVC(class_weight='auto', loss='l2', C=1e-3)
-    self.clf          = GradientBoostingClassifier(n_estimators=1000, 
-                                                   learning_rate=1.0, 
-                                                   max_depth=1)
+    self.clf          = RandomForestClassifier(n_estimators=200, max_depth=5,
+                                               min_samples_split=4,
+                                               oob_score=True,
+                                               n_jobs=11)
+#     self.clf          = GradientBoostingClassifier(n_estimators=1000, 
+#                                                    learning_rate=1.0, 
+#                                                    max_depth=1)
     self.Scaler       = StandardScaler()
     
 #     self.clf          = Pipeline([('Scaler', Scaler()), 
