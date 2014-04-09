@@ -389,6 +389,7 @@ def classify_using_sift():
   from sklearn import svm
   from sklearn.metrics import classification_report, accuracy_score
   from sklearn import cross_validation
+  from sklearn.grid_search import GridSearchCV
 
   makes = ['bmw', 'ford']
   types = ['sedan', 'SUV']
@@ -442,8 +443,19 @@ def classify_using_sift():
 #                                         'max_depth': [1, 10, 20],
 #                                         'min_samples_split': [1, 2, 5]}]
 
+  tuned_parameters_LinearSVC = [{'penalty': ['l2', 'l1'],
+                             'C': [1e-4, 1e-3, 1e-2, 1e-1, 1],
+                             'class_weight': ['auto']}]
+  
+  clf = GridSearchCV(svm.LinearSVC(C=1, dual=False), 
+                     tuned_parameters_LinearSVC, 
+                     cv=5, 
+                     scoring='precision',
+                     n_jobs=11,
+                     verbose=3)
+
 #   clf = svm.SVC(kernel='linear')
-  clf = svm.LinearSVC()
+#   clf = svm.LinearSVC()
 
 #   scores = cross_validation.cross_val_score(clf, features, labels, cv=10)
 #   print("")
