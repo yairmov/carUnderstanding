@@ -401,18 +401,23 @@ def classify_using_sift():
   train_annos = dataset['train_annos']
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
+  test_annos = dataset['test_annos']
+  test_annos = test_annos[np.array(
+                             test_annos.class_index.isin(classes.class_index))]
 
 
   print "Loading features."
-  features = np.empty(shape=[len(train_annos),
-                                 config.SIFT.BoW.num_clusters])
-  for ii in range(len(train_annos)):
-    img_name = train_annos.iloc[ii]['basename']
-    img_name = os.path.splitext(img_name)[0]
-    hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-                                 img_name) + '_hist.dat'
-    hist = Bow.load(hist_filename)
-    features[ii, :] = hist
+  features_train = Bow.load_bow(train_annos, config)
+  features_test  = Bow.load_bow(test_annos, config)
+#   features = np.empty(shape=[len(train_annos),
+#                                  config.SIFT.BoW.num_clusters])
+#   for ii in range(len(train_annos)):
+#     img_name = train_annos.iloc[ii]['basename']
+#     img_name = os.path.splitext(img_name)[0]
+#     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
+#                                  img_name) + '_hist.dat'
+#     hist = Bow.load(hist_filename)
+#     features[ii, :] = hist
 
 
   labels = np.array(train_annos.class_index)
@@ -430,9 +435,9 @@ def classify_using_sift():
 #   print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 #   print("-------------------------------------------")
 
-  clf.fit(features, labels)
+  clf.fit(features_train, labels)
 
-  y_pred = np.array(clf.predict(features))
+  y_pred = np.array(clf.predict(features_test))
 
   print(classification_report(labels, y_pred,
                               target_names=[c for c in classes.class_name]))
