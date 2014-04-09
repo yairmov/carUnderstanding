@@ -453,6 +453,20 @@ def classify_using_sift():
                      scoring='precision',
                      n_jobs=11,
                      verbose=3)
+  
+  
+  print("Grid scores on development set:")
+  print('')
+  for params, mean_score, scores in clf.grid_scores_:
+      print("%0.3f (+/-%0.03f) for %r"
+            % (mean_score, scores.std() / 2, params))
+  print('')
+  print("Best parameters set found on development set:")
+  print('')
+  print(clf.best_estimator_)
+  print('')
+  
+  clf = clf.best_estimator_
 
 #   clf = svm.SVC(kernel='linear')
 #   clf = svm.LinearSVC()
