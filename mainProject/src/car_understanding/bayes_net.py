@@ -140,7 +140,7 @@ class BayesNet:
       has_attrib = cc['class_index'] in attrib_class_ids
       if not cpt.has_row(row):
           cpt.create_row(row)
-      cpt.add_count(row, str(has_attrib))
+      cpt.add_count(row, has_attrib)
 #       cpt.ix[row, str(has_attrib)] += 1
     
     
