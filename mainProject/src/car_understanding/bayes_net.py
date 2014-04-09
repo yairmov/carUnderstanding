@@ -149,6 +149,7 @@ class BayesNet:
     print "CPT for attrib: {}".format(attrib_name)
     print "----------------------------"
     print cpt
+    import sys; sys.exit(-1)
     return cpt
     
   
