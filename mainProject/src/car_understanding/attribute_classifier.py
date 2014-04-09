@@ -55,7 +55,7 @@ class AttributeClassifier:
     self.clf          = RandomForestClassifier(n_estimators=200, max_depth=5,
                                                min_samples_split=4,
                                                oob_score=True,
-                                               n_jobs=11)
+                                               n_jobs=self.n_cores)
 #     self.clf          = GradientBoostingClassifier(n_estimators=1000, 
 #                                                    learning_rate=1.0, 
 #                                                    max_depth=1)
@@ -102,13 +102,13 @@ class AttributeClassifier:
     
     
     # make pos/neg sets of equal size
-#     pos_inds = labels.nonzero()[0]
-#     neg_inds = np.logical_not(labels).nonzero()[0]
-#     neg_inds = np.random.permutation(neg_inds)[:num_pos]
-#        
-#     features = features[np.concatenate([pos_inds, neg_inds]), :]
-#     labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
-#                              np.zeros(shape=neg_inds.shape, dtype=bool)])
+    pos_inds = labels.nonzero()[0]
+    neg_inds = np.logical_not(labels).nonzero()[0]
+    neg_inds = np.random.permutation(neg_inds)[:num_pos]
+        
+    features = features[np.concatenate([pos_inds, neg_inds]), :]
+    labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
+                             np.zeros(shape=neg_inds.shape, dtype=bool)])
      
      
     num_pos = sum(labels)
@@ -157,6 +157,11 @@ class AttributeClassifier:
       tuned_parameters_GradientBoosting = [{'n_estimators': [100, 1000],
                            'learning_rate': [1, 0.1, 0.01],
                            'max_depth': [1, 2, 3]}]
+
+      tuned_parameters_RandomForest = [{'n_estimators': [100, 200, 1000],
+                                        'max_depth': [1, 3, 5],
+                                        'min_samples_split': [1, 4]}]
+
       
       print("# Tuning hyper-parameters")
       print('')
@@ -164,12 +169,17 @@ class AttributeClassifier:
 #       clf = GridSearchCV(SVC(C=1), tuned_parameters_SVC, cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=3)
-      clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters_LinearSVC, cv=5, scoring='precision',
-                          n_jobs=self.n_cores,
-                          verbose=3)
+#       clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters_LinearSVC, cv=5, scoring='precision',
+#                           n_jobs=self.n_cores,
+#                           verbose=3)
 #       clf = GridSearchCV(GradientBoostingClassifier(), tuned_parameters_GradientBoosting, cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=1)
+
+      clf = GridSearchCV(RandomForestClassifier(), tuned_parameters_RandomForest, 
+                         cv=5, scoring='precision',
+                          n_jobs=self.n_cores,
+                          verbose=3)
       clf.fit(features, labels)
     
       print("Best parameters set found on development set:")
