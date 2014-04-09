@@ -453,6 +453,7 @@ def classify_using_sift():
                      scoring='precision',
                      n_jobs=11,
                      verbose=3)
+  clf.fit(features_train, labels_train)
   
   
   print("Grid scores on development set:")
