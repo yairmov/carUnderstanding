@@ -195,6 +195,7 @@ class AttributeClassifier:
       print()
       
       self.clf = clf.best_estimator_
+      self.fit(features, labels)
     
     
   def cross_validate(self, features, labels):
