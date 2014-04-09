@@ -488,9 +488,9 @@ def classify_using_sift():
   print("Accuracy: {}".format(accuracy_score(labels_test, y_pred)))
   print("Mean Accuracy: {}".format(clf.score(features_test, labels_test)))
   
-  dummy_1 = DummyClassifier(strategy='most_frequent')
-  dummy_2 = DummyClassifier(strategy='stratified')
-  dummy_3 = DummyClassifier(strategy='stratified')
+  dummy_1 = DummyClassifier(strategy='most_frequent').fit(features_train)
+  dummy_2 = DummyClassifier(strategy='stratified').fit(features_train)
+  dummy_3 = DummyClassifier(strategy='stratified').fit(features_train)
   
   print 'Dummy Classifiers:'
   print '-----------------'
