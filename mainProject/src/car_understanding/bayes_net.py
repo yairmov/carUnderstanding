@@ -132,21 +132,21 @@ class BayesNet:
     cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
                        index=rows, columns=['True', 'False'])
     
-#     cpt = CPT(smooth_value=1, name='attribute_cpt')
+    cpt = CPT(smooth_value=1, name='attribute_cpt')
     
     for ii in range(clf_res_descrete.shape[0]):
       cc = clf_res_descrete.iloc[ii]
       row = tuple(cc[clf_names])
       has_attrib = cc['class_index'] in attrib_class_ids
-#       if not cpt.has_row(row):
-#           cpt.create_row(row)
-#       cpt.add_count(row, str(has_attrib))
-      cpt.ix[row, str(has_attrib)] += 1
+      if not cpt.has_row(row):
+          cpt.create_row(row)
+      cpt.add_count(row, str(has_attrib))
+#       cpt.ix[row, str(has_attrib)] += 1
     
     
     # normalize all the rows, to create a probability function
-    cpt = cpt.divide(cpt.sum(axis=1), axis='index')
-#     cpt.normalize_rows()
+#     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
+    cpt.normalize_rows()
     print "CPT for attrib: {}".format(attrib_name)
     print "----------------------------"
     print cpt
