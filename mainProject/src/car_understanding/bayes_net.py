@@ -164,12 +164,12 @@ class BayesNet:
 #     cpt = pd.DataFrame(min_prob * np.ones([len(rows), 2], dtype=np.float64), 
 #                        index=rows, columns=['True', 'False'])
 
-    cpt = CPT(name='class_cpt', default_true_value=min_prob)
-    
     # All rows except the one that has ALL the attributes should have p(true)=min_prob.
     # The one in which all attribs are true, should be the proportion of this class
     # with respect to all classes that have all these attributes.
-    cpt['False'] = 1-min_prob
+#     cpt['False'] = 1-min_prob
+    
+    cpt = CPT(name='class_cpt', default_true_value=min_prob)
     
     num_classes_with_attrib = 0
     for cind in self.class_meta.index:
@@ -220,18 +220,18 @@ class BayesNet:
     #-----------------------------------------
     print('Building CPT for attributes')
     if not self.use_gt: # if using ground truth we don't need to calculate this
-      pbar = ProgressBar(len(attrib_names))
+#       pbar = ProgressBar(len(attrib_names))
       for ii, attrib_name in enumerate(attrib_names):
         self.CPT['p({}|theta)'.format(attrib_name)] = \
           self.cpt_for_attrib(attrib_name, attrib_selector)
-        pbar.animate(ii)
-      print ''
+#         pbar.animate(ii)
+#       print ''
         
         
     # P(class | attributes)
     #----------------------
     print('Building CPT classes')
-    pbar = ProgressBar(len(class_inds))
+#     pbar = ProgressBar(len(class_inds))
     for ii, class_index in enumerate(class_inds):
       # figure out which attributes does this class have
       attrib_list = attrib_selector.prune_attributes(class_index, attrib_names)
@@ -242,8 +242,8 @@ class BayesNet:
       self.CPT[class_key] = self.cpt_for_class(class_index, 
                                                attrib_list, 
                                                attrib_selector)
-      pbar.animate(ii)
-    print ''
+#       pbar.animate(ii)
+#     print ''
     
     print self.class_meta
         
