@@ -442,7 +442,8 @@ def classify_using_sift():
 #                                         'max_depth': [1, 10, 20],
 #                                         'min_samples_split': [1, 2, 5]}]
 
-  clf = svm.SVC(kernel='rbf')
+#   clf = svm.SVC(kernel='linear')
+  clf = svm.LinearSVC()
 
 #   scores = cross_validation.cross_val_score(clf, features, labels, cv=10)
 #   print("")
