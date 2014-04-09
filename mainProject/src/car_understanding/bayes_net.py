@@ -147,8 +147,8 @@ class BayesNet:
     # normalize all the rows, to create a probability function
 #     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
     cpt.normalize_rows()
-    print "CPT for attrib: {}".format(attrib_name)
-    print "----------------------------"
+#     print "CPT for attrib: {}".format(attrib_name)
+#     print "----------------------------"
 #     print cpt
     return cpt
     
@@ -193,8 +193,8 @@ class BayesNet:
 #     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
 #                         dtype=int))], 'False'] = 1 - p
                         
-    print "CPT for class: {}".format(self.class_meta.class_name[class_index])
-    print "---------------------------------"
+#     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
+#     print "---------------------------------"
 #     print cpt
     return cpt
     
