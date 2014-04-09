@@ -429,7 +429,7 @@ def bayes_net_generic(use_gt=False):
 #   types = ['sedan', 'suv']
 #   args = makes + types
   
-  args = get_args_from_file('sorted_attrib_list.txt' )
+  args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
   config.attribute.names = args
