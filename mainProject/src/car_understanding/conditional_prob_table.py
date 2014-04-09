@@ -62,6 +62,7 @@ class CPT(object):
   def get_value(self, row_ind, column):
     row_ind = str(row_ind)
     if not self.has_row(row_ind):
+      print '{{' + row_ind + '}}'
       raise LookupError()
       if self.is_normalized:
         return self.default_true_value if column else 1 - self.default_true_value
