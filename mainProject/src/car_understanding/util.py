@@ -31,7 +31,8 @@ def set_width_to_normalize_bb_width(img, xmin, xmax, to_width):
   return img, s
 
 
-def resize_img_to_normalize_bb_area():
+def resize_img_to_normalize_bb_area(img, bb, to_area=1e5):
+  return
 
 def change_bb_loc(scaler, xmin, xmax, ymin, ymax):
   w, h = (xmax - xmin, ymax - ymin)
