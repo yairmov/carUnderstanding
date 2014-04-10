@@ -162,13 +162,16 @@ def copy_dataset(old_path, config):
   flist = dir_util.copy_tree(old_path, config.dataset.main_path, 
                              update=1, verbose=3)
   
+  print(len(flist))
+  return
+  
   if len(flist) == 0: 
     print('FOUND COPY OF DATASET, NOT DOING ANYTHING')
     return
   
   # make a backup of the train/test annotation files
-  path.copy(config.dataset.train_annos_file, config.dataset.train_annos_file_bk)
-  path.copy(config.dataset.test_annos_file, config.dataset.test_annos_file_bk)
+  path.copy(path(config.dataset.train_annos_file), path(config.dataset.train_annos_file_bk))
+  path.copy(path(config.dataset.test_annos_file), path(config.dataset.test_annos_file_bk))
 
 class ProgressBar:
     def __init__(self, iterations):
