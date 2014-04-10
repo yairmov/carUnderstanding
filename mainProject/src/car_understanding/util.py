@@ -114,9 +114,10 @@ def crop_and_resize_img(img, bb, to_area=1e5):
   bb = (xmin, ymin, xmax, ymax)
   '''
   
-  area = float((bb[2] - bb[0]) * (bb[3] - bb[1]))
-  s = to_area / area
+  area = (bb[2] - bb[0]) * (bb[3] - bb[1])
+  s = to_area / float(area)
   
+  bb = (int(v) for v in bb)
   img = img.crop(bb)
   img.resize( [int(s * siz) for siz in img.size])
   
@@ -137,7 +138,7 @@ def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
     curr_line = curr_line.strip()
     (img_index, rel_path, domain_index,
      class_index, xmin, xmax, ymin, ymax) = curr_line.split(',')
-    xmin, xmax, ymin, ymax = (float(x) for x in (xmin, xmax, ymin, ymax))
+    xmin, xmax, ymin, ymax = (int(x) for x in (xmin, xmax, ymin, ymax))
     
     img_file = os.path.join(main_path, rel_path)
     img = Image.open(img_file)
