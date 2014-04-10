@@ -118,7 +118,7 @@ def crop_and_resize_img(img, bb, to_area=1e5):
   s = to_area / float(area)
   
   img = img.crop(bb)
-  img.resize( [int(s * siz) for siz in img.size])
+  img = img.resize( [int(s * siz) for siz in img.size], Image.ANTIALIAS)
   
   return img, s
   
