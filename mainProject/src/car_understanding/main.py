@@ -17,7 +17,7 @@ if __name__ == '__main__':
                     config)
   
   # RUN THIS ONCE(it will crop and resize the images)
-  
+  util.crop_and_resize_dataset(config)
   
   
   
