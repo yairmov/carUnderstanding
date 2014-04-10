@@ -132,7 +132,7 @@ def crop_and_resize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
 def backup_anno_file(anno_file):
   p = path(anno_file)
   (bname, ext) = p.basename().splitext() 
-  backup_name = path(bname + '_old' + ext)
+  backup_name = p.dirname().joinpath(path(bname + '_old' + ext))
   
   print(backup_name)
   path.copy(p, backup_name) 
