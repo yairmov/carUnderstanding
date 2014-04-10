@@ -7,7 +7,8 @@ Created on Jan 28, 2014
 
 from __future__ import print_function
 import os
-import scipy.misc
+# import scipy.misc
+from PIL import Image
 import matplotlib.pyplot as plt
 # from clint.textui import progress
 import sys
@@ -27,7 +28,8 @@ from path import path
 def set_width_to_normalize_bb_width(img, xmin, xmax, to_width):
   w = xmax - xmin
   s = to_width / w
-  img = scipy.misc.imresize(img, s)
+#   img = scipy.misc.imresize(img, s)
+  img.resize( [int(s * v) for v in img.size], Image.ANTIALIAS)
   return img, s
 
 
@@ -39,7 +41,8 @@ def resize_img_to_normalize_bb_area(img, bb, to_area=1e5):
   area = float((bb[2] - bb[0]) * (bb[3] - bb[1]))
   s = to_area / area
   if s != 1:
-    img = scipy.misc.imresize(img, s)
+#     img = scipy.misc.imresize(img, s)
+    img.resize( [int(s * v) for v in img.size], Image.ANTIALIAS)
   return img, s
 
 def change_bb_loc(scaler, xmin, xmax, ymin, ymax):
@@ -81,14 +84,16 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
 
     # Read image and resize such that bounding box is of specific size
     img_file = os.path.join(main_path, rel_path)
-    img = scipy.misc.imread(img_file)
+#     img = scipy.misc.imread(img_file)
+    img = Image.open(main_path, rel_path)
 #     img, scaler = set_width_to_normalize_bb_width(img, xmin, xmax, bb_width)
     img, scaler = resize_img_to_normalize_bb_area(img, 
                                                   (xmin, ymin, xmax, ymax), 
                                                   to_area=to_area)
 
     # Write image back to disk
-    scipy.misc.imsave(img_file, img)
+#     scipy.misc.imsave(img_file, img)
+    img.save(img_file)
 
     # change xmin, xmax, ymin, ymax to the new size
     xmin, xmax, ymin, ymax = change_bb_loc(scaler, xmin, xmax, ymin, ymax)
