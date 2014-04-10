@@ -123,7 +123,7 @@ def backup_anno_file(anno_file):
   path.copy(p, backup_name) 
 
 def copy_dataset(old_path, new_path, config):
-  flist = dir_util.copy_tree(old_path, new_path, update=1, verbose=1)
+  flist = dir_util.copy_tree(old_path, new_path, update=1, verbose=3)
   
   if len(flist) == 0: 
     return
