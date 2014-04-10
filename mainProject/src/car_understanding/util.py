@@ -24,11 +24,14 @@ from path import path
 # import Bow
 
 
-def set_width_to_normalize_bb(img, xmin, xmax, to_width):
+def set_width_to_normalize_bb_width(img, xmin, xmax, to_width):
   w = xmax - xmin
   s = to_width / w
   img = scipy.misc.imresize(img, s)
   return img, s
+
+
+def resize_img_to_normalize_bb_area():
 
 def change_bb_loc(scaler, xmin, xmax, ymin, ymax):
   w, h = (xmax - xmin, ymax - ymin)
@@ -67,7 +70,7 @@ def normalize_dataset(train_annos_file, main_path, out_file, bb_width):
     # Read image and resize such that bounding box is of specific size
     img_file = os.path.join(main_path, rel_path)
     img = scipy.misc.imread(img_file)
-    img, scaler = set_width_to_normalize_bb(img, xmin, xmax, bb_width)
+    img, scaler = set_width_to_normalize_bb_width(img, xmin, xmax, bb_width)
 
     # Write image back to disk
     scipy.misc.imsave(img_file, img)
