@@ -469,29 +469,22 @@ def classify_using_sift():
 #                      scoring='precision',
 #                      n_jobs=11,
 #                      verbose=3)
-  clf.fit(features_train, labels_train)
-  
-  
-  print("Grid scores on development set:")
-  print('')
-  for params, mean_score, scores in clf.grid_scores_:
-      print("%0.3f (+/-%0.03f) for %r"
-            % (mean_score, scores.std() / 2, params))
-  print('')
-  print("Best parameters set found on development set:")
-  print('')
-  print(clf.best_estimator_)
-  print('')
-  
-  clf = clf.best_estimator_
+#   clf.fit(features_train, labels_train)
+#   
+#   
+#   print("Grid scores on development set:")
+#   print('')
+#   for params, mean_score, scores in clf.grid_scores_:
+#       print("%0.3f (+/-%0.03f) for %r"
+#             % (mean_score, scores.std() / 2, params))
+#   print('')
+#   print("Best parameters set found on development set:")
+#   print('')
+#   print(clf.best_estimator_)
+#   print('')
+#   
+#   clf = clf.best_estimator_
 
-#   clf = svm.SVC(kernel='linear')
-#   clf = svm.LinearSVC()
-
-#   scores = cross_validation.cross_val_score(clf, features, labels, cv=10)
-#   print("")
-#   print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-#   print("-------------------------------------------")
 
   clf.fit(features_train, labels_train)
 
