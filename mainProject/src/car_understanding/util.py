@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import sys
 import cv2 as cv
 from path import path
-import distutils
+import distutils.dir_util as dir_util
 
 # import base64
 # import numpy as np
@@ -116,7 +116,7 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
 
 
 def copy_dataset(old_path, new_path):
-  distutils.dir_util.copy_tree(old_path, new_path, update=1, verbose=1)
+  dir_util.copy_tree(old_path, new_path, update=1, verbose=1)
 
 def crop_dataset(config):
   return
