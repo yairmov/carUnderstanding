@@ -38,7 +38,8 @@ def resize_img_to_normalize_bb_area(img, bb, to_area=1e5):
   
   area = float((bb[2] - bb[0]) * (bb[3] - bb[1]))
   s = to_area / area
-  img = scipy.misc.imresize(img, s)
+  if s != 1:
+    img = scipy.misc.imresize(img, s)
   return img, s
 
 def change_bb_loc(scaler, xmin, xmax, ymin, ymax):
@@ -59,16 +60,17 @@ This will change the images in the dataset!!
 Call this on a COPY of the dataset
 '''
 # def normalize_dataset(train_annos_file, main_path, out_file, bb_width):
-def normalize_dataset(train_annos_file, main_path, out_file, to_area=1e5):
+def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
   # read lines from file
-  with open(os.path.join(main_path, train_annos_file)) as f:
+  with open(data_annos_file) as f:
     content = f.readlines()
 
   out_fid = open(os.path.join(main_path, out_file), 'w')
 #   print("Resizing images such that BB is of width = %g" % bb_width)
   print("Resizing images such that BB is of area = %g" % to_area)
-  progress = ProgressBar(len(content))
-  for ii in range(len(content)):
+  n_imgs = len(content)
+  progress = ProgressBar(n_imgs)
+  for ii in range(n_imgs):
     progress.animate(ii)
     curr_line = content[ii]
     curr_line = curr_line.strip()
