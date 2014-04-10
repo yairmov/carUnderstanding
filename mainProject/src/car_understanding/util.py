@@ -122,14 +122,13 @@ def crop_and_resize_img(img, bb, to_area=1e5):
   
   return img, s
   
-def crop_and_resize_dataset(config):
-  with open(config.dataset.data_annos_file_bk) as f:
+def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
+  with open(infile) as f:
     content = f.readlines()
   
-  out_fid = open(config.dataset.data_annos_file_bk, 'w')
+  out_fid = open(outfile, 'w')
   
-  to_area = config.bb_area
-  print("Cropping images and resizing BB such that the area is: %g" % to_area)
+  print("Cropping images and resizing BB such that the area is: %g" % bb_area)
   n_imgs = len(content)
   progress = ProgressBar(n_imgs)
   for ii in range(n_imgs):
@@ -140,12 +139,12 @@ def crop_and_resize_dataset(config):
      class_index, xmin, xmax, ymin, ymax) = curr_line.split(',')
     xmin, xmax, ymin, ymax = (float(x) for x in (xmin, xmax, ymin, ymax))
     
-    img_file = os.path.join(config.dataset.main_path, rel_path)
+    img_file = os.path.join(main_path, rel_path)
     img = Image.open(img_file)
     
     img, scaler = crop_and_resize_img(img,
                                       (xmin, ymin, xmax, ymax), 
-                                      to_area=to_area)
+                                      to_area=bb_area)
     
     # generate new text line. we output -1 for bb location to mark
     # that the image is cropped

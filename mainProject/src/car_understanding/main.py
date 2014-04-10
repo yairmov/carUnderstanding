@@ -4,7 +4,7 @@ Created on Mar 3, 2014
 @author: ymovshov
 '''
 
-from configuration import get_config
+from configuration import get_config, update_config
 import util
 
 if __name__ == '__main__':
@@ -16,9 +16,18 @@ if __name__ == '__main__':
                     config)
   
   # RUN THIS ONCE(it will crop and resize the images)
-  util.crop_and_resize_dataset(config)
-  
-  
+  if not config.dataset.is_cropped:
+    # train
+    util.crop_and_resize_dataset(config.dataset.train_annos_file_bk,
+                                 config.dataset.train_annos_file,
+                                 config.dataset.main_path)
+    #test
+    util.crop_and_resize_dataset(config.dataset.train_annos_file_bk,
+                                 config.dataset.train_annos_file,
+                                 config.dataset.main_path)
+    update_config(config, 'dataset.is_cropped', True)
+    
+    
   
   
   
