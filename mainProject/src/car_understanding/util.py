@@ -117,7 +117,6 @@ def crop_and_resize_img(img, bb, to_area=1e5):
   area = (bb[2] - bb[0]) * (bb[3] - bb[1])
   s = to_area / float(area)
   
-  bb = (int(v) for v in bb)
   img = img.crop(bb)
   img.resize( [int(s * siz) for siz in img.size])
   
