@@ -20,11 +20,13 @@ if __name__ == '__main__':
     # train
     util.crop_and_resize_dataset(config.dataset.train_annos_file_bk,
                                  config.dataset.train_annos_file,
-                                 config.dataset.main_path)
+                                 config.dataset.main_path,
+                                 config.bb_area)
     #test
     util.crop_and_resize_dataset(config.dataset.train_annos_file_bk,
                                  config.dataset.train_annos_file,
-                                 config.dataset.main_path)
+                                 config.dataset.main_path,
+                                 config.bb_area)
     update_config(config, 'dataset.is_cropped', True)
     
     
