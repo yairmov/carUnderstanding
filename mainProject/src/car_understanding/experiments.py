@@ -384,6 +384,16 @@ def classify_using_attributes():
                               target_names=[c for c in classes.class_name]))
 
 
+def get_args_from_file(fname):
+  with open(fname, 'r') as f:
+    args = f.readlines()
+  
+  args = [str.lower(x.strip()) for x in args]  
+  # use only top K
+  K = 36
+  args = args[:K]
+  return args
+
 def classify_using_sift():
   from sklearn.ensemble import RandomForestClassifier
   from sklearn import svm
@@ -392,18 +402,23 @@ def classify_using_sift():
   from sklearn.grid_search import GridSearchCV
   from sklearn.dummy import DummyClassifier
 
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'SUV']
-  args = makes + types
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'SUV']
+#   args = makes + types
+  
+  args = get_args_from_file('sorted_attrib_list.txt')
+  
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
   config.attribute.names = args
 
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
+  classes = dataset['class_meta']
   train_annos = dataset['train_annos']
+  test_annos = dataset['test_annos']
+  
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
 #   train_annos = train_annos[np.array(
 #                              train_annos.class_index.isin(classes.class_index))]
-  test_annos = dataset['test_annos']
 #   test_annos = test_annos[np.array(
 #                              test_annos.class_index.isin(classes.class_index))]
 
