@@ -21,20 +21,20 @@
   }, 
   "hostname": "palfrey.vasc.ri.cmu.edu", 
   "dataset": {
-    "test_annos_file": "../../../fgcomp2013_normed/release/test_annos_track1.txt", 
-    "name": "fgcomp2013_normed", 
+    "test_annos_file": "../../../cache/dataset/test_annos_track1.txt", 
+    "name": "fgcomp2013_cropped", 
     "dev_set": {
       "test_size": 10, 
       "use": true, 
       "rand_seed": 12
     }, 
-    "main_path": "../../../fgcomp2013_normed/release", 
+    "main_path": "../../../cache/dataset", 
     "domains": [
       3
     ], 
-    "train_annos_file": "../../../fgcomp2013_normed/release/train_annos.txt", 
-    "domain_meta_file": "../../../fgcomp2013_normed/release/domain_meta.txt", 
-    "class_meta_file": "../../../fgcomp2013_normed/release/class_meta.txt", 
+    "train_annos_file": "../../../cache/dataset/train_annos.txt", 
+    "domain_meta_file": "../../../cache/dataset/domain_meta.txt", 
+    "class_meta_file": "../../../cache/dataset/class_meta.txt", 
     "index_str": "FGCOMP_{:>07}"
   }, 
   "flip_suffix": "_fp", 
