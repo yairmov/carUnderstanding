@@ -15,6 +15,7 @@ import sys
 import cv2 as cv
 from path import path
 import distutils.dir_util as dir_util
+import distutils.file_util as file_util
 
 # import base64
 # import numpy as np
@@ -115,12 +116,31 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
 
 
 
-def copy_dataset(old_path, new_path):
-  dir_util.copy_tree(old_path, new_path, update=1, verbose=1)
+def backup_anno_file(anno_file):
+  p = path(anno_file)
+  (bname, ext) = p.basename().splitext() 
+  backup_name = path(bname + '_old' + ext)
+  path.copy(p, backup_name) 
 
-def crop_dataset(config):
-  return
-  # Start by copying the dataset
+def copy_dataset(old_path, new_path, config):
+  flist = dir_util.copy_tree(old_path, new_path, update=1, verbose=1)
+  
+  if len(flist) == 0: 
+    return
+  
+  # make a copy of the train/test annotation files
+  train_ann_file = path(new_path).joinpath(path(config.dataset.train_annos_file).basename())
+  test_ann_file = path(new_path).joinpath(path(config.dataset.test_annos_file).basename())
+  
+  backup_anno_file(train_ann_file)
+  backup_anno_file(test_ann_file)
+  
+  
+
+def crop_and_resize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
+  # read lines from file
+  with open(data_annos_file) as f:
+    content = f.readlines()
   
   
 
