@@ -78,7 +78,6 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
   n_imgs = len(content)
   progress = ProgressBar(n_imgs)
   for ii in range(n_imgs):
-#   for ii in [909]:
     progress.animate(ii)
     curr_line = content[ii]
     curr_line = curr_line.strip()
@@ -89,17 +88,12 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
 
     # Read image and resize such that bounding box is of specific size
     img_file = os.path.join(main_path, rel_path)
-#     print("img_file: ", img_file)
-#     img = scipy.misc.imread(img_file)
     img = Image.open(img_file)
 #     img, scaler = set_width_to_normalize_bb_width(img, xmin, xmax, bb_width)
     img, scaler = resize_img_to_normalize_bb_area(img, 
                                                   (xmin, ymin, xmax, ymax), 
                                                   to_area=to_area)
-#     print("scaler: ", scaler)
 
-    # Write image back to disk
-#     scipy.misc.imsave(img_file, img)
     img.save(img_file)
 
     # change xmin, xmax, ymin, ymax to the new size
@@ -114,37 +108,51 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
 
   out_fid.close()
 
-
+def crop_and_resize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
+  with open(data_annos_file) as f:
+    content = f.readlines()
+    
+  out_fid = open(os.path.join(main_path, out_file), 'w')
+  
+  print("Cropping images and resizing BB such that the area is: %g" % to_area)
+  n_imgs = len(content)
+  progress = ProgressBar(n_imgs)
+  for ii in range(n_imgs):
+    progress.animate(ii)
+    curr_line = content[ii]
+    curr_line = curr_line.strip()
+    (img_index, rel_path, domain_index,
+     class_index, xmin, xmax, ymin, ymax) = curr_line.split(',')
+    xmin, xmax, ymin, ymax = (float(x) for x in (xmin, xmax, ymin, ymax))
+    
+    
+    
+    
 
 def backup_anno_file(anno_file):
   p = path(anno_file)
   (bname, ext) = p.basename().splitext() 
   backup_name = path(bname + '_old' + ext)
+  
+  print(backup_name)
   path.copy(p, backup_name) 
 
 def copy_dataset(old_path, new_path, config):
   flist = dir_util.copy_tree(old_path, new_path, update=1, verbose=3)
   
-  if len(flist) == 0: 
-    return
+#   if len(flist) == 0: 
+#     return
+
+  print(len(flist))
   
   # make a copy of the train/test annotation files
   train_ann_file = path(new_path).joinpath(path(config.dataset.train_annos_file).basename())
   test_ann_file = path(new_path).joinpath(path(config.dataset.test_annos_file).basename())
   
+  print(train_ann_file)
+  
   backup_anno_file(train_ann_file)
   backup_anno_file(test_ann_file)
-  
-  
-
-def crop_and_resize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
-  # read lines from file
-  with open(data_annos_file) as f:
-    content = f.readlines()
-  
-  
-
-
 
 class ProgressBar:
     def __init__(self, iterations):
