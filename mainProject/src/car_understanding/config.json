@@ -6,6 +6,7 @@
     ], 
     "orientations": 9
   }, 
+  "bb_area": 100000.0, 
   "logging": {
     "verbose": 4
   }, 
@@ -20,26 +21,28 @@
     "use_prob": false
   }, 
   "hostname": "palfrey.vasc.ri.cmu.edu", 
+  "config_file": "config.json", 
   "dataset": {
+    "test_annos_file": "../../../cache/dataset/test_annos_track1.txt", 
+    "test_annos_file_bk": "../../../cache/dataset/test_annos_track1_bk.txt", 
     "name": "fgcomp2013_cropped", 
+    "is_cropped": true, 
     "dev_set": {
       "test_size": 10, 
       "use": true, 
       "rand_seed": 12
     }, 
+    "train_annos_file_bk": "../../../cache/dataset/train_annos_bk.txt", 
     "main_path": "../../../cache/dataset", 
     "domains": [
       3
     ], 
-    "train_annos_file": "../../../cache/dataset/train_annos.txt",
-    "train_annos_file_bk": "../../../cache/dataset/train_annos_bk.txt",
-    "test_annos_file": "../../../cache/dataset/test_annos_track1.txt",
-    "test_annos_file_bk": "../../../cache/dataset/test_annos_track1_bk.txt", 
+    "train_annos_file": "../../../cache/dataset/train_annos.txt", 
     "domain_meta_file": "../../../cache/dataset/domain_meta.txt", 
     "class_meta_file": "../../../cache/dataset/class_meta.txt", 
     "index_str": "FGCOMP_{:>07}"
   }, 
-  "flip_suffix": "_fp", 
+  "n_cores": 11, 
   "SIFT": {
     "raw_dir": "../../../SIFT/raw", 
     "grid_spacing": 4, 
@@ -71,10 +74,8 @@
   "cache_dir": "../../../cache", 
   "output_dir": "../../../output", 
   "main_path": "../../../", 
-  "bb_width": 200,
-  "bb_area": 1e5, 
-  "config_file": "config.json",
-  "n_cores": 11, 
+  "bb_width": 200, 
+  "flip_suffix": "_fp", 
   "LPB": {
     "P": 8, 
     "R": 8
