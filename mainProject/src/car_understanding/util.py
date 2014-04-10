@@ -119,7 +119,7 @@ def copy_dataset(old_path, new_path):
   distutils.dir_util.copy_tree(old_path, new_path, update=1)
 
 def crop_dataset(config):
-  
+  return
   # Start by copying the dataset
   
   
