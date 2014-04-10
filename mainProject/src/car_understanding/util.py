@@ -32,7 +32,14 @@ def set_width_to_normalize_bb_width(img, xmin, xmax, to_width):
 
 
 def resize_img_to_normalize_bb_area(img, bb, to_area=1e5):
-  return
+  '''
+  bb = (xmin, ymin, xmax, ymax)
+  '''
+  
+  area = float((bb[2] - bb[0]) * (bb[3] - bb[1]))
+  s = to_area / area
+  img = scipy.misc.imresize(img, s)
+  return img, s
 
 def change_bb_loc(scaler, xmin, xmax, ymin, ymax):
   w, h = (xmax - xmin, ymax - ymin)
@@ -51,13 +58,15 @@ def change_bb_loc(scaler, xmin, xmax, ymin, ymax):
 This will change the images in the dataset!!
 Call this on a COPY of the dataset
 '''
-def normalize_dataset(train_annos_file, main_path, out_file, bb_width):
+# def normalize_dataset(train_annos_file, main_path, out_file, bb_width):
+def normalize_dataset(train_annos_file, main_path, out_file, to_area=1e5):
   # read lines from file
   with open(os.path.join(main_path, train_annos_file)) as f:
     content = f.readlines()
 
   out_fid = open(os.path.join(main_path, out_file), 'w')
-  print("Resizing images such that BB is of width = %g" % bb_width)
+#   print("Resizing images such that BB is of width = %g" % bb_width)
+  print("Resizing images such that BB is of area = %g" % to_area)
   progress = ProgressBar(len(content))
   for ii in range(len(content)):
     progress.animate(ii)
@@ -71,7 +80,10 @@ def normalize_dataset(train_annos_file, main_path, out_file, bb_width):
     # Read image and resize such that bounding box is of specific size
     img_file = os.path.join(main_path, rel_path)
     img = scipy.misc.imread(img_file)
-    img, scaler = set_width_to_normalize_bb_width(img, xmin, xmax, bb_width)
+#     img, scaler = set_width_to_normalize_bb_width(img, xmin, xmax, bb_width)
+    img, scaler = resize_img_to_normalize_bb_area(img, 
+                                                  (xmin, ymin, xmax, ymax), 
+                                                  to_area=to_area)
 
     # Write image back to disk
     scipy.misc.imsave(img_file, img)
