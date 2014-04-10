@@ -15,7 +15,8 @@ import sys
 import cv2 as cv
 from path import path
 import distutils.dir_util as dir_util
-import distutils.file_util as file_util
+from numpy import sqrt
+
 
 # import base64
 # import numpy as np
@@ -115,7 +116,7 @@ def crop_and_resize_img(img, bb, to_area=1e5):
   '''
   
   area = (bb[2] - bb[0]) * (bb[3] - bb[1])
-  s = to_area / float(area)
+  s = sqrt(to_area / float(area))
   
   img = img.crop(bb)
   img = img.resize( [int(s * siz) for siz in img.size], Image.ANTIALIAS)
