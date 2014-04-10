@@ -132,7 +132,7 @@ def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
   print("Cropping images and resizing BB such that the area is: %g" % bb_area)
   n_imgs = len(content)
   progress = ProgressBar(n_imgs)
-  for ii in range(n_imgs):
+  for ii in range(1):
     progress.animate(ii)
     curr_line = content[ii]
     curr_line = curr_line.strip()
