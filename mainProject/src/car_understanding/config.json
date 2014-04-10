@@ -12,7 +12,7 @@
   "attrib_names": [
     "sedan"
   ], 
-  "flip_images": true, 
+  "flip_images": false, 
   "attribute": {
     "high_thresh": 0, 
     "names": [], 
