@@ -159,15 +159,12 @@ def crop_and_resize_dataset(config):
 
 
 def copy_dataset(old_path, config):
-  flist = dir_util.copy_tree(old_path, config.dataset.main_path, 
-                             update=1, verbose=3)
-  
-  print(len(flist))
-  return
-  
-  if len(flist) == 0: 
+  if path(config.dataset.main_path).isdir():
     print('FOUND COPY OF DATASET, NOT DOING ANYTHING')
     return
+  
+  flist = dir_util.copy_tree(old_path, config.dataset.main_path, 
+                             update=1, verbose=3)
   
   # make a backup of the train/test annotation files
   path.copy(path(config.dataset.train_annos_file), path(config.dataset.train_annos_file_bk))
