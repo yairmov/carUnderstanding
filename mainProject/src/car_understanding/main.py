@@ -12,7 +12,7 @@ if __name__ == '__main__':
   config = get_config()
   
   # Copy data set to cache
-  util.copy_dataset('../../../fgcomp2013', '../../../cache/dataset')
+  util.copy_dataset('../../../fgcomp2013/release', '../../../cache/dataset')
   
   # RUN THIS ONCE(it will crop and resize the images)
   
