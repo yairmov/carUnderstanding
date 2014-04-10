@@ -153,6 +153,8 @@ def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
     
     out_fid.write("%s\n" % new_line)
     
+#     img.save(img_file)
+    
   out_fid.close()
     
 
