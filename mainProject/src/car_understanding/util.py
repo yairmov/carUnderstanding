@@ -73,7 +73,8 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
   print("Resizing images such that BB is of area = %g" % to_area)
   n_imgs = len(content)
   progress = ProgressBar(n_imgs)
-  for ii in range(n_imgs):
+#   for ii in range(n_imgs):
+  for ii in [909]:
     progress.animate(ii)
     curr_line = content[ii]
     curr_line = curr_line.strip()
@@ -84,12 +85,14 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
 
     # Read image and resize such that bounding box is of specific size
     img_file = os.path.join(main_path, rel_path)
+    print("img_file: ", img_file)
 #     img = scipy.misc.imread(img_file)
     img = Image.open(img_file)
 #     img, scaler = set_width_to_normalize_bb_width(img, xmin, xmax, bb_width)
     img, scaler = resize_img_to_normalize_bb_area(img, 
                                                   (xmin, ymin, xmax, ymax), 
                                                   to_area=to_area)
+    print("scaler: ", scaler)
 
     # Write image back to disk
 #     scipy.misc.imsave(img_file, img)
