@@ -447,28 +447,28 @@ def classify_using_sift():
   assert np.array_equal(np.unique(labels_train), 
                         np.unique(labels_test)), 'test labels not equal train labels'
   
-#   clf = RandomForestClassifier(n_estimators=1000, 
-#                                max_depth=50,
-#                                min_samples_split=1,
-#                                min_samples_leaf=1,
-#                                oob_score=True,
-#                                n_jobs=11)
+  clf = RandomForestClassifier(n_estimators=1000, 
+                               max_depth=50,
+                               min_samples_split=1,
+                               min_samples_leaf=1,
+                               oob_score=True,
+                               n_jobs=11)
 #   
 #   
 #   tuned_parameters_RandomForest = [{'n_estimators': [100, 200, 1000],
 #                                         'max_depth': [1, 10, 20],
 #                                         'min_samples_split': [1, 2, 5]}]
 
-  tuned_parameters_LinearSVC = [{'penalty': ['l2', 'l1'],
-                             'C': [1e-4, 1e-3, 1e-2, 1e-1, 1],
-                             'class_weight': ['auto']}]
-  
-  clf = GridSearchCV(svm.LinearSVC(C=1, dual=False), 
-                     tuned_parameters_LinearSVC, 
-                     cv=5, 
-                     scoring='precision',
-                     n_jobs=11,
-                     verbose=3)
+#   tuned_parameters_LinearSVC = [{'penalty': ['l2', 'l1'],
+#                              'C': [1e-4, 1e-3, 1e-2, 1e-1, 1],
+#                              'class_weight': ['auto']}]
+#   
+#   clf = GridSearchCV(svm.LinearSVC(C=1, dual=False), 
+#                      tuned_parameters_LinearSVC, 
+#                      cv=5, 
+#                      scoring='precision',
+#                      n_jobs=11,
+#                      verbose=3)
   clf.fit(features_train, labels_train)
   
   
