@@ -149,7 +149,7 @@ def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
     # generate new text line. we output -1 for bb location to mark
     # that the image is cropped
     new_line = ','.join((img_index, rel_path, domain_index,
-              class_index, -1, -1, -1, -1))
+              class_index, '-1', '-1', '-1', '-1'))
     
     out_fid.write("%s\n" % new_line)
     
