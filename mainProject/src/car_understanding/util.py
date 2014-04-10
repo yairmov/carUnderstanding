@@ -116,7 +116,7 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
 
 
 def copy_dataset(old_path, new_path):
-  distutils.dir_util.copy_tree(old_path, new_path, update=1)
+  distutils.dir_util.copy_tree(old_path, new_path, update=1, verbose=1)
 
 def crop_dataset(config):
   return
