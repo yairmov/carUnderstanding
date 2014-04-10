@@ -85,7 +85,7 @@ def normalize_dataset(data_annos_file, main_path, out_file, to_area=1e5):
     # Read image and resize such that bounding box is of specific size
     img_file = os.path.join(main_path, rel_path)
 #     img = scipy.misc.imread(img_file)
-    img = Image.open(main_path, rel_path)
+    img = Image.open(img_file)
 #     img, scaler = set_width_to_normalize_bb_width(img, xmin, xmax, bb_width)
     img, scaler = resize_img_to_normalize_bb_area(img, 
                                                   (xmin, ymin, xmax, ymax), 
