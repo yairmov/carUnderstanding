@@ -39,10 +39,12 @@ def resize_img_to_normalize_bb_area(img, bb, to_area=1e5):
   '''
   
   area = float((bb[2] - bb[0]) * (bb[3] - bb[1]))
+  print("area: ", area)
   s = to_area / area
+  print("s: ", s)
   if s != 1:
 #     img = scipy.misc.imresize(img, s)
-    img.resize( [int(s * v) for v in img.size], Image.ANTIALIAS)
+    img.resize( [int(s * siz) for siz in img.size])
   return img, s
 
 def change_bb_loc(scaler, xmin, xmax, ymin, ymax):
