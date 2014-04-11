@@ -50,9 +50,15 @@
       "max_desc_per_img": 3000, 
       "model_file": "../../../SIFT/BoW_model.dat", 
       "requested_num_clusters": 1000, 
+<<<<<<< HEAD
       "hist_dir": "../../../SIFT/word_hist", 
       "num_clusters": 48, 
       "max_desc_total": 400000
+=======
+      "num_clusters": 945, 
+      "max_desc_total": 4e6,
+      "max_desc_per_img": 3000
+>>>>>>> 9b1a4a3eb28e0fdacb10491d3ca3ed5eac1188a4
     }, 
     "matlab": {
       "raw_dir": "../../../SIFT/raw", 

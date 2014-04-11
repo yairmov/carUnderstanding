@@ -77,8 +77,7 @@ def load_sift(data_annos, config):
   features = np.concatenate(features)
   # sample max_desc features
   inds  = np.random.permutation(features.shape[0])
-  features = features[inds, :]
-  features = features[:config.SIFT.BoW.max_desc_total, :]
+  features = features[inds[:config.SIFT.BoW.max_desc_total], :]
 
   return features
   
