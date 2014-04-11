@@ -87,11 +87,11 @@ def main():
   
 #   print('DENSE SIFT - train set')
 #   calculate_dense_sift(dataset['train_annos'], config)
-  print('DENSE SIFT - test set')
-  calculate_dense_sift(dataset['test_annos'], config)
+#   print('DENSE SIFT - test set')
+#   calculate_dense_sift(dataset['test_annos'], config)
   
   # Create BoW model
-  features = load_sift(dataset, config)
+  features = load_sift(dataset['train_annos'], config)
   print "Loaded %d SIFT features from disk" % features.shape[0]
   print "K-Means CLustering"
   bow_model = Bow.cluster_to_words(features, config)
