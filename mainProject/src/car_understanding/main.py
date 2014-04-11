@@ -73,7 +73,7 @@ def load_sift(data_annos, config):
 
   features = []
   for ii in range(nfiles):
-    features.append(load_sift_from_file(fnames[ii], config))
+    features.append(load_sift_from_file(fnames[ii]))
   
   features = np.concatenate(features)
   # sample max_desc features
