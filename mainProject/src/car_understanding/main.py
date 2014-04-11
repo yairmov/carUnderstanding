@@ -65,8 +65,7 @@ def load_sift_from_file(sift_filename, max_num_desc=None):
 def load_sift(data_annos, config):
   nfiles = len(data_annos)
   fnames = data_annos.basename.apply(lambda x: path(x).splitext()[0] + '.dat')
-  fnames.apply(lambda x: path(config.SIFT.raw_dir).joinpath(x))
-  fnames = list(fnames)
+  fnames = list(fnames.apply(lambda x: path(config.SIFT.raw_dir).joinpath(x)))
   print 'Loading dense SIFT from %d images ' % nfiles
 #   features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
 #                  delayed(load_sift_from_file)(fnames[ii], config)
