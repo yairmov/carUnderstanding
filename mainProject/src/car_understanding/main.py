@@ -96,7 +96,6 @@ def main():
   
   # Create BoW model
   features = load_sift(dataset['train_annos'], config)
-  return
   print "Loaded %d SIFT features from disk" % features.shape[0]
   print "K-Means CLustering"
   bow_model = Bow.cluster_to_words(features, config)
