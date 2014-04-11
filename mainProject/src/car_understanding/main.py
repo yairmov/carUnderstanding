@@ -68,7 +68,7 @@ def load_sift(data_annos, config):
   fnames = list(fnames)
   print 'Loading dense SIFT from %d images ' % nfiles
   features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-                 delayed(load_sift_from_file)(data_annos[ii], config)
+                 delayed(load_sift_from_file)(fnames[ii], config)
                  for ii in range(nfiles))
   
   features = np.concatenate(features)
