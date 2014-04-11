@@ -6,7 +6,7 @@
     ], 
     "orientations": 9
   }, 
-  "bb_area": 100000.0, 
+  "hostname": "palfrey.vasc.ri.cmu.edu", 
   "logging": {
     "verbose": 4
   }, 
@@ -20,13 +20,12 @@
     "dir": "../../../attribute_classifiers", 
     "use_prob": false
   }, 
-  "hostname": "palfrey.vasc.ri.cmu.edu", 
-  "config_file": "config.json", 
+  "bb_area": 100000.0, 
   "dataset": {
     "test_annos_file": "../../../cache/dataset/test_annos_track1.txt", 
     "test_annos_file_bk": "../../../cache/dataset/test_annos_track1_bk.txt", 
-    "name": "fgcomp2013_cropped", 
-    "is_cropped": false, 
+    "index_str": "FGCOMP_{:>07}", 
+    "is_cropped": true, 
     "dev_set": {
       "test_size": 10, 
       "use": true, 
@@ -40,9 +39,10 @@
     "train_annos_file": "../../../cache/dataset/train_annos.txt", 
     "domain_meta_file": "../../../cache/dataset/domain_meta.txt", 
     "class_meta_file": "../../../cache/dataset/class_meta.txt", 
-    "index_str": "FGCOMP_{:>07}"
+    "name": "fgcomp2013_cropped"
   }, 
   "n_cores": 11, 
+  "flip_suffix": "_fp", 
   "SIFT": {
     "raw_dir": "../../../SIFT/raw", 
     "grid_spacing": 4, 
@@ -75,7 +75,7 @@
   "output_dir": "../../../output", 
   "main_path": "../../../", 
   "bb_width": 200, 
-  "flip_suffix": "_fp", 
+  "config_file": "config.json", 
   "LPB": {
     "P": 8, 
     "R": 8
