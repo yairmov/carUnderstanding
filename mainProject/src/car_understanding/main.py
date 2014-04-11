@@ -7,6 +7,7 @@ Created on Mar 3, 2014
 import numpy as np
 from path import path
 from sklearn.externals.joblib import Parallel, delayed, load, dump
+import pandas as pd
 
 from configuration import get_config, update_config
 import util
@@ -41,45 +42,20 @@ def preprocess_dataset(config):
 def calculate_dense_sift(data_annos, config):  
   dense_sift_matlab(data_annos, config)
   
+  
 
-
-def load_sift_from_file(sift_filename, max_num_desc=None):
-  (kp, desc) = load_from_disk(sift_filename, matlab_version=True)
+def create_bow_model(train_annos, config):
+#   features = Bow.load_sift(train_annos, config)
+#   print "Loaded %d SIFT features from disk" % features.shape[0]
+#   print "K-Means CLustering"
+#   bow_model = Bow.cluster_to_words(features, config)
+  bow_model = Bow.fit_model(train_annos, config)
+  Bow.save(bow_model, config.SIFT.BoW.model_file)
   
   
-  # Randomly select a scale and get all the descriptors from it
-  p_size = np.random.choice(np.unique(kp[:,-1]))
-  inds = kp[:,-1] == p_size
-  kp = kp[inds, :]
-  desc = desc[inds, :]
-  
-  # Random selection of a subset of the descriptors
-  inds  = np.random.permutation(desc.shape[0])
-  desc = desc[inds, :]
-  desc = desc[:max_num_desc, :]
-  
-  return desc.astype(np.float32)
-  
-  
-def load_sift(data_annos, config):
-  nfiles = len(data_annos)
-  fnames = data_annos.basename.apply(lambda x: path(x).splitext()[0] + '.dat')
-  fnames = list(fnames.apply(lambda x: path(config.SIFT.raw_dir).joinpath(x)))
-  print 'Loading dense SIFT from %d images ' % nfiles
-  features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-                 delayed(load_sift_from_file)(fnames[ii], config.SIFT.BoW.max_desc_per_img)
-                 for ii in range(nfiles))
-
-#   features = []
-#   for ii in range(nfiles):
-#     features.append(load_sift_from_file(fnames[ii], config.SIFT.BoW.max_desc_per_img))
-  
-  features = np.concatenate(features)
-  # sample max_desc features
-  inds  = np.random.permutation(features.shape[0])
-  features = features[inds[:config.SIFT.BoW.max_desc_total], :]
-
-  return features
+def assign_LLC(dataset, config):
+  annos = pd.concat([dataset['train_annos'], dataset['test_annos']], axis=0)
+  Bow.create_word_histograms_on_dataset(annos, config)
   
 def main():
   config = get_config()
@@ -94,14 +70,11 @@ def main():
 #   calculate_dense_sift(dataset['test_annos'], config)
   
   # Create BoW model
-  features = load_sift(dataset['train_annos'], config)
-  dump(features, 'tmp.dat', compress=3)
-  return
-  print "Loaded %d SIFT features from disk" % features.shape[0]
-  print "K-Means CLustering"
-  bow_model = Bow.cluster_to_words(features, config)
-  dump(bow_model, config.SIFT.BoW.model_file)
+#   create_bow_model(dataset['train_annos'], config)
   
+  # Assign cluster labels to all images
+  print("Assigning to histograms/LLC")
+  assign_LLC(dataset, config)
   
     
 if __name__ == '__main__':

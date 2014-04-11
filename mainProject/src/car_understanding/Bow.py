@@ -15,6 +15,7 @@ from sklearn.cluster import KMeans, MiniBatchKMeans
 from sklearn.externals import joblib
 from sklearn import preprocessing
 from sklearn.externals.joblib import Parallel, delayed
+from path import path
 
 # Import my code
 import dense_SIFT
@@ -23,7 +24,7 @@ from dense_SIFT import load_from_disk
 import configuration
 
 def fit_model(train_annos, config):
-  features = load_SIFT_from_files(train_annos, config)
+  features = load_sift(train_annos, config)
   print "Loaded %d SIFT features from disk" % features.shape[0]
   print "K-Means CLustering"
   return cluster_to_words(features, config)
@@ -40,68 +41,106 @@ def contains(box, point):
 
 
 
-def load_SIFT_from_a_file(curr_anno, config):
-  curr_file = os.path.splitext(curr_anno['basename'])[0] + '.dat'
-  (kp, desc) = load_from_disk(os.path.join(config.SIFT.raw_dir, curr_file),
-                              matlab_version=True)
-
-  # Only keep points that are inside the bounding box
-  box = (curr_anno['xmin'], curr_anno['xmax'],
-         curr_anno['ymin'], curr_anno['ymax'])
-
-#   inds = np.zeros(shape=[len(kp),], dtype=bool)
-#   for jj in range(len(kp)):
-#     inds[jj] = contains(box, kp[jj].pt)
-  
-  n_pts = int(kp.shape[0])
-  inds = np.zeros(shape=[n_pts,], dtype=bool)
-  for jj in range(n_pts):
-    inds[jj] = contains(box, kp[jj,:2])
-
-  desc = desc[inds, :]
-#   kp = np.asarray(kp)[inds].tolist()
-  kp = kp[inds,:]
-
-  # Random selection of a subset of the keypojnts/descriptors
-  # Select one patch size and get all descriptors from it
-  patch_size = np.random.choice(np.unique(kp[:,-1]), 1)[0]
-  inds = np.where(kp[:,-1] == patch_size)[0]
-  desc = desc[inds,:]
-  kp = kp[inds,:]
-  
-  
-#   inds  = np.random.permutation(desc.shape[0])
+# def load_SIFT_from_a_file(curr_anno, config):
+#   curr_file = os.path.splitext(curr_anno['basename'])[0] + '.dat'
+#   (kp, desc) = load_from_disk(os.path.join(config.SIFT.raw_dir, curr_file),
+#                               matlab_version=True)
+# 
+#   # Only keep points that are inside the bounding box
+#   box = (curr_anno['xmin'], curr_anno['xmax'],
+#          curr_anno['ymin'], curr_anno['ymax'])
+# 
+# #   inds = np.zeros(shape=[len(kp),], dtype=bool)
+# #   for jj in range(len(kp)):
+# #     inds[jj] = contains(box, kp[jj].pt)
+#   
+#   n_pts = int(kp.shape[0])
+#   inds = np.zeros(shape=[n_pts,], dtype=bool)
+#   for jj in range(n_pts):
+#     inds[jj] = contains(box, kp[jj,:2])
+# 
 #   desc = desc[inds, :]
-#   desc = desc[:config.SIFT.BoW.max_desc_per_img, :]
-# #   kp    = [kp[i] for i in inds]
-# #   kp    = kp[:config.SIFT.BoW.max_desc_per_img]
+# #   kp = np.asarray(kp)[inds].tolist()
+#   kp = kp[inds,:]
+# 
+#   # Random selection of a subset of the keypojnts/descriptors
+#   # Select one patch size and get all descriptors from it
+#   patch_size = np.random.choice(np.unique(kp[:,-1]), 1)[0]
+#   inds = np.where(kp[:,-1] == patch_size)[0]
+#   desc = desc[inds,:]
+#   kp = kp[inds,:]
+#   
+#   
+# #   inds  = np.random.permutation(desc.shape[0])
+# #   desc = desc[inds, :]
+# #   desc = desc[:config.SIFT.BoW.max_desc_per_img, :]
+# # #   kp    = [kp[i] for i in inds]
+# # #   kp    = kp[:config.SIFT.BoW.max_desc_per_img]
+# 
+#   return desc
+# 
+# def load_SIFT_from_files(train_annos, config):
+# 
+#   nfiles = len(train_annos)
+#   print 'Loading dense SIFT for %d training images ' % nfiles
+#   features = Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
+#                  delayed(load_SIFT_from_a_file)(train_annos.iloc[ii], config)
+#                  for ii in range(nfiles))
+# 
+# #   features = []
+# #   pbar = ProgressBar(nfiles)
+# #   for ii in range(nfiles):
+# #     pbar.animate(ii)
+# #     features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
+# 
+#   # convert to numy arry
+#   features = np.concatenate(features)
+# 
+#   # sample max_desc features
+#   inds  = np.random.permutation(features.shape[0])
+#   features = features[inds, :]
+#   features = features[:config.SIFT.BoW.max_desc_total, :]
+# 
+#   return features  
 
-  return desc
 
-def load_SIFT_from_files(train_annos, config):
-
-  nfiles = len(train_annos)
-  print 'Loading dense SIFT for %d training images ' % nfiles
-  features = Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
-                 delayed(load_SIFT_from_a_file)(train_annos.iloc[ii], config)
+def load_sift_from_file(sift_filename, max_num_desc=None):
+  (kp, desc) = load_from_disk(sift_filename, matlab_version=True)
+  
+  
+  # Randomly select a scale and get all the descriptors from it
+  p_size = np.random.choice(np.unique(kp[:,-1]))
+  inds = kp[:,-1] == p_size
+  kp = kp[inds, :]
+  desc = desc[inds, :]
+  
+  # Random selection of a subset of the descriptors
+  inds  = np.random.permutation(desc.shape[0])
+  desc = desc[inds, :]
+  desc = desc[:max_num_desc, :]
+  
+  return desc.astype(np.float32)
+  
+  
+def load_sift(data_annos, config):
+  nfiles = len(data_annos)
+  fnames = data_annos.basename.apply(lambda x: path(x).splitext()[0] + '.dat')
+  fnames = list(fnames.apply(lambda x: path(config.SIFT.raw_dir).joinpath(x)))
+  print 'Loading dense SIFT from %d images ' % nfiles
+  features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
+                 delayed(load_sift_from_file)(fnames[ii], config.SIFT.BoW.max_desc_per_img)
                  for ii in range(nfiles))
 
 #   features = []
-#   pbar = ProgressBar(nfiles)
 #   for ii in range(nfiles):
-#     pbar.animate(ii)
-#     features.append(load_SIFT_from_a_file(train_annos.iloc[ii], config))
-
-  # convert to numy arry
+#     features.append(load_sift_from_file(fnames[ii], config.SIFT.BoW.max_desc_per_img))
+  
   features = np.concatenate(features)
-
   # sample max_desc features
   inds  = np.random.permutation(features.shape[0])
-  features = features[inds, :]
-  features = features[:config.SIFT.BoW.max_desc_total, :]
+  features = features[inds[:config.SIFT.BoW.max_desc_total], :]
 
-  return features  
-
+  return features
 
 # Cluster features to create the 'words'
 def cluster_to_words(features, config):
