@@ -45,7 +45,6 @@ def calculate_dense_sift(data_annos, config):
 
 def load_sift_from_file(sift_filename, max_num_desc=None):
   (kp, desc) = load_from_disk(sift_filename, matlab_version=True)
-  return desc
   
   
   # Randomly select a scale and get all the descriptors from it
