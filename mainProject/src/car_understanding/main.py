@@ -85,8 +85,8 @@ def main():
   
   (dataset, config) = fgu.get_all_metadata(config)
   
-  print('DENSE SIFT - train set')
-  calculate_dense_sift(dataset['train_annos'], config)
+#   print('DENSE SIFT - train set')
+#   calculate_dense_sift(dataset['train_annos'], config)
   print('DENSE SIFT - test set')
   calculate_dense_sift(dataset['test_annos'], config)
   
