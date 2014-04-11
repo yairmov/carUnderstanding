@@ -69,8 +69,7 @@ def normalize_sift_data(data_annos, config):
   p = path(config.SIFT.matlab.raw_dir)
   data_names = np.array(data_names.map(lambda x: str(p.joinpath(x + '.mat'))))
   
-  print data_names[:5]
-
+  print type(data_names[0])
 
   def normalize_one(name):
     out_name = path(name).splitext()[0] + '.dat'
