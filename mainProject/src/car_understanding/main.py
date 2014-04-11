@@ -53,10 +53,10 @@ def load_sift_from_file(sift_filename, max_num_desc=None):
   kp = kp[inds, :]
   desc = desc[inds, :]
   
-#   # Random selection of a subset of the descriptors
-#   inds  = np.random.permutation(desc.shape[0])
-#   desc = desc[inds, :]
-#   desc = desc[:max_num_desc, :]
+  # Random selection of a subset of the descriptors
+  inds  = np.random.permutation(desc.shape[0])
+  desc = desc[inds, :]
+  desc = desc[:max_num_desc, :]
   
   return desc.astype(np.float32)
   
