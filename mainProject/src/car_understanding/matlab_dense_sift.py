@@ -63,25 +63,23 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
   shutil.rmtree(directory_name)
 
 
+def normalize_one(name):
+  out_name = path(name).splitext()[0] + '.dat'
+  flag = not path(out_name).isfile()
+  flag = True 
+  if flag:
+    a = sio.loadmat(name)
+    desc = a['desc']
+    frames = a['frames']
+    normalize_sift(desc, inplace=True)
+    dump(dict(frames=frames, desc=desc), out_name, compress=3)
+
 def normalize_sift_data(data_annos, config):
 
   data_names = data_annos.basename.map(lambda x: str(os.path.splitext(x)[0]))
   p = path(config.SIFT.matlab.raw_dir)
   data_names = np.array(data_names.map(lambda x: str(p.joinpath(x + '.mat'))))
   
-  print type(data_names[0])
-
-  def normalize_one(name):
-    out_name = path(name).splitext()[0] + '.dat'
-    flag = not path(out_name).isfile()
-    flag = True 
-    if flag:
-      a = sio.loadmat(name)
-      desc = a['desc']
-      frames = a['frames']
-      normalize_sift(desc, inplace=True)
-      dump(dict(frames=frames, desc=desc), out_name, compress=3)
-   
   Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
                  delayed(normalize_one)(data_names[ii])
                  for ii in range(len(data_names)))
