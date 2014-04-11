@@ -71,8 +71,10 @@ def normalize_sift_data(data_annos, config):
 
 
   def normalize_one(name):
-    out_name = os.path.splitext(name)[0] + '.dat'
-    if not path(out_name).isfile():
+    out_name = path(name).splitext()[0] + '.dat'
+    flag = not path(out_name).isfile()
+    flag = True 
+    if flag:
       a = sio.loadmat(name)
       desc = a['desc']
       frames = a['frames']
@@ -83,15 +85,14 @@ def normalize_sift_data(data_annos, config):
                  delayed(normalize_one)(data_names[ii])
                  for ii in range(len(data_names)))
 
-#   pbar = util.ProgressBar(len(data_names))
-#   for ii, name in enumerate(data_names):
-#     out_name = os.path.splitext(name)[0] + '.dat'
-# #     if not path(out_name).isfile():
-#     a = sio.loadmat(name)
-#     desc = a['desc']
-#     frames = a['frames']
-#     normalize_sift(desc, inplace=True)
-#     dump(dict(frames=frames, desc=desc), out_name, compress=3)
-#     pbar.animate(ii)
+  pbar = util.ProgressBar(len(data_names))
+  for ii, name in enumerate(data_names):
+    out_name = path(name).splitext()[0] + '.dat'
+    a = sio.loadmat(name)
+    desc = a['desc']
+    frames = a['frames']
+    normalize_sift(desc, inplace=True)
+    dump(dict(frames=frames, desc=desc), out_name, compress=3)
+    pbar.animate(ii)
 
 
