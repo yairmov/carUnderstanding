@@ -59,7 +59,7 @@ def load_sift_from_file(sift_filename, max_num_desc=None):
   desc = desc[inds, :]
   desc = desc[:max_num_desc, :]
   
-  return desc
+  return desc.astype(np.float32)
   
   
 def load_sift(data_annos, config):
