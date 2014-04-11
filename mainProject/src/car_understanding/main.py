@@ -6,7 +6,7 @@ Created on Mar 3, 2014
 
 import numpy as np
 from path import path
-from sklearn.externals.joblib import Parallel, delayed
+from sklearn.externals.joblib import Parallel, delayed, load, dump
 
 from configuration import get_config, update_config
 import util
@@ -95,6 +95,8 @@ def main():
   
   # Create BoW model
   features = load_sift(dataset['train_annos'], config)
+  dump(features, 'tmp.dat', compress=3)
+  return
   print "Loaded %d SIFT features from disk" % features.shape[0]
   print "K-Means CLustering"
   bow_model = Bow.cluster_to_words(features, config)

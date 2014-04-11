@@ -52,7 +52,7 @@
       "requested_num_clusters": 1000, 
       "hist_dir": "../../../SIFT/word_hist", 
       "num_clusters": 51, 
-      "max_desc_total": 4000000.0
+      "max_desc_total": 4000000
     }, 
     "matlab": {
       "raw_dir": "../../../SIFT/raw", 
