@@ -100,6 +100,7 @@ def main():
   print "Loaded %d SIFT features from disk" % features.shape[0]
   print "K-Means CLustering"
   bow_model = Bow.cluster_to_words(features, config)
+  dump(bow_model, config.SIFT.BoW.model_file)
   
   
     

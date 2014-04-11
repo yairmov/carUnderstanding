@@ -51,7 +51,7 @@
       "model_file": "../../../SIFT/BoW_model.dat", 
       "requested_num_clusters": 1000, 
       "hist_dir": "../../../SIFT/word_hist", 
-      "num_clusters": 51, 
+      "num_clusters": 1000, 
       "max_desc_total": 4000000
     }, 
     "matlab": {
