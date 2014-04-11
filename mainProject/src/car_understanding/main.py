@@ -54,10 +54,10 @@ def load_sift_from_file(sift_filename, max_num_desc=None):
   kp = kp[inds, :]
   desc = desc[inds, :]
   
-#   # Random selection of a subset of the descriptors
-#   inds  = np.random.permutation(desc.shape[0])
-#   desc = desc[inds, :]
-#   desc = desc[:max_num_desc, :]
+  # Random selection of a subset of the descriptors
+  inds  = np.random.permutation(desc.shape[0])
+  desc = desc[inds, :]
+  desc = desc[:max_num_desc, :]
   
   return desc
   
@@ -68,13 +68,8 @@ def load_sift(data_annos, config):
   fnames = list(fnames.apply(lambda x: path(config.SIFT.raw_dir).joinpath(x)))
   print 'Loading dense SIFT from %d images ' % nfiles
   features = Parallel(n_jobs=-1, verbose=config.logging.verbose)(
-                 delayed(load_sift_from_file)(fnames[ii], config)
+                 delayed(load_sift_from_file)(fnames[ii], config.SIFT.max_desc_per_img)
                  for ii in range(nfiles))
-
-#   features = []
-#   for ii in range(nfiles):
-#     print ii
-#     features.append(load_sift_from_file(fnames[ii]))
   
   features = np.concatenate(features)
   # sample max_desc features

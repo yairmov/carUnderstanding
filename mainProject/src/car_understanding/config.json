@@ -52,6 +52,7 @@
       "requested_num_clusters": 1000, 
       "num_clusters": 945, 
       "max_desc_total": 400000
+      "max_desc_per_img": 3000,
     }, 
     "matlab": {
       "raw_dir": "../../../SIFT/raw", 
