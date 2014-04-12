@@ -29,8 +29,8 @@ def preprocess_dataset(config):
                                  config.dataset.main_path,
                                  config.bb_area)
     #test
-    util.crop_and_resize_dataset(config.dataset.train_annos_file_bk,
-                                 config.dataset.train_annos_file,
+    util.crop_and_resize_dataset(config.dataset.test_annos_file_bk,
+                                 config.dataset.test_annos_file,
                                  config.dataset.main_path,
                                  config.bb_area)
     update_config(config, 'dataset.is_cropped', True)
