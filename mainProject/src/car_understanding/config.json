@@ -25,7 +25,7 @@
     "test_annos_file": "../../../cache/dataset/test_annos_track1.txt", 
     "index_str": "FGCOMP_{:>07}", 
     "test_annos_file_bk": "../../../cache/dataset/test_annos_track1_bk.txt", 
-    "is_cropped": true, 
+    "is_cropped": false, 
     "dev_set": {
       "test_size": 10, 
       "use": true, 
