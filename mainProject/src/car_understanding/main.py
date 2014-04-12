@@ -19,8 +19,7 @@ import Bow
 
 def preprocess_dataset(config):
   # Copy data set to cache
-  util.copy_dataset('../../../fgcomp2013/release', 
-                    config)
+  util.copy_dataset(config)
   
   # RUN THIS ONCE(it will crop and resize the images)
   if not config.dataset.is_cropped:

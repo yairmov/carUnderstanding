@@ -161,11 +161,12 @@ def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
     
 
 
-def copy_dataset(old_path, config):
+def copy_dataset(config):
   if path(config.dataset.main_path).isdir():
     print('FOUND COPY OF DATASET, NOT DOING ANYTHING')
     return
   
+  old_path = config.dataset.original_dataset_path
   flist = dir_util.copy_tree(old_path, config.dataset.main_path, 
                              update=1, verbose=3)
   

@@ -32,7 +32,8 @@
       "rand_seed": 12
     }, 
     "train_annos_file_bk": "../../../cache/dataset/train_annos_bk.txt", 
-    "main_path": "../../../cache/dataset", 
+    "main_path": "../../../cache/dataset",
+    "original_dataset_path": "../../../fgcomp2013/release", 
     "domains": [
       3
     ], 
