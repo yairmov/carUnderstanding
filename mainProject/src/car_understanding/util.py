@@ -164,7 +164,7 @@ def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
 def copy_dataset(config):
   if config.dataset.main_path.isdir() and \
      len(config.dataset.main_path.listdir()) > 0:
-    print('FOUND COPY OF DATASET, NOT DOING ANYTHING')
+    print('FOUND COPY OF DATASET, NOT COPYING ANYTHING')
     return
   
   old_path = config.dataset.original_dataset_path
