@@ -123,7 +123,8 @@ def crop_and_resize_img(img, bb, to_area=1e5):
   
   return img, s
   
-def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
+def crop_and_resize_dataset(infile, outfile, main_path, bb_area,
+                            has_class=True):
   with open(infile) as f:
     content = f.readlines()
   
@@ -136,9 +137,15 @@ def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
     progress.animate(ii)
     curr_line = content[ii]
     curr_line = curr_line.strip()
-    (img_index, rel_path, domain_index,
-     class_index, xmin, xmax, ymin, ymax) = curr_line.split(',')
+    if has_class:
+      (img_index, rel_path, domain_index,
+       class_index, xmin, xmax, ymin, ymax) = curr_line.split(',')
+    else:
+      (img_index, rel_path, domain_index,
+       xmin, xmax, ymin, ymax) = curr_line.split(',')
+       
     xmin, xmax, ymin, ymax = (int(x) for x in (xmin, xmax, ymin, ymax))
+      
     
     img_file = os.path.join(main_path, rel_path)
     img = Image.open(img_file)
@@ -149,8 +156,12 @@ def crop_and_resize_dataset(infile, outfile, main_path, bb_area):
     
     # generate new text line. we output -1 for bb location to mark
     # that the image is cropped
-    new_line = ','.join((img_index, rel_path, domain_index,
-              class_index, '-1', '-1', '-1', '-1'))
+    if has_class:
+      new_line = ','.join((img_index, rel_path, domain_index,
+                class_index, '-1', '-1', '-1', '-1'))
+    else:
+      new_line = ','.join((img_index, rel_path, domain_index,
+                 '-1', '-1', '-1', '-1'))
     
     out_fid.write("%s\n" % new_line)
     
