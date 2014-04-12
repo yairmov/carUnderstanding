@@ -61,17 +61,17 @@ def assign_LLC(dataset, config):
 def main():
   config = get_config()
   
-  preprocess_dataset(config)
+#   preprocess_dataset(config)
   
   (dataset, config) = fgu.get_all_metadata(config)
   
-#   print('DENSE SIFT - train set')
-#   calculate_dense_sift(dataset['train_annos'], config)
-#   print('DENSE SIFT - test set')
-#   calculate_dense_sift(dataset['test_annos'], config)
+  print('DENSE SIFT - train set')
+  calculate_dense_sift(dataset['train_annos'], config)
+  print('DENSE SIFT - test set')
+  calculate_dense_sift(dataset['test_annos'], config)
   
   # Create BoW model
-#   create_bow_model(dataset['train_annos'], config)
+  create_bow_model(dataset['train_annos'], config)
   
   # Assign cluster labels to all images
   print("Assigning to histograms/LLC")
