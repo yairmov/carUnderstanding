@@ -170,17 +170,17 @@ class AttributeClassifier:
 #       clf = GridSearchCV(SVC(C=1), tuned_parameters_SVC, cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=3)
-      clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters_LinearSVC, cv=5, scoring='precision',
-                          n_jobs=self.n_cores,
-                          verbose=3)
+#       clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters_LinearSVC, cv=5, scoring='precision',
+#                           n_jobs=self.n_cores,
+#                           verbose=3)
 #       clf = GridSearchCV(GradientBoostingClassifier(), tuned_parameters_GradientBoosting, cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=1)
 
-#       clf = GridSearchCV(RandomForestClassifier(), tuned_parameters_RandomForest, 
-#                          cv=5, scoring='precision',
-#                           n_jobs=self.n_cores,
-#                           verbose=3)
+      clf = GridSearchCV(RandomForestClassifier(), tuned_parameters_RandomForest, 
+                         cv=5, scoring='precision',
+                          n_jobs=self.n_cores,
+                          verbose=3)
       clf.fit(features, labels)
     
       print("Best parameters set found on development set:")
