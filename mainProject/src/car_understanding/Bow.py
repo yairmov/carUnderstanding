@@ -25,8 +25,6 @@ import configuration
 
 def fit_model(train_annos, config):
   features = load_sift(train_annos, config)
-  joblib.dump(features, 'tmp.dat')
-  import sys; sys.exit(-1)
   print "Loaded %d SIFT features from disk" % features.shape[0]
   print "K-Means CLustering"
   return cluster_to_words(features, config)
