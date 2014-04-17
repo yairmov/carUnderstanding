@@ -52,7 +52,8 @@ class SpatialPooler(object):
     
   
   @staticmethod
-  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])', nopython=True)
+  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])', nopython=True,
+       locals={'M':numba.types.f8[:]})
   def to_pool(locations, features, pooling_box):
     M = np.max(locations, axis = 0)
     
