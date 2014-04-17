@@ -46,12 +46,12 @@ class SpatialPooler(object):
   @staticmethod
   @jit(nopython=True)
   def to_pool(locations, features, pooling_box):
-    xM, yM = tuple(locations.max(axis = 0))
+    M = locations.max(axis = 0)
     
-    xmin = xM * pooling_box[0]
-    ymin = yM * pooling_box[1]
-    xmax = xM * pooling_box[2]
-    ymax = yM * pooling_box[3]
+    xmin = M[0] * pooling_box[0]
+    ymin = M[1] * pooling_box[1]
+    xmax = M[0] * pooling_box[2]
+    ymax = M[1] * pooling_box[3]
     
     to_pool = contains(np.array([xmin, ymin, xmax, ymax]), locations) 
     
