@@ -99,7 +99,7 @@ def test(args, config, dataset):
   print "Load image Bow histograms from disk"
   features = np.empty(shape=[len(test_annos), 
                              config.SIFT.BoW.num_clusters * 
-                             config.SIFT.pool_boxes])
+                             len(config.SIFT.pool_boxes)])
   progress = ProgressBar(len(test_annos))
   for ii in range(len(test_annos)):
     img_name = test_annos.iloc[ii]['basename']

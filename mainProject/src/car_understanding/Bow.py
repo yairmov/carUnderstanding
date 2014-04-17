@@ -282,7 +282,7 @@ def create_word_histograms_on_dataset(data_annos, config):
 def load_bow(data_annos, config):
   features = np.empty(shape=[len(data_annos), 
                              config.SIFT.BoW.num_clusters * 
-                             config.SIFT.pool_boxes])
+                             len(config.SIFT.pool_boxes)])
   progress = ProgressBar(len(data_annos))
   for ii in range(len(data_annos)):
     img_name = data_annos.iloc[ii]['basename']

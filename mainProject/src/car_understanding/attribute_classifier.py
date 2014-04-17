@@ -74,7 +74,7 @@ class AttributeClassifier:
       # Preallocate feature matrix
       features = np.empty(shape=[len(self.dataset), 
                                  self.config.SIFT.BoW.num_clusters *
-                                 self.config.SIFT.pool_boxes])
+                                 len(self.config.SIFT.pool_boxes)])
       for ii in range(len(self.dataset)):
         img_name = self.dataset.iloc[ii]['basename']
         img_name = os.path.splitext(img_name)[0]
