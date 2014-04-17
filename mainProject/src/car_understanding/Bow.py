@@ -252,7 +252,7 @@ def create_word_histogram_on_file(raw_feature_file, bow_model, config):
   
   (frames, desc) = dense_SIFT.load_from_disk(raw_feature_file,
                                          matlab_version=True)
-  hist = word_histogram(desc, frames[:,:1], bow_model, config)
+  hist = word_histogram(desc, frames[:,:2], bow_model, config)
   save(hist, hist_filename)
 
 def create_word_histograms_on_dataset(data_annos, config):
