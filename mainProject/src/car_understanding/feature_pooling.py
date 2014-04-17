@@ -6,8 +6,9 @@ Created on Apr 17, 2014
 
 import numpy as np
 from numba import autojit, jit
+import numba
 
-@jit('b1[:](f8[:], f8[:])', nopython=True)
+@jit('b1[:](f8[:], f8[:])', nopython=True, locals={'d': numba.types.b1[:]})
 def contains(box, points):
   '''
   For each point in points checks if it is in the box.
@@ -24,7 +25,8 @@ def contains(box, points):
   contains_x = np.logical_and(points[:,0] >= box[0], points[:,0] <= box[2])
   contains_y = np.logical_and(points[:,1] >= box[1], points[:,1] <= box[3])
   
-  return np.logical_and(contains_x, contains_y)
+  d = np.logical_and(contains_x, contains_y)
+  return d
 
 
 
