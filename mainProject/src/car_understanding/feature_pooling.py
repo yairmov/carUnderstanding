@@ -8,7 +8,8 @@ import numpy as np
 from numba import autojit, jit
 import numba
 
-@jit('b1[:](f8[:], f8[:])', nopython=True, locals={'d': numba.types.b1[:]})
+@jit('b1[:](f8[:], f8[:])', nopython=True, locals={'contains_x': numba.types.b1[:],
+                                                   'contains_y': numba.types.b1[:]})
 def contains(box, points):
   '''
   For each point in points checks if it is in the box.
