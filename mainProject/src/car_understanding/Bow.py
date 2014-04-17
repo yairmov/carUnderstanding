@@ -227,7 +227,9 @@ def word_histogram(features, locations, bow_model, config):
     pooled_enc = [sp.features_to_pool(locations, encoding).max(axis=0) 
              for sp in spatial_poolers]
         
-    hist = np.concatenate(pooled_enc, axis=1) 
+    hist = np.concatenate(pooled_enc, axis=0)
+    print hist.shape
+    import sys; sys.exit(0) 
 
 
   else:
