@@ -12,6 +12,7 @@ import numba
 #                                                    'contains_y': numba.types.b1[:],
 #                                                    'x': numba.types.f8[:],
 #                                                    'y':numba.types.f8[:]})
+@jit('b1[:](f8[:], f8[:], f8[:], f8[:], f8[:,:])')
 def contains(xmin, ymin, xmax, ymax, points):
   '''
   For each point in points checks if it is in the box.
@@ -30,10 +31,8 @@ def contains(xmin, ymin, xmax, ymax, points):
   contains_x = (x >= xmin) * (x <= xmax)
   contains_y = (y >= ymin) * (y <= ymax)
   
-  return contains_x
   
-#   d = np.logical_and(contains_x, contains_y)
-#   return d
+  return np.logical_and(contains_x, contains_y)
 
 
 
@@ -53,8 +52,7 @@ class SpatialPooler(object):
     
   
   @staticmethod
-  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])', nopython=True,
-       locals={'to_pool': numba.types.b1[:]})
+  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])', nopython=True)
   def to_pool(locations, features, pooling_box):
     M = locations.max(axis = 0)
     
