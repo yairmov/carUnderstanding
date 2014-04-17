@@ -23,8 +23,8 @@ def contains(box, points):
   
 #   assert type(points) == np.ndarray, 'points should be numpy array'
   
-  contains_x = points[:,0] >= box[0] * points[:,0] <= box[2]
-  contains_y = points[:,1] >= box[1] * points[:,1] <= box[3]
+  contains_x = (points[:,0] >= box[0]) * (points[:,0] <= box[2])
+  contains_y = (points[:,1] >= box[1]) * (points[:,1] <= box[3])
   
   return contains_x
   
