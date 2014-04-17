@@ -224,12 +224,10 @@ def word_histogram(features, locations, bow_model, config):
     
     spatial_poolers = [SpatialPooler(x) for x in config.SIFT.pool_boxes] 
 
-    hists = [sp.features_to_pool(locations, encoding).max(axis=0) 
+    pooled_enc = [sp.features_to_pool(locations, encoding).max(axis=0) 
              for sp in spatial_poolers]
         
-    hist = np.concatenate(hists, axis=1) 
-    print hist.shape
-    import sys; sys.exit(0)
+    hist = np.concatenate(pooled_enc, axis=1) 
 
 
   else:
@@ -266,20 +264,20 @@ def create_word_histograms_on_dataset(data_annos, config):
 #   if not os.path.isdir(config.SIFT.BoW.hist_dir):
 #     os.makedirs(config.SIFT.BoW.hist_dir)
 
-#   Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
-#                  delayed(create_word_histogram_on_file)(
-#                  os.path.join(dir_path,
-#                               os.path.splitext(data_annos.iloc[ii]['basename'])[0] + '.dat'),
-#                  bow_model,
-#                  config)
-#                  for ii in range(n_files))
+  Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
+                 delayed(create_word_histogram_on_file)(
+                 os.path.join(dir_path,
+                              os.path.splitext(data_annos.iloc[ii]['basename'])[0] + '.dat'),
+                 bow_model,
+                 config)
+                 for ii in range(n_files))
 
-  for ii in range(n_files):
-    print ii
-    create_word_histogram_on_file(os.path.join(dir_path,
-                                os.path.splitext(data_annos.iloc[ii]['basename'])[0] + '.dat'),
-                                bow_model,
-                                config)
+#   for ii in range(n_files):
+#     print ii
+#     create_word_histogram_on_file(os.path.join(dir_path,
+#                                 os.path.splitext(data_annos.iloc[ii]['basename'])[0] + '.dat'),
+#                                 bow_model,
+#                                 config)
 
 
 def load_bow(data_annos, config):
