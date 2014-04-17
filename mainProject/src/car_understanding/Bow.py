@@ -228,8 +228,6 @@ def word_histogram(features, locations, bow_model, config):
              for sp in spatial_poolers]
         
     hist = np.concatenate(pooled_enc, axis=0)
-    print hist.shape
-    import sys; sys.exit(0) 
 
 
   else:
