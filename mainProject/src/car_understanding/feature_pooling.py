@@ -40,11 +40,11 @@ class SpatialPooler(object):
     indicating the desired area in the image.
     E.g. (0, 0, 0.5, 1) will pool features from the left half of the image.  
     '''
-    self.pooling_box = pooling_box
+    self.pooling_box = np.array(pooling_box)
     
   
   @staticmethod
-  @jit('f8[:](f8[:], f8[:], f8[:])', nopython=True)
+  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])')
   def to_pool(locations, features, pooling_box):
     M = locations.max(axis = 0)
     
@@ -72,7 +72,7 @@ class SpatialPooler(object):
                                            'where each row is the x,y '+
                                            'location in the image')
     
-    return self.to_pool(locations, features, np.array(self.pooling_box))
+    return self.to_pool(locations, features, self.pooling_box)
     
     
     
