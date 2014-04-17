@@ -7,7 +7,7 @@ Created on Apr 17, 2014
 import numpy as np
 from numba import autojit, jit
 
-# @jit('b1[:](f8[:], f8[:])')
+@jit('b1[:](f8[:], f8[:])')
 def contains(box, points):
   '''
   For each point in points checks if it is in the box.
@@ -43,7 +43,7 @@ class SpatialPooler(object):
     self.pooling_box = pooling_box
     
   
-  
+  @autojit
   def features_to_pool(self, locations, features):
     '''
     locations - numpy array of size Nx2 where each row is the x,y location
@@ -54,10 +54,10 @@ class SpatialPooler(object):
     returns the subset of features that should be pooled. 
     '''
     
-    assert type(locations) == np.ndarray, ('locations must be an ' + 
-                                           'N-by-2 numpy.ndarray' +  
-                                           'where each row is the x,y '+
-                                           'location in the image')
+#     assert type(locations) == np.ndarray, ('locations must be an ' + 
+#                                            'N-by-2 numpy.ndarray' +  
+#                                            'where each row is the x,y '+
+#                                            'location in the image')
     
     xM, yM = tuple(locations.max(axis = 0))
     
