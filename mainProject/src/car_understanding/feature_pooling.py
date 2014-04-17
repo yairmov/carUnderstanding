@@ -10,8 +10,8 @@ import numba
 
 @jit('b1[:](f8, f8, f8, f8, f8[:,:])', nopython=True, locals={'contains_x': numba.types.b1[:],
                                                    'contains_y': numba.types.b1[:],
-                                                   'x': numba.types.f8,
-                                                   'y':numba.types.f8})
+                                                   'x': numba.types.f8[:],
+                                                   'y':numba.types.f8[:]})
 def contains(xmin, ymin, xmax, ymax, points):
   '''
   For each point in points checks if it is in the box.
