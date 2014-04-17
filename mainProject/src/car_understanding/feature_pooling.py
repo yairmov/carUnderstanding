@@ -43,7 +43,20 @@ class SpatialPooler(object):
     self.pooling_box = pooling_box
     
   
+  @staticmethod
   @jit
+  def to_pool(locations, features, pooling_box):
+    xM, yM = tuple(locations.max(axis = 0))
+    
+    xmin = xM * pooling_box[0]
+    ymin = yM * pooling_box[1]
+    xmax = xM * pooling_box[2]
+    ymax = yM * pooling_box[3]
+    
+    to_pool = contains(np.array([xmin, ymin, xmax, ymax]), locations) 
+    
+    return features[to_pool, :]
+  
   def features_to_pool(self, locations, features):
     '''
     locations - numpy array of size Nx2 where each row is the x,y location
@@ -54,21 +67,15 @@ class SpatialPooler(object):
     returns the subset of features that should be pooled. 
     '''
     
-#     assert type(locations) == np.ndarray, ('locations must be an ' + 
-#                                            'N-by-2 numpy.ndarray' +  
-#                                            'where each row is the x,y '+
-#                                            'location in the image')
+    assert type(locations) == np.ndarray, ('locations must be an ' + 
+                                           'N-by-2 numpy.ndarray' +  
+                                           'where each row is the x,y '+
+                                           'location in the image')
     
-    xM, yM = tuple(locations.max(axis = 0))
+    return self.to_pool(locations, features, self.pooling_box)
     
-    xmin = xM * self.pooling_box[0]
-    ymin = yM * self.pooling_box[1]
-    xmax = xM * self.pooling_box[2]
-    ymax = yM * self.pooling_box[3]
     
-    to_pool = contains(np.array([xmin, ymin, xmax, ymax]), locations)
     
-    return features[to_pool, :]
     
       
         
