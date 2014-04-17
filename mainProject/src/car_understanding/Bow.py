@@ -23,6 +23,7 @@ from util import ProgressBar
 from dense_SIFT import load_from_disk
 import configuration
 from feature_pooling import SpatialPooler
+from llc import LLC_encoding
 
 def fit_model(train_annos, config):
   features = load_sift(train_annos, config)
@@ -208,7 +209,6 @@ def load(filename):
 # bow_model, and return count histogram.
 # Can also apply LLC enocoding to use more than one cluster center. 
 def word_histogram(features, locations, bow_model, config):
-  from llc import LLC_encoding
 
   # normalize SIFT features
   # features = normalize_features(features)
@@ -226,6 +226,8 @@ def word_histogram(features, locations, bow_model, config):
 
     hists = [sp.features_to_pool(locations, encoding).max(axis=0) 
              for sp in spatial_poolers]
+    print [x.shape for x in hists]
+    import sys; sys.exit(0)
         
     hist = np.concatenate(hists, axis=0) 
 
