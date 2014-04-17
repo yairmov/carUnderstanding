@@ -44,7 +44,7 @@ class SpatialPooler(object):
     
   
   @staticmethod
-  @jit(nopython=True)
+  @jit('f8[:](f8[:], f8[:], f8[:])', nopython=True)
   def to_pool(locations, features, pooling_box):
     M = locations.max(axis = 0)
     
@@ -72,7 +72,7 @@ class SpatialPooler(object):
                                            'where each row is the x,y '+
                                            'location in the image')
     
-    return self.to_pool(locations, features, self.pooling_box)
+    return self.to_pool(locations, features, np.array(self.pooling_box))
     
     
     
