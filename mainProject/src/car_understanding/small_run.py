@@ -151,7 +151,9 @@ def create_feature_matrix(dataset, config):
   train_annos = dataset['train_annos']
 
   # Preallocate feature matrix
-  features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
+  features = np.empty(shape=[len(train_annos), 
+                             config.SIFT.BoW.num_clusters * 
+                             config.SIFT.pool_boxes])
 
   # Load histograms from disk into a matrix
   print 'Loading histograms from disk'
@@ -331,7 +333,9 @@ def select_small_set_for_bayes_net(dataset, makes, types):
 
 def create_attrib_res_on_images(train_annos, attrib_classifiers, config):
   print "Load image Bow histograms from disk"
-  features = np.empty(shape=[len(train_annos), config.SIFT.BoW.num_clusters])
+  features = np.empty(shape=[len(train_annos), 
+                             config.SIFT.BoW.num_clusters * 
+                             config.SIFT.pool_boxes])
   for ii in range(len(train_annos)):
     img_name = train_annos.iloc[ii]['basename']
     img_name = os.path.splitext(img_name)[0]

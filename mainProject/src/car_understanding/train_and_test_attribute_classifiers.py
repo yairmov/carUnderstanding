@@ -97,7 +97,9 @@ def test(args, config, dataset):
   attrib_selector = AttributeSelector(config, dataset['class_meta'])
   
   print "Load image Bow histograms from disk"
-  features = np.empty(shape=[len(test_annos), config.SIFT.BoW.num_clusters])
+  features = np.empty(shape=[len(test_annos), 
+                             config.SIFT.BoW.num_clusters * 
+                             config.SIFT.pool_boxes])
   progress = ProgressBar(len(test_annos))
   for ii in range(len(test_annos)):
     img_name = test_annos.iloc[ii]['basename']

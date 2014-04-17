@@ -5,7 +5,7 @@ Created on Apr 17, 2014
 '''
 
 import numpy as np
-from numba import autojit, jit
+# from numba import autojit, jit
 
 # @jit('b1[:](f8[:], f8[:])')
 def contains(box, points):
