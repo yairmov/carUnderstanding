@@ -25,8 +25,10 @@ def contains(box, points):
   contains_x = np.logical_and(points[:,0] >= box[0], points[:,0] <= box[2])
   contains_y = np.logical_and(points[:,1] >= box[1], points[:,1] <= box[3])
   
-  d = np.logical_and(contains_x, contains_y)
-  return d
+  return contains_x
+  
+#   d = np.logical_and(contains_x, contains_y)
+#   return d
 
 
 
@@ -46,7 +48,7 @@ class SpatialPooler(object):
     
   
   @staticmethod
-  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])')
+#   @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])')
   def to_pool(locations, features, pooling_box):
     M = locations.max(axis = 0)
     
