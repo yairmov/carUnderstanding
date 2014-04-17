@@ -57,10 +57,9 @@ class SpatialPooler(object):
                                            'location in the image')
     
     xM, yM = tuple(locations.max(axis = 0))
-    xm, ym = tuple(locations.min(axis = 0))
     
-    xmin = xm * self.pooling_box[0]
-    ymin = ym * self.pooling_box[1]
+    xmin = xM * self.pooling_box[0]
+    ymin = yM * self.pooling_box[1]
     xmax = xM * self.pooling_box[2]
     ymax = yM * self.pooling_box[3]
     
