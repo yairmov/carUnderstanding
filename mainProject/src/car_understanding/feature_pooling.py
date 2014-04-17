@@ -59,10 +59,10 @@ class SpatialPooler(object):
     xM, yM = tuple(locations.max(axis = 0))
     xm, ym = tuple(locations.min(axis = 0))
     
-    xmin = xm * self.pooling[0]
-    ymin = ym * self.pooling[1]
-    xmax = xM * self.pooling[2]
-    ymax = yM * self.pooling[3]
+    xmin = xm * self.pooling_box[0]
+    ymin = ym * self.pooling_box[1]
+    xmax = xM * self.pooling_box[2]
+    ymax = yM * self.pooling_box[3]
     
     to_pool = self.contains((xmin, ymin, xmax, ymax), locations)
     
