@@ -43,7 +43,6 @@ class SpatialPooler(object):
     return np.logical_and(contains_x, contains_y)
     
   
-  @jit  
   def features_to_pool(self, locations, features):
     '''
     locations - numpy array of size Nx2 where each row is the x,y location
