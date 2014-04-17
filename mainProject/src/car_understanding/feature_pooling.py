@@ -43,7 +43,7 @@ class SpatialPooler(object):
     self.pooling_box = pooling_box
     
   
-  @autojit
+  @jit
   def features_to_pool(self, locations, features):
     '''
     locations - numpy array of size Nx2 where each row is the x,y location
