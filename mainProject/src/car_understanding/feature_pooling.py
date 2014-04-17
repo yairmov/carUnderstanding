@@ -5,6 +5,7 @@ Created on Apr 17, 2014
 '''
 
 import numpy as np
+from numba import jit
 
 class SpatialPooler(object):
   '''
@@ -22,6 +23,7 @@ class SpatialPooler(object):
     
   
   @staticmethod
+  @jit
   def contains(box, points):
     '''
     For each point in points checks if it is in the box.
@@ -40,7 +42,8 @@ class SpatialPooler(object):
     
     return np.logical_and(contains_x, contains_y)
     
-    
+  
+  @jit  
   def features_to_pool(self, locations, features):
     '''
     locations - numpy array of size Nx2 where each row is the x,y location

@@ -229,7 +229,6 @@ def word_histogram(features, locations, bow_model, config):
         
     hist = np.concatenate(pooled_enc, axis=0)
 
-
   else:
 
     print('NO SPATIAL POOLING IMPLEMENTED FOR SIMPLE BAG OF WORDS!!!')
