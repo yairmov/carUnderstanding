@@ -7,7 +7,7 @@ Created on Apr 17, 2014
 import numpy as np
 from numba import autojit, jit
 
-@jit('b1[:](f8[:], f8[:])')
+# @jit('b1[:](f8[:], f8[:])')
 def contains(box, points):
   '''
   For each point in points checks if it is in the box.
@@ -44,7 +44,7 @@ class SpatialPooler(object):
     
   
   @staticmethod
-  @jit
+#   @jit
   def to_pool(locations, features, pooling_box):
     xM, yM = tuple(locations.max(axis = 0))
     
