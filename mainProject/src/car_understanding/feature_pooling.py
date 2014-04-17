@@ -8,9 +8,9 @@ import numpy as np
 from numba import autojit, jit
 import numba
 
-@jit('b1[:](f8[:], f8[:,:])', nopython=True, locals={'contains_x': numba.types.b1[:],
+@jit('b1[:](f8, f8, f8, f8, f8[:,:])', nopython=True, locals={'contains_x': numba.types.b1[:],
                                                    'contains_y': numba.types.b1[:]})
-def contains(box, points):
+def contains(xmin, ymin, xmax, ymax, points):
   '''
   For each point in points checks if it is in the box.
   box can be any tuple like container.
@@ -23,8 +23,8 @@ def contains(box, points):
   
 #   assert type(points) == np.ndarray, 'points should be numpy array'
   
-  contains_x = (points[:,0] >= box[0]) * (points[:,0] <= box[2])
-  contains_y = (points[:,1] >= box[1]) * (points[:,1] <= box[3])
+  contains_x = (points[:,0] >= xmin) * (points[:,0] <= xmax)
+  contains_y = (points[:,1] >= ymin) * (points[:,1] <= ymax)
   
   return contains_x
   
@@ -53,14 +53,12 @@ class SpatialPooler(object):
   def to_pool(locations, features, pooling_box):
     M = locations.max(axis = 0)
     
-    box = np.zeros(shape=[4])
-    
-    box[0] = M[0] * pooling_box[0]
-    box[1] = M[1] * pooling_box[1]
-    box[2] = M[0] * pooling_box[2]
-    box[3] = M[1] * pooling_box[3]
+    xmin = M[0] * pooling_box[0]
+    ymin = M[1] * pooling_box[1]
+    xmax = M[0] * pooling_box[2]
+    ymax = M[1] * pooling_box[3]
   
-    to_pool = contains(box, locations) 
+    to_pool = contains(xmin, ymin, xmax, ymax, locations) 
     
     return features[to_pool, :]
   
