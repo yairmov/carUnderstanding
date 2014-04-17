@@ -5,9 +5,9 @@ Created on Apr 17, 2014
 '''
 
 import numpy as np
-from numba import autojit
+from numba import autojit, jit
 
-@autojit
+@jit('b1[:](f8[:], f8[:])')
 def contains(box, points):
   '''
   For each point in points checks if it is in the box.
@@ -66,7 +66,7 @@ class SpatialPooler(object):
     xmax = xM * self.pooling_box[2]
     ymax = yM * self.pooling_box[3]
     
-    to_pool = contains((xmin, ymin, xmax, ymax), locations)
+    to_pool = contains(np.array([xmin, ymin, xmax, ymax]), locations)
     
     return features[to_pool, :]
     
