@@ -5,16 +5,8 @@ Created on Apr 17, 2014
 '''
 
 import numpy as np
-from numba import autojit, jit
-import numba
 
-max_jit = numba.jit("f8[:](f8[:])")(np.max)
 
-# @jit('b1[:](f8[:], f8[:], f8[:], f8[:], f8[:,:])', nopython=True, locals={'contains_x': numba.types.b1[:],
-#                                                    'contains_y': numba.types.b1[:],
-#                                                    'x': numba.types.f8[:],
-#                                                    'y':numba.types.f8[:]})
-@jit('b1[:](f8[:], f8[:], f8[:], f8[:], f8[:,:])')
 def contains(xmin, ymin, xmax, ymax, points):
   '''
   For each point in points checks if it is in the box.
@@ -32,7 +24,6 @@ def contains(xmin, ymin, xmax, ymax, points):
   y = points[:,1]
   contains_x = (x >= xmin) * (x <= xmax)
   contains_y = (y >= ymin) * (y <= ymax)
-  
   
   return np.logical_and(contains_x, contains_y)
 
@@ -54,10 +45,8 @@ class SpatialPooler(object):
     
   
   @staticmethod
-  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])', nopython=True,
-       locals={'M':numba.types.f8[:]})
   def to_pool(locations, features, pooling_box):
-    M = max_jit(locations, axis = 0)
+    M = np.max(locations, axis = 0)
     
     xmin = M[0] * pooling_box[0]
     ymin = M[1] * pooling_box[1]
