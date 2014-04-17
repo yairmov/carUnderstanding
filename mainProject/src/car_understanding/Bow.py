@@ -22,6 +22,7 @@ import dense_SIFT
 from util import ProgressBar
 from dense_SIFT import load_from_disk
 import configuration
+from feature_pooling import SpatialPooler
 
 def fit_model(train_annos, config):
   features = load_sift(train_annos, config)
@@ -206,7 +207,7 @@ def load(filename):
 # Assign each features vector in features (row) to a cluster center from
 # bow_model, and return count histogram.
 # Can also apply LLC enocoding to use more than one cluster center. 
-def word_histogram(features, bow_model, config):
+def word_histogram(features, locations, bow_model, config):
   from llc import LLC_encoding
 
   # normalize SIFT features
@@ -219,11 +220,19 @@ def word_histogram(features, bow_model, config):
     encoding = LLC_encoding(codebook, features, config.SIFT.LLC.knn, config.SIFT.LLC.beta)
 
     # use max pooling for LLC
-    hist = encoding.max(axis=0)
+#     hist = encoding.max(axis=0)
+    
+    spatial_poolers = [SpatialPooler(x) for x in config.SIFT.pool_boxes] 
+
+    hists = [sp.features_to_pool(locations, encoding).max(axis=0) 
+             for sp in spatial_poolers]
+        
+    hist = np.concatenate(hists, axis=0) 
 
 
   else:
 
+    print('NO SPATIAL POOLING IMPLEMENTED FOR SIMPLE BAG OF WORDS!!!')
     word_ids = bow_model.predict(features)
     hist = np.histogram(word_ids, bins=config.SIFT.BoW.num_clusters,
                         range=[0, config.SIFT.BoW.num_clusters], density=True)
@@ -241,9 +250,9 @@ def create_word_histogram_on_file(raw_feature_file, bow_model, config):
   (name, ext) = os.path.splitext(os.path.split(raw_feature_file)[1])
   hist_filename = os.path.join(config.SIFT.BoW.hist_dir, name + '_hist.dat')
   
-  (kp, desc) = dense_SIFT.load_from_disk(raw_feature_file,
+  (frames, desc) = dense_SIFT.load_from_disk(raw_feature_file,
                                          matlab_version=True)
-  hist = word_histogram(desc, bow_model, config)
+  hist = word_histogram(desc, frames, bow_model, config)
   save(hist, hist_filename)
 
 def create_word_histograms_on_dataset(data_annos, config):
@@ -255,21 +264,20 @@ def create_word_histograms_on_dataset(data_annos, config):
 #   if not os.path.isdir(config.SIFT.BoW.hist_dir):
 #     os.makedirs(config.SIFT.BoW.hist_dir)
 
-  Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
-                 delayed(create_word_histogram_on_file)(
-                 os.path.join(dir_path,
-                              os.path.splitext(data_annos.iloc[ii]['basename'])[0] + '.dat'),
-                 bow_model,
-                 config)
-                 for ii in range(n_files))
+#   Parallel(n_jobs=config.n_cores, verbose=config.logging.verbose)(
+#                  delayed(create_word_histogram_on_file)(
+#                  os.path.join(dir_path,
+#                               os.path.splitext(data_annos.iloc[ii]['basename'])[0] + '.dat'),
+#                  bow_model,
+#                  config)
+#                  for ii in range(n_files))
 
-#   for ii in range(n_files):
-# #   for ii in [13714]:
-#     print ii
-#     create_word_histogram_on_file(os.path.join(dir_path,
-#                                 os.path.splitext(data_annos.iloc[ii]['basename'])[0] + '.dat'),
-#                                 bow_model,
-#                                 config)
+  for ii in range(n_files):
+    print ii
+    create_word_histogram_on_file(os.path.join(dir_path,
+                                os.path.splitext(data_annos.iloc[ii]['basename'])[0] + '.dat'),
+                                bow_model,
+                                config)
 
 
 def load_bow(data_annos, config):

@@ -65,14 +65,11 @@ def run_dense_sift_matlab(img_names, data_names, sizes):
 
 def normalize_one(name):
   out_name = path(name).splitext()[0] + '.dat'
-  flag = not path(out_name).isfile()
-  flag = True 
-  if flag:
-    a = sio.loadmat(name)
-    desc = a['desc']
-    frames = a['frames']
-    normalize_sift(desc, inplace=True)
-    dump(dict(frames=frames, desc=desc), out_name, compress=3)
+  a = sio.loadmat(name)
+  desc = a['desc']
+  frames = a['frames']
+  normalize_sift(desc, inplace=True)
+  dump(dict(frames=frames, desc=desc), out_name, compress=3)
 
 def normalize_sift_data(data_annos, config):
 
