@@ -9,7 +9,9 @@ from numba import autojit, jit
 import numba
 
 @jit('b1[:](f8, f8, f8, f8, f8[:,:])', nopython=True, locals={'contains_x': numba.types.b1[:],
-                                                   'contains_y': numba.types.b1[:]})
+                                                   'contains_y': numba.types.b1[:],
+                                                   'x': numba.types.f8,
+                                                   'y':numba.types.f8})
 def contains(xmin, ymin, xmax, ymax, points):
   '''
   For each point in points checks if it is in the box.
@@ -23,8 +25,10 @@ def contains(xmin, ymin, xmax, ymax, points):
   
 #   assert type(points) == np.ndarray, 'points should be numpy array'
   
-  contains_x = (points[:,0] >= xmin) * (points[:,0] <= xmax)
-  contains_y = (points[:,1] >= ymin) * (points[:,1] <= ymax)
+  x = points[:,0]
+  y = points[:,1]
+  contains_x = (x >= xmin) * (x <= xmax)
+  contains_y = (y >= ymin) * (y <= ymax)
   
   return contains_x
   
