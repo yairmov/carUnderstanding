@@ -23,7 +23,6 @@ class SpatialPooler(object):
     
   
   @staticmethod
-  @jit
   def contains(box, points):
     '''
     For each point in points checks if it is in the box.
