@@ -8,6 +8,8 @@ import numpy as np
 from numba import autojit, jit
 import numba
 
+max_jit = numba.jit("f8[:](f8[:])")(np.max)
+
 # @jit('b1[:](f8[:], f8[:], f8[:], f8[:], f8[:,:])', nopython=True, locals={'contains_x': numba.types.b1[:],
 #                                                    'contains_y': numba.types.b1[:],
 #                                                    'x': numba.types.f8[:],
@@ -55,7 +57,6 @@ class SpatialPooler(object):
   @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])', nopython=True,
        locals={'M':numba.types.f8[:]})
   def to_pool(locations, features, pooling_box):
-    max_jit = numba.jit("f8[:](f8[:])")(np.max)
     M = max_jit(locations, axis = 0)
     
     xmin = M[0] * pooling_box[0]
