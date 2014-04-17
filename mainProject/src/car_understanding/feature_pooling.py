@@ -5,7 +5,7 @@ Created on Apr 17, 2014
 '''
 
 import numpy as np
-from numba import jit
+from numba import autojit
 
 class SpatialPooler(object):
   '''
@@ -23,6 +23,7 @@ class SpatialPooler(object):
     
   
   @staticmethod
+  @autojit
   def contains(box, points):
     '''
     For each point in points checks if it is in the box.
