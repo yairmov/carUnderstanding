@@ -19,7 +19,7 @@ def contains(box, points):
   returns a boolean numpy array of length N.
   '''
   
-  assert type(points) == np.ndarray, 'points should be numpy array'
+#   assert type(points) == np.ndarray, 'points should be numpy array'
   
   contains_x = np.logical_and(points[:,0] >= box[0], points[:,0] <= box[2])
   contains_y = np.logical_and(points[:,1] >= box[1], points[:,1] <= box[3])
