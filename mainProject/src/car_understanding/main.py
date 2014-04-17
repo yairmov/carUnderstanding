@@ -71,7 +71,7 @@ def main():
 #   calculate_dense_sift(dataset['test_annos'], config)
   
   # Create BoW model
-  create_bow_model(dataset['train_annos'], config)
+#   create_bow_model(dataset['train_annos'], config)
   
   # Assign cluster labels to all images
   print("Assigning to histograms/LLC")
