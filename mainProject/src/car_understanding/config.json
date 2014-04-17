@@ -63,7 +63,7 @@
     	[
     		0.5, 0.5, 1, 1
     	]
-    ]
+    ],
     "BoW": {
       "max_desc_per_img": 3000, 
       "model_file": "../../../SIFT/BoW_model.dat", 
