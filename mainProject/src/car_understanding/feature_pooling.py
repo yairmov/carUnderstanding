@@ -66,7 +66,7 @@ class SpatialPooler(object):
     xmax = xM * self.pooling_box[2]
     ymax = yM * self.pooling_box[3]
     
-    to_pool = self.contains((xmin, ymin, xmax, ymax), locations)
+    to_pool = contains((xmin, ymin, xmax, ymax), locations)
     
     return features[to_pool, :]
     
