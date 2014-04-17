@@ -44,7 +44,7 @@ class SpatialPooler(object):
     
   
   @staticmethod
-  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])')
+  @jit('f8[:,:](f8[:,:], f8[:,:], f8[:])', nopython=True)
   def to_pool(locations, features, pooling_box):
     M = locations.max(axis = 0)
     
