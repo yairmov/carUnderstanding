@@ -19,7 +19,7 @@ from attribute_selector import AttributeSelector
 from attribute_classifier import AttributeClassifier
 from bayes_net import BayesNet
 import Bow
-from util import ProgressBar
+from util import ProgressBar, AccuracyAtN
 from dense_SIFT import load_from_disk, save_to_disk, normalize_sift
 
 
@@ -498,6 +498,17 @@ def classify_using_sift():
   
   print("Accuracy: {}".format(accuracy_score(labels_test, y_pred)))
   print("Mean Accuracy: {}".format(clf.score(features_test, labels_test)))
+  
+  
+  print ''
+  print 'Accuracy at N:'
+  scorer = AccuracyAtN(clf.decision_function(features_test), 
+                       labels_test, class_names=np.unique(labels_train))
+  for ii in range(1, 11):
+    print 'Accuracy at {}: {}'.format(ii, scorer.get_accuracy_at(ii))
+    
+  
+  
   
   dummy_1 = DummyClassifier(strategy='most_frequent').fit(features_train, labels_train)
   dummy_2 = DummyClassifier(strategy='stratified').fit(features_train, labels_train)
