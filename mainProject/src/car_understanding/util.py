@@ -230,6 +230,9 @@ class AccuracyAtN(object):
     self.class_order = (self.S.shape[1] - 1) - np.argsort(self.S)
     l = self.class_order.lookup(range(self.S.shape[0]), true_labels)
     self.rank_of_true = pd.DataFrame(data=l, index=self.S.index, columns=['Rank']) 
+    
+  def get_accuracy_at(self, N):
+    return np.mean(self.rank_of_true < N)
 
 
 def makedir_if_needed(name):
