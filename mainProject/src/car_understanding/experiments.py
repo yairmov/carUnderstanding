@@ -459,7 +459,8 @@ def classify_using_sift():
   dump({'features_train': features_train, 
         'features_test': features_test, 
         'labels_train': labels_train,
-        'labels_test': labels_test})
+        'labels_test': labels_test},
+       'tmp.dat')
   import sys; sys.exit(0)
   clf = svm.LinearSVC(C=1)
 
