@@ -232,7 +232,7 @@ class AccuracyAtN(object):
     self.rank_of_true = pd.DataFrame(data=l, index=self.S.index, columns=['Rank']) 
     
   def get_accuracy_at(self, N):
-    return np.mean(self.rank_of_true < N)
+    return np.mean(self.rank_of_true < N)[0]
 
 
 def makedir_if_needed(name):
