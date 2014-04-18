@@ -18,7 +18,7 @@ def contains(xmin, ymin, xmax, ymax, points):
   returns a boolean numpy array of length N.
   '''
   
-#   assert type(points) == np.ndarray, 'points should be numpy array'
+  assert type(points) == np.ndarray, 'points should be numpy array'
   
   x = points[:,0]
   y = points[:,1]

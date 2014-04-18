@@ -447,43 +447,43 @@ def classify_using_sift():
   assert np.array_equal(np.unique(labels_train), 
                         np.unique(labels_test)), 'test labels not equal train labels'
   
-  clf = RandomForestClassifier(n_estimators=1000, 
-                               max_depth=50,
-                               min_samples_split=1,
-                               min_samples_leaf=1,
-                               oob_score=True,
-                               n_jobs=11)
+#   clf = RandomForestClassifier(n_estimators=1000, 
+#                                max_depth=50,
+#                                min_samples_split=1,
+#                                min_samples_leaf=1,
+#                                oob_score=True,
+#                                n_jobs=11)
 #   
 #   
 #   tuned_parameters_RandomForest = [{'n_estimators': [100, 200, 1000],
 #                                         'max_depth': [1, 10, 20],
 #                                         'min_samples_split': [1, 2, 5]}]
 
-#   tuned_parameters_LinearSVC = [{'penalty': ['l2', 'l1'],
-#                              'C': [1e-4, 1e-3, 1e-2, 1e-1, 1],
-#                              'class_weight': ['auto']}]
-#   
-#   clf = GridSearchCV(svm.LinearSVC(C=1, dual=False), 
-#                      tuned_parameters_LinearSVC, 
-#                      cv=5, 
-#                      scoring='precision',
-#                      n_jobs=11,
-#                      verbose=3)
-#   clf.fit(features_train, labels_train)
-#   
-#   
-#   print("Grid scores on development set:")
-#   print('')
-#   for params, mean_score, scores in clf.grid_scores_:
-#       print("%0.3f (+/-%0.03f) for %r"
-#             % (mean_score, scores.std() / 2, params))
-#   print('')
-#   print("Best parameters set found on development set:")
-#   print('')
-#   print(clf.best_estimator_)
-#   print('')
-#   
-#   clf = clf.best_estimator_
+  tuned_parameters_LinearSVC = [{'penalty': ['l2'],
+                             'C': [1e-4, 1e-3, 1e-2, 1e-1, 1],
+                             'class_weight': ['auto']}]
+   
+  clf = GridSearchCV(svm.LinearSVC(C=1, dual=False), 
+                     tuned_parameters_LinearSVC, 
+                     cv=5, 
+                     scoring='precision',
+                     n_jobs=11,
+                     verbose=3)
+  clf.fit(features_train, labels_train)
+   
+   
+  print("Grid scores on development set:")
+  print('')
+  for params, mean_score, scores in clf.grid_scores_:
+      print("%0.3f (+/-%0.03f) for %r"
+            % (mean_score, scores.std() / 2, params))
+  print('')
+  print("Best parameters set found on development set:")
+  print('')
+  print(clf.best_estimator_)
+  print('')
+   
+  clf = clf.best_estimator_
 
 
   clf.fit(features_train, labels_train)
@@ -500,6 +500,7 @@ def classify_using_sift():
   dummy_2 = DummyClassifier(strategy='stratified').fit(features_train, labels_train)
   dummy_3 = DummyClassifier(strategy='stratified').fit(features_train, labels_train)
   
+  print ''
   print 'Dummy Classifiers:'
   print '-----------------'
   print("Accuracy - most_frequent: {}".format(accuracy_score(labels_test, dummy_1.predict(features_test))))
