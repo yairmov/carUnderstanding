@@ -16,6 +16,8 @@ import cv2 as cv
 from path import path
 import distutils.dir_util as dir_util
 from numpy import sqrt
+import pandas as pd
+import numpy as np
 
 
 # import base64
@@ -218,25 +220,16 @@ class ProgressBar:
 
 
 
-def series_to_iplot(series, name=''):
-    '''
-    Coverting a Pandas Series to Plotly interface
-    '''
-    if series.index.__class__.__name__=="DatetimeIndex":
-        #Convert the index to MySQL Datetime like strings
-        x = series.index.format()
-        #Alternatively, directly use x, since DateTime index is np.datetime64
-        #see http://nbviewer.ipython.org/gist/cparmer/7721116
-        #x=df.index.values.astype('datetime64[s]')
-    else:
-        x = series.index.values
-
-    line = {}
-    line['x'] = x
-    line['y'] = series.values
-    line['name'] = name
-
-    return [line]
+class AccuracyAtN(object):
+  def __init__(self, scores, true_labels, class_names=None):
+    self.S = pd.DataFrame(data=scores)
+    if not class_names is None:
+      self.S.columns=class_names
+    
+    
+    self.class_order = (self.S.shape[1] - 1) - np.argsort(self.S)
+    l = self.class_order.lookup(range(self.S.shape[0]), true_labels)
+    self.rank_of_true = pd.DataFrame(data=l, index=self.S.index) 
 
 
 def makedir_if_needed(name):

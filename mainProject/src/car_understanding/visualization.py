@@ -241,7 +241,25 @@ def show_feature_matrix(annos, config, class_meta, attrib_names):
     
     
   
-  
+  def series_to_iplot(series, name=''):
+    '''
+    Coverting a Pandas Series to Plotly interface
+    '''
+    if series.index.__class__.__name__=="DatetimeIndex":
+        #Convert the index to MySQL Datetime like strings
+        x = series.index.format()
+        #Alternatively, directly use x, since DateTime index is np.datetime64
+        #see http://nbviewer.ipython.org/gist/cparmer/7721116
+        #x=df.index.values.astype('datetime64[s]')
+    else:
+        x = series.index.values
+
+    line = {}
+    line['x'] = x
+    line['y'] = series.values
+    line['name'] = name
+
+    return [line]
   
   
   
