@@ -436,8 +436,8 @@ def bayes_net_generic(use_gt=False):
   args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
-  config.attribute.names = args
   (dataset, config) = fgu.get_all_metadata(config)
+  config.attribute.names = args
   
 #   print "training attrib classifiers"
 #   run_attrib_training(args, cross_validation=False)
@@ -458,7 +458,6 @@ def bayes_net_generic(use_gt=False):
       attrib_classifiers.append(AttributeClassifier.load(filename))
   
   train_annos = dataset['train_annos']  
-  # Select only images from the args "world"
   classes = dataset['class_meta']
   
   # reduce the training set to be only classes with these attributes.
