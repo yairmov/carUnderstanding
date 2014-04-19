@@ -228,7 +228,10 @@ class AccuracyAtN(object):
     
     tmp = np.argsort(self.S)
     self.class_order = (self.S.shape[1] - 1) - np.argsort(tmp) 
-    l = self.class_order.lookup(range(self.S.shape[0]), true_labels)
+#     l = self.class_order.lookup(range(self.S.shape[0]), true_labels)
+    l = np.zeros(shape=[self.S.shape[0]])
+    for ii in xrange(l.shape[0]):
+      l[ii] = self.class_order.loc[true_labels[ii]].iloc[ii]
     self.rank_of_true = pd.DataFrame(data=l, index=self.S.index, columns=['Rank']) 
     
   def get_accuracy_at(self, N):
