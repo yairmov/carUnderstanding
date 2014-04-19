@@ -283,7 +283,7 @@ class BayesNet:
     attrrib_prob_cache = {}
     
     for ii in range(n_imgs):
-      print "=================={}========================".format(ii)
+      print "=================={}/{}========================".format(ii, n_imgs)
       if use_gt:
         desc = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
         key = np.array(desc) 
