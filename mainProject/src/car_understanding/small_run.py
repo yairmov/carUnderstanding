@@ -494,6 +494,7 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   from mpltools import style
   from sklearn.metrics import classification_report
   from sklearn.metrics import accuracy_score
+  from util import AccuracyAtN
   
 #   style.use('ggplot')
   
@@ -511,6 +512,14 @@ def show_confusion_matrix(train_annos, class_meta, class_prob):
   print "Accuracy: {}".format(accuracy_score(class_true, y_pred_class))
   cm = confusion_matrix(class_true, y_pred_class, class_names.index) + 0.0
   cm = normalize(cm, norm='l1', axis=1)
+  
+  
+  print ''
+  print 'Accuracy at N:'
+  scorer = AccuracyAtN(class_prob, 
+                       class_true, class_names=class_prob.columns)
+  for ii in range(1, 11):
+    print 'Accuracy at {}: {}'.format(ii, scorer.get_accuracy_at(ii))
   
   
   # Show confusion matrix in a separate window
@@ -576,7 +585,7 @@ if __name__ == '__main__':
   # Using the more generic BayesNet class
   #-------------------------------------
   
-  bayes_net_generic(use_gt=False)
+  bayes_net_generic(use_gt=True)
 
 
 
