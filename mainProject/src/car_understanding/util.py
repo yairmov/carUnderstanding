@@ -226,8 +226,7 @@ class AccuracyAtN(object):
     if not class_names is None:
       self.S.columns=class_names
     
-    
-    self.class_order = (self.S.shape[1] - 1) - np.argsort(self.S)
+    self.class_order = (self.S.shape[1] - 1) - np.argsort(self.S).argsort() 
     l = self.class_order.lookup(range(self.S.shape[0]), true_labels)
     self.rank_of_true = pd.DataFrame(data=l, index=self.S.index, columns=['Rank']) 
     

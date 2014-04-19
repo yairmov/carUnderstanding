@@ -498,7 +498,7 @@ def classify_using_sift():
 
   clf.fit(features_train, labels_train)
 
-  y_pred = np.array(clf.predict(features_test))
+  y_pred = clf.predict(features_test)
 
   print(classification_report(labels_test, y_pred,
                               target_names=[c for c in classes.class_name]))
