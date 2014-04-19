@@ -231,7 +231,7 @@ class AccuracyAtN(object):
 #     l = self.class_order.lookup(range(self.S.shape[0]), true_labels)
     l = np.zeros(shape=[self.S.shape[0]])
     for ii in xrange(l.shape[0]):
-      l[ii] = self.class_order.loc[true_labels[ii]].iloc[ii]
+      l[ii] = self.class_order.iloc[ii][true_labels[ii]]
     self.rank_of_true = pd.DataFrame(data=l, index=self.S.index, columns=['Rank']) 
     
   def get_accuracy_at(self, N):
