@@ -77,7 +77,7 @@ class BayesNet:
     for the Bayes Net.
     '''
     if self.use_gt:
-      return None
+      return None, None
     
     
     # Define some conviniece pointers 
