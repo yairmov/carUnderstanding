@@ -473,13 +473,17 @@ def bayes_net_generic(use_gt=False):
   
   test_annos = dataset['test_annos']
   # Select only images from the args "world"
-  test_annos = test_annos[np.array(
-                             test_annos.class_index.isin(classes.class_index))]
+#   test_annos = test_annos[np.array(
+#                              test_annos.class_index.isin(classes.class_index))]
   
 #   print 'TESTING ON TRAINING!!!!!!!'
 #   test_annos = train_annos.iloc[:train_annos.shape[0]/2]
   
   print 'predicting!!!'
+  
+  
+  print 'SMALL EXPERIMENT!'
+  test_annos = test_annos.iloc[:10]
   
   (class_probs, attrib_probs) = bnet.predict(test_annos)
   show_confusion_matrix(test_annos, classes, class_probs)
