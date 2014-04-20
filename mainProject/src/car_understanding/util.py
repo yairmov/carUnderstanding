@@ -226,11 +226,11 @@ class AccuracyAtN(object):
     if not class_names is None:
       self.S.columns=class_names
     
+    true_labels = np.array(true_labels)
     tmp = np.argsort(self.S)
     self.class_order = (self.S.shape[1] - 1) - np.argsort(tmp) 
 #     l = self.class_order.lookup(range(self.S.shape[0]), true_labels)
     l = np.zeros(shape=[self.S.shape[0]])
-    print(true_labels[0])
     for ii in range(l.shape[0]):
       l[ii] = self.class_order.iloc[ii][true_labels[ii]]
       
