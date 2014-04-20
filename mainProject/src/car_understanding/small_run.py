@@ -481,10 +481,6 @@ def bayes_net_generic(use_gt=False):
   
   print 'predicting!!!'
   
-  
-  print 'SMALL EXPERIMENT!'
-  test_annos = test_annos.iloc[:10]
-  
   (class_probs, attrib_probs) = bnet.predict(test_annos)
   dump({'class_probs': class_probs, 'attrib_probs': attrib_probs},
        'bnet_res.dat')
