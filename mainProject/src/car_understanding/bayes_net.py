@@ -108,6 +108,10 @@ class BayesNet:
   
     res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
     res_descrete = pd.concat([res_descrete, train_annos.ix[:, ['class_index']]], axis=1)
+    
+    sklearn.externals.joblib.dump({'res': res, 'res_descrete': res_descrete}, 'tmp.dat')
+    import sys; sys.exit(0)
+    
     return res, res_descrete
   
   
