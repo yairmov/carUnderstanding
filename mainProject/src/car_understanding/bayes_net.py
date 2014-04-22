@@ -113,7 +113,7 @@ class BayesNet:
     from sklearn.externals.joblib import dump; dump({'res': res, 
                                                      'res_descrete': res_descrete,
                                                      'features': features}, 'tmp.dat')
-    import sys; sys.exit(0)
+#     import sys; sys.exit(0)
     
     return res, res_descrete
   
