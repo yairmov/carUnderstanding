@@ -53,7 +53,7 @@ class BayesNet:
        
     self.desc         = desc
     self.clf_res      = None
-    self.clf_res_descrete = None
+    self.clf_res_discrete = None
     self.CPT          = {}
     self.clf_names    = [self.attrib_clfs[ii].name for 
                                   ii in range(len(self.attrib_clfs))]
@@ -110,9 +110,9 @@ class BayesNet:
     res_descrete = pd.concat([res_descrete, train_annos.ix[:, ['class_index']]], axis=1)
     
     
-    from sklearn.externals.joblib import dump; dump({'res': res, 
-                                                     'res_descrete': res_descrete,
-                                                     'features': features}, 'tmp.dat')
+#     from sklearn.externals.joblib import dump; dump({'res': res, 
+#                                                      'res_descrete': res_descrete,
+#                                                      'features': features}, 'tmp.dat')
 #     import sys; sys.exit(0)
     
     return res, res_descrete
@@ -121,16 +121,16 @@ class BayesNet:
   def cpt_for_attrib(self, attrib_name, attrib_selector):
     clf_names = np.array(self.clf_names)
 #     clf_res = self.clf_res
-    clf_res_descrete = self.clf_res_descrete
+    clf_res_discrete = self.clf_res_discrete
     
     
     attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
     # intersect attrib_class_ids with clf_res.class_index
     attrib_class_ids = \
-    [val for val in attrib_class_ids if val in list(clf_res_descrete.class_index)]
+    [val for val in attrib_class_ids if val in list(clf_res_discrete.class_index)]
     
-#     clf_res_descrete = clf_res.copy()
-#     clf_res_descrete.ix[:, clf_names] = \
+#     clf_res_discrete = clf_res.copy()
+#     clf_res_discrete.ix[:, clf_names] = \
 #                   clf_res.ix[:, clf_names] > self.config.attribute.high_thresh
     
     # Create all tuples of True/False classifier score
@@ -141,8 +141,8 @@ class BayesNet:
     
     cpt = CPT(smooth_value=1, name='attribute_cpt')
     
-    for ii in range(clf_res_descrete.shape[0]):
-      cc = clf_res_descrete.iloc[ii]
+    for ii in range(clf_res_discrete.shape[0]):
+      cc = clf_res_discrete.iloc[ii]
       row = tuple(cc[clf_names])
       has_attrib = cc['class_index'] in attrib_class_ids
       if not cpt.has_row(row):
@@ -214,7 +214,7 @@ class BayesNet:
     in the net.
     '''
     if self.clf_res == None:
-      self.clf_res, self.clf_res_descrete = self.create_attrib_res_on_images()
+      self.clf_res, self.clf_res_discrete = self.create_attrib_res_on_images()
     
     attrib_selector = self.attrib_selector
     
@@ -276,32 +276,33 @@ class BayesNet:
                               columns=attrib_names)
     
     if not use_gt:
-      clf_res_descrete = self.clf_res_descrete
-#       clf_res_descrete = self.clf_res.copy()
-#       clf_res_descrete[self.clf_names] = \
+      clf_res_discrete = self.clf_res_discrete
+#       clf_res_discrete = self.clf_res.copy()
+#       clf_res_discrete[self.clf_names] = \
 #           self.clf_res[self.clf_names] > self.config.attribute.high_thresh
         
     # using ground truth    
     if use_gt:
       attrib_meta = self.attrib_selector.create_attrib_meta(attrib_names)
         
-    # Create cache for results - we only have 2^num_attrib options.
+    # Create cache for results:
+    # we don't want to waste time on options we have seen before.
     class_prob_cache = {}
     attrrib_prob_cache = {}
     
     for ii in range(n_imgs):
       print "=================={}/{}========================".format(ii, n_imgs)
       if use_gt:
-        desc = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
-        key = np.array(desc) 
+        discr = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
+        key = np.array(discr) 
       else:
-        desc = clf_res_descrete.iloc[ii]
-        key = np.array(desc[attrib_names])
+        discr = clf_res_discrete.iloc[ii]
+        key = np.array(discr[attrib_names])
       print "key: {}".format(key)
       key = key.tostring()
       if (not class_prob_cache.has_key(key)):
         print "Never got this key before, computing...."
-        (class_prob_ii, attrib_prob_ii) = self.predict_one(desc)
+        (class_prob_ii, attrib_prob_ii) = self.predict_one(discr)
         class_prob_cache[key] = class_prob_ii
         attrrib_prob_cache[key] = attrib_prob_ii
       
@@ -310,13 +311,13 @@ class BayesNet:
       
     return (class_prob, attrib_prob)
   
-  def predict_one(self, clf_res_descrete, method='pymc'):
+  def predict_one(self, clf_res_discrete, method='pymc'):
     if method == 'pymc':
-      return self.predict_one_pymc(clf_res_descrete)
+      return self.predict_one_pymc(clf_res_discrete)
     else:
-      return self.predict_one_ebayes(clf_res_descrete)
+      return self.predict_one_ebayes(clf_res_discrete)
     
-  def predict_one_ebayes(self, clf_res_descrete):
+  def predict_one_ebayes(self, clf_res_discrete):
     from bayesian.bbn import build_bbn
     
 #     #------- Dynamically rename a function ---------
@@ -336,7 +337,7 @@ class BayesNet:
     
     return    
   
-  def predict_one_pymc(self, clf_res_descrete):
+  def predict_one_pymc(self, clf_res_discrete):
     use_gt = self.use_gt
     # building model
     # first start with observed variables - the results of all the classifiers 
@@ -347,7 +348,7 @@ class BayesNet:
     theta = mc.DiscreteUniform('theta', 0, 1,
                                size=len(self.clf_names),
                                observed=True,
-                               value=clf_res_descrete[self.clf_names])
+                               value=clf_res_discrete[self.clf_names])
     
     
     
@@ -360,7 +361,7 @@ class BayesNet:
       for attrib_name in attrib_names:
         rv = mc.DiscreteUniform(attrib_name, 
                                 observed=True, 
-                                value=clf_res_descrete[attrib_name])
+                                value=clf_res_discrete[attrib_name])
         attrib_bnet_nodes[attrib_name] = rv
     else:
       for attrib_name in attrib_names:
