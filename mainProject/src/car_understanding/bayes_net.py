@@ -261,7 +261,10 @@ class BayesNet:
   layer, to check what is the best we can hope for.
   '''
   def predict(self, test_annos):
-    n_imgs = test_annos.shape[0]
+    if len(test_annos.shape) == 1:
+      n_imgs = 1
+    else:
+      n_imgs = test_annos.shape[0]
     use_gt = self.use_gt
     class_inds = self.class_inds
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
