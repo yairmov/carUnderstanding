@@ -240,14 +240,14 @@ class AttributeClassifier:
     
     
   def predict(self, features):
-    return self.clf.predict(features)
+    return self.clf.predict(self.Scaler.transform(features))
   
   def decision_function(self, features, use_prob=True):
-    features = self.Scaler.transform(features)
+    f = self.Scaler.transform(features)
     import sklearn
     if (use_prob and self.probability) or type(self.clf) == sklearn.ensemble.forest.RandomForestClassifier:
-      return self.clf.predict_proba(features)[:,1]
-    return self.clf.decision_function(features)
+      return self.clf.predict_proba(f)[:,1]
+    return self.clf.decision_function(f)
     
   
     
