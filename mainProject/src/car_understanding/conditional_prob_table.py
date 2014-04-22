@@ -69,16 +69,16 @@ class CPT(object):
     
   def get_value(self, row_ind, column):
     row_ind = self.make_key(row_ind)
-    s =  'row: {}, col: {} '.format(row_ind, column)
+#     s =  'row: {}, col: {} '.format(row_ind, column)
     if not self.has_row(row_ind):
       if self.is_normalized:
-        print s + 'val: {}'.format(str(self.default_true_value if column else 1 - self.default_true_value))
+#         print s + 'val: {}'.format(str(self.default_true_value if column else 1 - self.default_true_value))
         return self.default_true_value if column else 1 - self.default_true_value
       else:
-        print s + 'val: 0' 
+#         print s + 'val: 0' 
         return 0
     
-    print s + 'val: {}'.format(self.cpt.ix[row_ind, column])
+#     print s + 'val: {}'.format(self.cpt.ix[row_ind, column])
     return self.cpt.ix[row_ind, column]
   
   def __str__(self):

@@ -405,7 +405,7 @@ class BayesNet:
     print()
 
 ##     use    
-#     mcmc.summary()
+    mcmc.summary()
 ##     or:
 #     for node in attrib_bnet_nodes.values():
 #       node.summary()       
