@@ -292,8 +292,9 @@ class BayesNet:
     
     for ii in range(n_imgs):
       print "=================={}/{}========================".format(ii, n_imgs)
-      print "Image: {}, class: {}".format(test_annos.iloc[ii]['basename'],
-                                          test_annos.iloc[ii]['class_name'])
+      print "Image: {}, class_id: {}, class_name: {}".format(test_annos.iloc[ii]['basename'],
+                                                            test_annos.iloc[ii]['class_index'], 
+                                                            test_annos.iloc[ii]['class_name'])
       if use_gt:
         discr = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
         key = np.array(discr) 
