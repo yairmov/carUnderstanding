@@ -432,7 +432,7 @@ class BayesNet:
     print "class_probs:"
     print class_probs 
     
-    import sys;sys.exit(0)
+#     import sys;sys.exit(0)
     return (class_probs, attrib_probs)
   
   
