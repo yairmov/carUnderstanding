@@ -117,7 +117,7 @@ class BayesNet:
   
   
   @staticmethod
-  def cpt_for_attrib(self, attrib_name, attrib_selector, 
+  def cpt_for_attrib(attrib_name, attrib_selector, 
                      clf_names, clf_res_discrete):
     
     attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
