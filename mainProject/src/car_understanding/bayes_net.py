@@ -70,7 +70,7 @@ class BayesNet:
      
     
   
-  def create_attrib_res_on_images(self):
+  def create_attrib_res_on_images(self, data_annos):
     '''
     Calculates the predicion of all attribute classifiers on training images.
     This table can be used to caclulate all the Conditional Probability tables
@@ -81,12 +81,11 @@ class BayesNet:
     
     
     # Define some conviniece pointers 
-    train_annos = self.train_annos
     config = self.config
     attrib_classifiers = self.attrib_clfs
     
     print "Load image Bow histograms from disk"
-    features = Bow.load_bow(train_annos, config)
+    features = Bow.load_bow(data_annos, config)
   
     print "Apply attribute classifiers on images"
     res = {}
@@ -102,12 +101,12 @@ class BayesNet:
       res_descrete[attrib_clf.name] = curr_res_d.reshape(len(curr_res_d))
       pbar.animate(ii)
   
-    res = pd.DataFrame(data=res, index=train_annos.index)
-    res_descrete = pd.DataFrame(data=res_descrete, index=train_annos.index)
+    res = pd.DataFrame(data=res, index=data_annos.index)
+    res_descrete = pd.DataFrame(data=res_descrete, index=data_annos.index)
   
   
-    res = pd.concat([res, train_annos.ix[:, ['class_index']]], axis=1)
-    res_descrete = pd.concat([res_descrete, train_annos.ix[:, ['class_index']]], axis=1)
+    res = pd.concat([res, data_annos.ix[:, ['class_index']]], axis=1)
+    res_descrete = pd.concat([res_descrete, data_annos.ix[:, ['class_index']]], axis=1)
     
     
 #     from sklearn.externals.joblib import dump; dump({'res': res, 
@@ -214,7 +213,8 @@ class BayesNet:
     in the net.
     '''
     if self.clf_res == None:
-      self.clf_res, self.clf_res_discrete = self.create_attrib_res_on_images()
+      self.clf_res, self.clf_res_discrete = \
+      self.create_attrib_res_on_images(self.train_annos)
     
     attrib_selector = self.attrib_selector
     
@@ -279,8 +279,7 @@ class BayesNet:
                               columns=attrib_names)
     
     if not use_gt:
-      clf_res_discrete = self.clf_res_discrete
-      print clf_res_discrete.shape; import sys; sys.exit(-1)
+      clf_res, clf_res_discrete = self.create_attrib_res_on_images(test_annos)
 #       clf_res_discrete = self.clf_res.copy()
 #       clf_res_discrete[self.clf_names] = \
 #           self.clf_res[self.clf_names] > self.config.attribute.high_thresh
