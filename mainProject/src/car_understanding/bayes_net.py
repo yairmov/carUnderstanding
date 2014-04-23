@@ -280,6 +280,7 @@ class BayesNet:
     
     if not use_gt:
       clf_res_discrete = self.clf_res_discrete
+      print clf_res_discrete.shape; import sys; sys.exit(-1)
 #       clf_res_discrete = self.clf_res.copy()
 #       clf_res_discrete[self.clf_names] = \
 #           self.clf_res[self.clf_names] > self.config.attribute.high_thresh
