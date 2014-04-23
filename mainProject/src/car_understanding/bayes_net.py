@@ -220,11 +220,13 @@ class BayesNet:
     print('Building CPT for attributes')
     if not self.use_gt: # if using ground truth we don't need to calculate this
       
+      
+      n_attribs = len(attrib_names)
       cpts = Parallel(n_jobs=self.config.n_cores, 
                       verbose=self.config.logging.verbose)(
 #                       delayed(self.cpt_for_attrib(attrib_names[ii], attrib_selector))
                       delayed(str(ii)) 
-                      for ii in range(len(attrib_names)))
+                      for ii in range(n_attribs))
                       
       import sys; sys.exit()
                       
