@@ -294,7 +294,7 @@ class BayesNet:
     attrrib_prob_cache = {}
     
     for ii in range(n_imgs):
-      print "=================={}/{}========================".format(ii, n_imgs)
+      print "=================={}/{}========================".format(ii+1, n_imgs)
       print "Image: {}, class_id: {}, class_name: {}".format(test_annos.iloc[ii]['basename'],
                                                             test_annos.iloc[ii]['class_index'], 
                                                             test_annos.iloc[ii]['class_name'])
@@ -303,6 +303,7 @@ class BayesNet:
         key = np.array(discr) 
       else:
         discr = clf_res_discrete.iloc[ii]
+        print discr
         key = np.array(discr[attrib_names])
       print "key: {}".format(key)
       key = key.tostring()

@@ -124,7 +124,7 @@ def test(args, config, dataset):
   
   res = pd.DataFrame(data=res, index=test_annos.index)
   res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
-  dump({'res':res}, 'tmp.dat')
+  dump({'res':res, 'features': features}, 'tmp.dat')
   
   K = np.ceil(np.sqrt(len(args.attrib_names)))
   table = PrettyTable(['Attribute', 'AP', 'AP random'])
