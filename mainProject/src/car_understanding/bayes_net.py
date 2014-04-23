@@ -223,11 +223,8 @@ class BayesNet:
       n_attribs = len(attrib_names)
       cpts = Parallel(n_jobs=self.config.n_cores, 
                       verbose=self.config.logging.verbose)(
-#                       delayed(self.cpt_for_attrib(attrib_names[ii], attrib_selector))
-                      delayed(str)(ii)
+                      delayed(self.cpt_for_attrib)(attrib_names[ii], attrib_selector)
                       for ii in range(n_attribs))
-                      
-      print cpts; import sys; sys.exit()
                       
       for ii, attrib_name in enumerate(attrib_names):
         self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
