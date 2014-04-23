@@ -188,8 +188,8 @@ class BayesNet:
         num_classes_with_attrib += 1
          
          
-    print "attrib_list: {}".format(attrib_list)
-    print "num_classes_with_attribs: {}".format(num_classes_with_attrib)
+#     print "attrib_list: {}".format(attrib_list)
+#     print "num_classes_with_attribs: {}".format(num_classes_with_attrib)
     p = 1.0 / num_classes_with_attrib
     row = tuple(True for ii in range(len(attrib_list)))
     cpt.create_row(row)
@@ -410,7 +410,8 @@ class BayesNet:
 #       MAP.fit() # first do MAP estimation
       
     mcmc = mc.MCMC(model)
-    mcmc.sample(10000, 3000)
+#     mcmc.sample(10000, 3000)
+    mcmc.sample(2000)
     print()
 
 ##     use    
