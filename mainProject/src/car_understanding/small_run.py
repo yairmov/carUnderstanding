@@ -481,7 +481,7 @@ def bayes_net_generic(use_gt=False):
   
   print 'predicting!!!'
   
-  (class_probs, attrib_probs) = bnet.predict(test_annos.iloc[-5:])
+  (class_probs, attrib_probs) = bnet.predict(test_annos.iloc[:])
   dump({'class_probs': class_probs, 
         'attrib_probs': attrib_probs,
         'test_annos': test_annos,
