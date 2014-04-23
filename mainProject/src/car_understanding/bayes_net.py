@@ -304,7 +304,7 @@ class BayesNet:
       else:
         discr = clf_res_discrete.iloc[ii]
         key = np.array(discr[attrib_names])
-      print "key: {}".format(key)
+#       print "key: {}".format(key)
       key = key.tostring()
       if (not class_prob_cache.has_key(key)):
         print "Never got this key before, computing...."
