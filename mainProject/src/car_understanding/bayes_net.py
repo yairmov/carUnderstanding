@@ -150,7 +150,7 @@ class BayesNet:
           cpt.create_row(row)
       cpt.add_count(row, str(has_attrib))
 #       cpt.ix[row, str(has_attrib)] += 1
-    
+    print('')
     
     # normalize all the rows, to create a probability function
 #     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
@@ -232,6 +232,7 @@ class BayesNet:
     if not self.use_gt: # if using ground truth we don't need to calculate this
 #       pbar = ProgressBar(len(attrib_names))
       for ii, attrib_name in enumerate(attrib_names):
+        print 'Attribute: {}'.format(attrib_name)
         self.CPT['p({}|theta)'.format(attrib_name)] = \
           self.cpt_for_attrib(attrib_name, attrib_selector)
 #         pbar.animate(ii)
