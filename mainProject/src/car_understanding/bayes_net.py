@@ -235,6 +235,7 @@ class BayesNet:
         print 'Attribute: {}'.format(attrib_name)
         self.CPT['p({}|theta)'.format(attrib_name)] = \
           self.cpt_for_attrib(attrib_name, attrib_selector)
+        import code; code.interact(local=locals())
 #         pbar.animate(ii)
 #       print ''
         
