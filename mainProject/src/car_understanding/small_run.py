@@ -461,9 +461,9 @@ def bayes_net_generic(use_gt=False):
   classes = dataset['class_meta']
   
   # reduce the training set to be only classes with these attributes.
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
   
   bnet = BayesNet(config, train_annos, 
                   classes, attrib_classifiers, 
@@ -473,8 +473,8 @@ def bayes_net_generic(use_gt=False):
   
   test_annos = dataset['test_annos']
   # Select only images from the args "world"
-  test_annos = test_annos[np.array(
-                             test_annos.class_index.isin(classes.class_index))]
+#   test_annos = test_annos[np.array(
+#                              test_annos.class_index.isin(classes.class_index))]
   
 #   print 'TESTING ON TRAINING!!!!!!!'
 #   test_annos = train_annos.iloc[:train_annos.shape[0]/2]

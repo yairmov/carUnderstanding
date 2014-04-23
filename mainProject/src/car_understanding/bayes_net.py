@@ -303,7 +303,6 @@ class BayesNet:
         key = np.array(discr) 
       else:
         discr = clf_res_discrete.iloc[ii]
-        print discr
         key = np.array(discr[attrib_names])
       print "key: {}".format(key)
       key = key.tostring()
