@@ -429,11 +429,11 @@ def get_args_from_file(fname):
   return args
   
 def bayes_net_generic(use_gt=False):
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'suv']
-  args = makes + types
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'suv']
+#   args = makes + types
   
-#   args = get_args_from_file('sorted_attrib_list.txt')
+  args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
@@ -461,9 +461,9 @@ def bayes_net_generic(use_gt=False):
   classes = dataset['class_meta']
   
   # reduce the training set to be only classes with these attributes.
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
   
   bnet = BayesNet(config, train_annos, 
                   classes, attrib_classifiers, 

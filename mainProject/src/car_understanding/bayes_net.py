@@ -231,8 +231,6 @@ class BayesNet:
                       
       for ii, attrib_name in enumerate(attrib_names):
         self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
-        print 'attrib: {}'.format(attrib_name)
-        print cpts[ii]
       
 #       for ii, attrib_name in enumerate(attrib_names):
 #         print 'Attribute: {}'.format(attrib_name)
