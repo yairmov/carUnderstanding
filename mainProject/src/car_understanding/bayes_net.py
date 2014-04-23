@@ -222,7 +222,7 @@ class BayesNet:
       n_attribs = len(attrib_names)
       cpts = Parallel(n_jobs=self.config.n_cores, 
                       verbose=self.config.logging.verbose)(
-                      delayed(self.cpt_for_attrib)(attrib_names[ii], 
+                      delayed(BayesNet.cpt_for_attrib)(attrib_names[ii], 
                                                    attrib_selector,
                                                    np.array(self.clf_names),
                                                    self.clf_res_discrete)
