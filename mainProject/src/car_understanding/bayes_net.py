@@ -25,6 +25,35 @@ from attribute_selector import AttributeSelector
 from conditional_prob_table import CPT
 
 
+def cpt_for_attrib(attrib_name, attrib_selector, 
+                     clf_names, clf_res_discrete):
+    
+    attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
+    # intersect attrib_class_ids with clf_res.class_index
+    attrib_class_ids = \
+    [val for val in attrib_class_ids if val in list(clf_res_discrete.class_index)]
+    
+    
+    cpt = CPT(smooth_value=1, name='{}_attribute_cpt'.format(attrib_name))
+    
+#     pbar = ProgressBar(clf_res_discrete.shape[0])
+    for ii in range(clf_res_discrete.shape[0]):
+#       pbar.animate(ii)
+      cc = clf_res_discrete.iloc[ii]
+      row = tuple(cc[clf_names])
+      has_attrib = cc['class_index'] in attrib_class_ids
+      if not cpt.has_row(row):
+          cpt.create_row(row)
+      cpt.add_count(row, str(has_attrib))
+#     print('')
+    
+    # normalize all the rows, to create a probability function
+    cpt.normalize_rows()
+#     print "CPT for attrib: {}".format(attrib_name)
+#     print "----------------------------"
+#     print cpt
+    return cpt
+
 class BayesNet:
   """A Bayes net model."""
   
@@ -116,35 +145,7 @@ class BayesNet:
     return res, res_descrete
   
   
-  @staticmethod
-  def cpt_for_attrib(attrib_name, attrib_selector, 
-                     clf_names, clf_res_discrete):
-    
-    attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
-    # intersect attrib_class_ids with clf_res.class_index
-    attrib_class_ids = \
-    [val for val in attrib_class_ids if val in list(clf_res_discrete.class_index)]
-    
-    
-    cpt = CPT(smooth_value=1, name='{}_attribute_cpt'.format(attrib_name))
-    
-#     pbar = ProgressBar(clf_res_discrete.shape[0])
-    for ii in range(clf_res_discrete.shape[0]):
-#       pbar.animate(ii)
-      cc = clf_res_discrete.iloc[ii]
-      row = tuple(cc[clf_names])
-      has_attrib = cc['class_index'] in attrib_class_ids
-      if not cpt.has_row(row):
-          cpt.create_row(row)
-      cpt.add_count(row, str(has_attrib))
-#     print('')
-    
-    # normalize all the rows, to create a probability function
-    cpt.normalize_rows()
-#     print "CPT for attrib: {}".format(attrib_name)
-#     print "----------------------------"
-#     print cpt
-    return cpt
+  
     
   
   
@@ -222,7 +223,7 @@ class BayesNet:
       n_attribs = len(attrib_names)
       cpts = Parallel(n_jobs=self.config.n_cores, 
                       verbose=self.config.logging.verbose)(
-                      delayed(BayesNet.cpt_for_attrib)(attrib_names[ii], 
+                      delayed(cpt_for_attrib)(attrib_names[ii], 
                                                    attrib_selector,
                                                    np.array(self.clf_names),
                                                    self.clf_res_discrete)
