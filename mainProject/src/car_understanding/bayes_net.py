@@ -116,11 +116,9 @@ class BayesNet:
     return res, res_descrete
   
   
-  def cpt_for_attrib(self, attrib_name, attrib_selector):
-    clf_names = np.array(self.clf_names)
-#     clf_res = self.clf_res
-    clf_res_discrete = self.clf_res_discrete
-    
+  @staticmethod
+  def cpt_for_attrib(self, attrib_name, attrib_selector, 
+                     clf_names, clf_res_discrete):
     
     attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
     # intersect attrib_class_ids with clf_res.class_index
@@ -220,10 +218,14 @@ class BayesNet:
     if not self.use_gt: # if using ground truth we don't need to calculate this
       
       
+      
       n_attribs = len(attrib_names)
       cpts = Parallel(n_jobs=self.config.n_cores, 
                       verbose=self.config.logging.verbose)(
-                      delayed(self.cpt_for_attrib)(attrib_names[ii], attrib_selector)
+                      delayed(self.cpt_for_attrib)(attrib_names[ii], 
+                                                   attrib_selector,
+                                                   np.array(self.clf_names),
+                                                   self.clf_res_discrete)
                       for ii in range(n_attribs))
                       
       for ii, attrib_name in enumerate(attrib_names):
