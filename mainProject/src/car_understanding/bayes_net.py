@@ -18,7 +18,7 @@ import itertools
 from util import ProgressBar
 import pandas as pd
 import pymc as mc
-# from sklearn.externals.joblib import Parallel, delayed
+from sklearn.externals.joblib import Parallel, delayed
 import sys
 
 import Bow as Bow
@@ -128,15 +128,6 @@ class BayesNet:
     attrib_class_ids = \
     [val for val in attrib_class_ids if val in list(clf_res_discrete.class_index)]
     
-#     clf_res_discrete = clf_res.copy()
-#     clf_res_discrete.ix[:, clf_names] = \
-#                   clf_res.ix[:, clf_names] > self.config.attribute.high_thresh
-    
-    # Create all tuples of True/False classifier score
-#     rows = list(itertools.product(*[(1, 0) for 
-#                                     ii in range(len(clf_names))]))
-#     cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
-#                        index=rows, columns=['True', 'False'])
     
     cpt = CPT(smooth_value=1, name='{}_attribute_cpt'.format(attrib_name))
     
@@ -149,11 +140,9 @@ class BayesNet:
       if not cpt.has_row(row):
           cpt.create_row(row)
       cpt.add_count(row, str(has_attrib))
-#       cpt.ix[row, str(has_attrib)] += 1
 #     print('')
     
     # normalize all the rows, to create a probability function
-#     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
     cpt.normalize_rows()
 #     print "CPT for attrib: {}".format(attrib_name)
 #     print "----------------------------"
@@ -230,13 +219,21 @@ class BayesNet:
     #-----------------------------------------
     print('Building CPT for attributes')
     if not self.use_gt: # if using ground truth we don't need to calculate this
-#       pbar = ProgressBar(len(attrib_names))
+      
+      cpts = Parallel(n_jobs=self.config.n_cores, 
+                      verbose=self.config.logging.verbose)(
+                      delayed(self.cpt_for_attrib(attrib_name, attrib_selector)) 
+                      for attrib_name in attrib_names)
+                      
       for ii, attrib_name in enumerate(attrib_names):
-        print 'Attribute: {}'.format(attrib_name)
-        self.CPT['p({}|theta)'.format(attrib_name)] = \
-          self.cpt_for_attrib(attrib_name, attrib_selector)
-#         pbar.animate(ii)
-#       print ''
+        self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
+        print 'attrib: {}'.format(attrib_name)
+        print cpts[ii]
+      
+#       for ii, attrib_name in enumerate(attrib_names):
+#         print 'Attribute: {}'.format(attrib_name)
+#         self.CPT['p({}|theta)'.format(attrib_name)] = \
+#           self.cpt_for_attrib(attrib_name, attrib_selector)
         
         
     # P(class | attributes)
