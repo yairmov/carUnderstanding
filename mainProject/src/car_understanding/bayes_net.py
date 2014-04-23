@@ -140,7 +140,9 @@ class BayesNet:
     
     cpt = CPT(smooth_value=1, name='attribute_cpt')
     
+    pbar = ProgressBar(clf_res_discrete.shape[0])
     for ii in range(clf_res_discrete.shape[0]):
+      pbar.animate(ii)
       cc = clf_res_discrete.iloc[ii]
       row = tuple(cc[clf_names])
       has_attrib = cc['class_index'] in attrib_class_ids
