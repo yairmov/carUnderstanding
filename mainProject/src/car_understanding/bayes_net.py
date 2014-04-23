@@ -138,11 +138,11 @@ class BayesNet:
 #     cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
 #                        index=rows, columns=['True', 'False'])
     
-    cpt = CPT(smooth_value=1, name='attribute_cpt')
+    cpt = CPT(smooth_value=1, name='{}_attribute_cpt'.format(attrib_name))
     
-    pbar = ProgressBar(clf_res_discrete.shape[0])
+#     pbar = ProgressBar(clf_res_discrete.shape[0])
     for ii in range(clf_res_discrete.shape[0]):
-      pbar.animate(ii)
+#       pbar.animate(ii)
       cc = clf_res_discrete.iloc[ii]
       row = tuple(cc[clf_names])
       has_attrib = cc['class_index'] in attrib_class_ids
@@ -150,7 +150,7 @@ class BayesNet:
           cpt.create_row(row)
       cpt.add_count(row, str(has_attrib))
 #       cpt.ix[row, str(has_attrib)] += 1
-    print('')
+#     print('')
     
     # normalize all the rows, to create a probability function
 #     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
@@ -405,11 +405,11 @@ class BayesNet:
     model = mc.Model(nodes)
 #     mc.graph.dag(model).write_pdf('tmp.pdf')
     
-    if not self.use_gt:
-      MAP = mc.MAP(model)
-      MAP.fit() # first do MAP estimation
+#     if not self.use_gt:
+#       MAP = mc.MAP(model)
+#       MAP.fit() # first do MAP estimation
       
-    mcmc = mc.MCMC(MAP.variables)
+    mcmc = mc.MCMC(model)
     mcmc.sample(10000, 3000)
     print()
 
