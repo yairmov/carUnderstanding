@@ -45,6 +45,7 @@ class CPT(object):
   def create_row(self, row_ind):
     row_ind = self.make_key(row_ind)
     if not self.has_row(row_ind):
+      print 'creating row: {}'.format(row_ind)
       self.cpt.loc[row_ind] = pd.Series(data=np.array([0,0]), 
                                         index=['True', 'False'])
       self.index.add(row_ind)
