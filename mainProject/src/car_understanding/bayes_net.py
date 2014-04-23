@@ -19,7 +19,6 @@ from util import ProgressBar
 import pandas as pd
 import pymc as mc
 from sklearn.externals.joblib import Parallel, delayed
-import sys
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
@@ -225,10 +224,10 @@ class BayesNet:
       cpts = Parallel(n_jobs=self.config.n_cores, 
                       verbose=self.config.logging.verbose)(
 #                       delayed(self.cpt_for_attrib(attrib_names[ii], attrib_selector))
-                      delayed(str(ii)) 
+                      delayed(str)(ii)
                       for ii in range(n_attribs))
                       
-      import sys; sys.exit()
+      print cpts; import sys; sys.exit()
                       
       for ii, attrib_name in enumerate(attrib_names):
         self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
