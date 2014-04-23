@@ -6,25 +6,26 @@ Util module to do training and testing of the attribte classifiers.
 @author: ymovshov
 '''
 
-import sys
-import os
-import numpy as np
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
-from sklearn.metrics import precision_recall_curve
+from prettytable import PrettyTable
+from sklearn.externals.joblib import load, dump
 from sklearn.metrics import auc, average_precision_score
 from sklearn.metrics import classification_report
-import pandas as pd
+from sklearn.metrics import precision_recall_curve
 import matplotlib.pyplot as plt
-from prettytable import PrettyTable
+import numpy as np
+import os
+import pandas as pd
+import sys
 
 
-from configuration import get_config
-import fgcomp_dataset_utils as fgu
 from attribute_classifier import AttributeClassifier
 from attribute_selector import AttributeSelector
+from configuration import get_config
 from util import ProgressBar
 import Bow
+import fgcomp_dataset_utils as fgu
 
 __date__ = '2014-03-13'
 
@@ -123,6 +124,7 @@ def test(args, config, dataset):
   
   res = pd.DataFrame(data=res, index=test_annos.index)
   res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
+  dump({'res':res}, 'tmp.dat')
   
   K = np.ceil(np.sqrt(len(args.attrib_names)))
   table = PrettyTable(['Attribute', 'AP', 'AP random'])
