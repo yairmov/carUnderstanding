@@ -131,6 +131,10 @@ def test(args, config, dataset):
   table.align['Attribute'] = 'l'
   table.padding_width = 1
   table.float_format = '0.2'
+  
+  results = pd.DataFrame(data=np.zeros([len(config.attribute.names), 2]), 
+                         index = config.attribute.names)
+  
   for ii, attrib_name in enumerate(args.attrib_names):
     pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
     true_labels = np.array(res.class_index.isin(pos_classes))
@@ -158,6 +162,7 @@ def test(args, config, dataset):
 #     score_random = average_precision_score(true_labels, y_random)
     
     table.add_row([attrib_name, score, score_r])
+    results.iloc[ii] = np.array([score, score_r])
     print("Area Under Curve: %0.2f" % score)
     print ("")
     if args.plot:
@@ -174,6 +179,7 @@ def test(args, config, dataset):
   
   table.border = False
   print table.get_string(sortby="AP", reversesort=True)
+  print results
     
   if args.plot:
     plt.draw()
