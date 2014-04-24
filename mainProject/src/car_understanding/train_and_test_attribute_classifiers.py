@@ -133,7 +133,8 @@ def test(args, config, dataset):
   table.float_format = '0.2'
   
   results = pd.DataFrame(data=np.zeros([len(config.attribute.names), 2]), 
-                         index = config.attribute.names)
+                         index = config.attribute.names,
+                         columns=['AP', 'AP Random'])
   
   for ii, attrib_name in enumerate(args.attrib_names):
     pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
