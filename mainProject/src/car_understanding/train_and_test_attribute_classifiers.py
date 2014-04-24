@@ -130,6 +130,7 @@ def test(args, config, dataset):
   table = PrettyTable(['Attribute', 'AP', 'AP random'])
   table.align['Attribute'] = 'l'
   table.padding_width = 1
+  table.float_format = '0.2'
   for ii, attrib_name in enumerate(args.attrib_names):
     pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
     true_labels = np.array(res.class_index.isin(pos_classes))
@@ -171,7 +172,7 @@ def test(args, config, dataset):
       plt.legend(['Our method (ap): {:.3f}'.format(score), 
                   'Random (ap): {:.3f}'.format(score_r)])
   
-  print table
+  print x.get_string(sortby="AP")
     
   if args.plot:
     plt.draw()
