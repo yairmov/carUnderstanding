@@ -172,7 +172,7 @@ def test(args, config, dataset):
       plt.legend(['Our method (ap): {:.3f}'.format(score), 
                   'Random (ap): {:.3f}'.format(score_r)])
   
-  print x.get_string(sortby="AP")
+  print table.get_string(sortby="AP")
     
   if args.plot:
     plt.draw()
