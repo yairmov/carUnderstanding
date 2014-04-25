@@ -537,6 +537,8 @@ def show_confusion_matrix(data_annos, class_meta, class_prob):
   plt.ylabel('True')
 #   fig.savefig('cm.pdf')
   plt.show() 
+  
+  return (cm, class_names)
 
 
 
