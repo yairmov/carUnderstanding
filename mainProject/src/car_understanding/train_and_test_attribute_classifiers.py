@@ -180,7 +180,7 @@ def test(args, config, dataset):
       plt.legend(['Our method (ap): {:.3f}'.format(score), 
                   'Random (ap): {:.3f}'.format(score_r)])
   
-  table.border = False
+#   table.border = False
   print table.get_string(sortby="AP", reversesort=True)
   print results
     
