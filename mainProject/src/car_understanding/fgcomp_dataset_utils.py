@@ -87,6 +87,8 @@ def read_image_annotations(infilename, has_class_id=True):
 
   return dataset
 
+def read_attribute_meta(infilename):
+  return pd.DataFrame.from_csv(infilename)
 
 def get_all_metadata(config=None, args=None):
   if config == None and args == None:
@@ -95,6 +97,7 @@ def get_all_metadata(config=None, args=None):
     config = get_config(args)
     
   class_meta  = read_class_meta(config.dataset.class_meta_file)
+  attrib_meta = read_image_annotations(config.dataset.attrib_meta_file)
   train_annos = read_image_annotations(config.dataset.train_annos_file)
   test_annos = read_image_annotations(config.dataset.test_annos_file,
                                       has_class_id=False)
@@ -139,7 +142,8 @@ def get_all_metadata(config=None, args=None):
            'test_annos': test_used,
            'dev_annos': dev_annos_test, 
             'class_meta': class_meta,
-            'domain_meta': domain_meta},
+            'domain_meta': domain_meta,
+            'attrib_meta': attrib_meta},
           config)
 
 def create_dev_set(train_annos, config):
