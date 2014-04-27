@@ -39,6 +39,7 @@ class AttributeSelector:
                                index = classes.index)
     
     for name in attrib_names:
+      print name
       attrib_matrix[name] = np.sum(self.attrib_meta == name, axis=1)  > 0
           
     return attrib_matrix
