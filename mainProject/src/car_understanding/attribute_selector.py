@@ -24,7 +24,7 @@ class AttributeSelector:
     """
     self.config  = config
     self.class_meta = class_meta.copy()
-    self.attribg_meta = attrib_meta.copy()
+    self.attrib_meta = attrib_meta.copy()
     self.attrib_matrix = \
       self.create_attrib_matrix(np.concatenate([np.unique(attrib_meta[x]) 
                                                 for x in attrib_meta.columns]))
