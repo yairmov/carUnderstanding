@@ -52,28 +52,23 @@ class AttributeSelector:
     return np.array(self.attrib_matrix.index[attrib_mask])
   
   
-  def has_list_attributes_by_index(self, class_id, attrib_names):
+  def has_list_attributes_by_index(self, class_index, attrib_names):
     '''
     Does class:class_index has the attribute list atrrib_names?
     '''
-    return AttributeSelector.has_list_attributes_by_name(
-                                      self.class_meta.class_name[class_id], 
-                                      attrib_names)
+    return list(self.attrib_matrix.loc[class_index][attrib_names])
     
   def has_attribute_by_index(self, class_index, attrib_name):
     '''
     Does class:class_index has the attribute atrrib_name?
     '''
-    return AttributeSelector.has_attribute_by_name(
-                                 self.class_meta.class_name[class_index], 
-                                 attrib_name)
+    return self.attrib_matrix.loc[class_index][attrib_name].iloc[0]
     
   def prune_attributes(self, class_index, attrib_names):
     '''
     From the list of attributes, return only the ones that this class has.
     '''
-    has_attrib = [self.has_attribute_by_index(class_index, n) for
-                n in attrib_names]
+    has_attrib = self.has_list_attributes_by_index(class_index, attrib_names)
 
     new_attrib_names = np.array(attrib_names)
     return new_attrib_names[np.array(has_attrib)]
@@ -89,6 +84,7 @@ class AttributeSelector:
     i.e. the class "Acura RL Sedan 2012" has the attributes:
     [Acura, Sedan, 2012], but not the attribute Ford. 
     '''
+    raise 'Should not be calling this!!!!!'
     return str.find(str.lower(class_name), str.lower(attrib_name)) != -1
   
   @staticmethod  
@@ -96,6 +92,7 @@ class AttributeSelector:
     '''
     Does class:class_name has all attributes in attrib_names?
     '''
+    raise 'Should not be calling this!!!!!'
     has_attrib = [AttributeSelector.has_attribute_by_name(class_name, a_name) for
                   a_name in attrib_names]
     
