@@ -41,8 +41,11 @@ class AttributeSelector:
     
     for name in attrib_names:
       print name
+      print ('attrib_matrix-after-282-', name, ': ', attrib_matrix.loc[282][name])
+      print '-------------'
       attrib_matrix[name] = np.sum(self.attrib_meta == name, axis=1)  > 0
       
+    print '-------------'
     print ('attrib_matrix-after-282: ', attrib_matrix.loc[282])
           
     return attrib_matrix
