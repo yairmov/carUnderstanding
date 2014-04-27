@@ -33,9 +33,8 @@ class AttributeSelector:
     
     
   def create_attrib_matrix(self, attrib_names):
-    classes = self.class_meta
     attrib_matrix = pd.DataFrame(columns = attrib_names,
-                                 index = classes.index,
+                                 index = self.class_meta.index,
                                  dtype=bool)
     
     for name in attrib_names:
