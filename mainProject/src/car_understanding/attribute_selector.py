@@ -40,6 +40,7 @@ class AttributeSelector:
     for name in attrib_matrix.columns:
       print name
       a = np.sum(self.attrib_meta == name, axis=1)  > 0
+      print a
       attrib_matrix[name] = a
           
     return attrib_matrix
