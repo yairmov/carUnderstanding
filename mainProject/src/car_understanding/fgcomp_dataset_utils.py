@@ -97,7 +97,8 @@ def get_all_metadata(config=None, args=None):
     config = get_config(args)
     
   class_meta  = read_class_meta(config.dataset.class_meta_file)
-  attrib_meta = read_attribute_meta(config.dataset.attrib_meta_file)
+  attrib_meta_with_name = read_attribute_meta(config.dataset.attrib_meta_file)
+  attrib_meta = attrib_meta_with_name.drop('class_name',axis=1)
   train_annos = read_image_annotations(config.dataset.train_annos_file)
   test_annos = read_image_annotations(config.dataset.test_annos_file,
                                       has_class_id=False)
@@ -143,7 +144,8 @@ def get_all_metadata(config=None, args=None):
            'dev_annos': dev_annos_test, 
             'class_meta': class_meta,
             'domain_meta': domain_meta,
-            'attrib_meta': attrib_meta},
+            'attrib_meta': attrib_meta,
+            'attrib_meta_with_name': attrib_meta_with_name},
           config)
 
 def create_dev_set(train_annos, config):
