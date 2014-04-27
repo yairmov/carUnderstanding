@@ -84,7 +84,7 @@ class AttributeSelector:
     i.e. the class "Acura RL Sedan 2012" has the attributes:
     [Acura, Sedan, 2012], but not the attribute Ford. 
     '''
-    raise 'Should not be calling this!!!!!'
+    raise Exception('Depricated: Should not be calling this!!!!!')
     return str.find(str.lower(class_name), str.lower(attrib_name)) != -1
   
   @staticmethod  
@@ -92,7 +92,7 @@ class AttributeSelector:
     '''
     Does class:class_name has all attributes in attrib_names?
     '''
-    raise 'Should not be calling this!!!!!'
+    raise Exception('Depricated: Should not be calling this!!!!!')
     has_attrib = [AttributeSelector.has_attribute_by_name(class_name, a_name) for
                   a_name in attrib_names]
     
