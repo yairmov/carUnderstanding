@@ -33,10 +33,13 @@ class AttributeSelector:
     
   def create_attrib_matrix(self, attrib_names):
     classes = self.class_meta
+    print classes
     attrib_matrix = pd.DataFrame(np.zeros([classes.shape[0], len(attrib_names)],
                                         dtype=int), 
                                columns = attrib_names,
                                index = classes.index)
+    print attrib_matrix
+    
     for name in attrib_matrix.columns:
       print name
       a = np.sum(self.attrib_meta == name, axis=1)  > 0
