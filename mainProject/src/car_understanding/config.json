@@ -41,7 +41,7 @@
     "train_annos_file": "../../../cache/dataset/train_annos.txt", 
     "domain_meta_file": "../../../cache/dataset/domain_meta.txt", 
     "class_meta_file": "../../../cache/dataset/class_meta.txt",
-    "attrib_meta_file": "../../../cache/dataset/attrib_meta.txt", 
+    "attrib_meta_file": "../../../cache/dataset/attribute_meta.txt", 
     "index_str": "FGCOMP_{:>07}"
   }, 
   "n_cores": 11, 
