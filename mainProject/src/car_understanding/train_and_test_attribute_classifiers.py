@@ -95,7 +95,9 @@ def test(args, config, dataset):
   print("========")
   print("")
   test_annos = dataset['test_annos']
-  attrib_selector = AttributeSelector(config, dataset['class_meta'])
+  attrib_selector = AttributeSelector(config, 
+                                      dataset['class_meta'],
+                                      dataset['attrib_meta'])
   
   print "Load image Bow histograms from disk"
   features = np.empty(shape=[len(test_annos), 
@@ -193,7 +195,9 @@ def train(args, config, dataset):
   print("========")
   print("")
   train_annos = dataset['train_annos']
-  attrib_selector = AttributeSelector(config, dataset['class_meta'])
+  attrib_selector = AttributeSelector(config, 
+                                      dataset['class_meta'],
+                                      dataset['attrib_meta'])
   for attrib_name in config.attribute.names:
     print(attrib_name)
     print("")
