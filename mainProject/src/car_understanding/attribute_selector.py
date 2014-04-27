@@ -47,14 +47,9 @@ class AttributeSelector:
     '''
     Return all class ids that have the attribuet attrib_name
     '''
-    class_ids = []
-    attrib_name = str.lower(attrib_name)
-    for ii in range(len(self.class_meta)):
-      class_name = str.lower(self.class_meta['class_name'].iloc[ii])
-      if AttributeSelector.has_attribute_by_name(class_name, attrib_name):
-        class_ids.append(self.class_meta['class_index'].iloc[ii])
+    attrib_mask = self.attrib_matrix[attrib_name]
   
-    return class_ids
+    return np.array(self.attrib_matrix.index[attrib_mask])
   
   
   def has_list_attributes_by_index(self, class_id, attrib_names):
