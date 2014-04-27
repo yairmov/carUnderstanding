@@ -25,11 +25,9 @@ class AttributeSelector:
     self.config  = config
     self.class_meta = class_meta.copy()
     self.attrib_meta = attrib_meta.copy()
-    print ('meta-282: ', self.attrib_meta.loc[282])
     self.attrib_matrix = \
       self.create_attrib_matrix(np.concatenate([np.unique(attrib_meta[x]) 
                                                 for x in attrib_meta.columns]))
-      #         self.create_attrib_matrix(['uk', 'italy', 'germany'])
     
     
     
@@ -38,17 +36,9 @@ class AttributeSelector:
                                  index = self.class_meta.index,
                                  dtype=bool)
     attrib_matrix[:] = False
-    print ('meta-282-v2: ', self.attrib_meta.loc[282])
-    print ('attrib_matrix-before-282: ', attrib_matrix.loc[282])
     
     for name in attrib_names:
-      print name
       attrib_matrix[name] = np.sum(self.attrib_meta == name, axis=1)  > 0
-      print ('attrib_matrix-after-282-', name, ': ', attrib_matrix.loc[282][name])
-      print '-------------'
-      
-    print '-------------'
-    print ('attrib_matrix-after-282: ', attrib_matrix.loc[282])
           
     return attrib_matrix
     
