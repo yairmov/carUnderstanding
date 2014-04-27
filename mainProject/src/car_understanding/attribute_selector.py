@@ -37,13 +37,15 @@ class AttributeSelector:
     attrib_matrix = pd.DataFrame(columns = attrib_names,
                                  index = self.class_meta.index,
                                  dtype=bool)
+    attrib_matrix[:] = False
+    print ('meta-282-v2: ', self.attrib_meta.loc[282])
     print ('attrib_matrix-before-282: ', attrib_matrix.loc[282])
     
     for name in attrib_names:
       print name
+      attrib_matrix[name] = np.sum(self.attrib_meta == name, axis=1)  > 0
       print ('attrib_matrix-after-282-', name, ': ', attrib_matrix.loc[282][name])
       print '-------------'
-      attrib_matrix[name] = np.sum(self.attrib_meta == name, axis=1)  > 0
       
     print '-------------'
     print ('attrib_matrix-after-282: ', attrib_matrix.loc[282])
