@@ -18,13 +18,41 @@ import itertools
 from util import ProgressBar
 import pandas as pd
 import pymc as mc
-# from sklearn.externals.joblib import Parallel, delayed
-import sys
+from sklearn.externals.joblib import Parallel, delayed
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
 from conditional_prob_table import CPT
 
+
+def cpt_for_attrib(attrib_name, attrib_selector, 
+                     clf_names, clf_res_discrete):
+    
+    attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
+    # intersect attrib_class_ids with clf_res.class_index
+    attrib_class_ids = \
+    [val for val in attrib_class_ids if val in list(clf_res_discrete.class_index)]
+    
+    
+    cpt = CPT(smooth_value=1, name='{}_attribute_cpt'.format(attrib_name))
+    
+#     pbar = ProgressBar(clf_res_discrete.shape[0])
+    for ii in range(clf_res_discrete.shape[0]):
+#       pbar.animate(ii)
+      cc = clf_res_discrete.iloc[ii]
+      row = tuple(cc[clf_names])
+      has_attrib = cc['class_index'] in attrib_class_ids
+      if not cpt.has_row(row):
+          cpt.create_row(row)
+      cpt.add_count(row, str(has_attrib))
+#     print('')
+    
+    # normalize all the rows, to create a probability function
+    cpt.normalize_rows()
+#     print "CPT for attrib: {}".format(attrib_name)
+#     print "----------------------------"
+#     print cpt
+    return cpt
 
 class BayesNet:
   """A Bayes net model."""
@@ -117,46 +145,7 @@ class BayesNet:
     return res, res_descrete
   
   
-  def cpt_for_attrib(self, attrib_name, attrib_selector):
-    clf_names = np.array(self.clf_names)
-#     clf_res = self.clf_res
-    clf_res_discrete = self.clf_res_discrete
-    
-    
-    attrib_class_ids = attrib_selector.class_ids_for_attribute(attrib_name)
-    # intersect attrib_class_ids with clf_res.class_index
-    attrib_class_ids = \
-    [val for val in attrib_class_ids if val in list(clf_res_discrete.class_index)]
-    
-#     clf_res_discrete = clf_res.copy()
-#     clf_res_discrete.ix[:, clf_names] = \
-#                   clf_res.ix[:, clf_names] > self.config.attribute.high_thresh
-    
-    # Create all tuples of True/False classifier score
-#     rows = list(itertools.product(*[(1, 0) for 
-#                                     ii in range(len(clf_names))]))
-#     cpt = pd.DataFrame(np.ones([len(rows), 2], dtype=np.float64), 
-#                        index=rows, columns=['True', 'False'])
-    
-    cpt = CPT(smooth_value=1, name='attribute_cpt')
-    
-    for ii in range(clf_res_discrete.shape[0]):
-      cc = clf_res_discrete.iloc[ii]
-      row = tuple(cc[clf_names])
-      has_attrib = cc['class_index'] in attrib_class_ids
-      if not cpt.has_row(row):
-          cpt.create_row(row)
-      cpt.add_count(row, str(has_attrib))
-#       cpt.ix[row, str(has_attrib)] += 1
-    
-    
-    # normalize all the rows, to create a probability function
-#     cpt = cpt.divide(cpt.sum(axis=1), axis='index')
-    cpt.normalize_rows()
-    print "CPT for attrib: {}".format(attrib_name)
-    print "----------------------------"
-    print cpt
-    return cpt
+  
     
   
   
@@ -186,8 +175,8 @@ class BayesNet:
         num_classes_with_attrib += 1
          
          
-    print "attrib_list: {}".format(attrib_list)
-    print "num_classes_with_attribs: {}".format(num_classes_with_attrib)
+#     print "attrib_list: {}".format(attrib_list)
+#     print "num_classes_with_attribs: {}".format(num_classes_with_attrib)
     p = 1.0 / num_classes_with_attrib
     row = tuple(True for ii in range(len(attrib_list)))
     cpt.create_row(row)
@@ -199,9 +188,9 @@ class BayesNet:
 #     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
 #                         dtype=int))], 'False'] = 1 - p
                         
-    print "CPT for class: {}".format(self.class_meta.class_name[class_index])
-    print "---------------------------------"
-    print cpt
+#     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
+#     print "---------------------------------"
+#     print cpt
     return cpt
     
       
@@ -228,12 +217,25 @@ class BayesNet:
     #-----------------------------------------
     print('Building CPT for attributes')
     if not self.use_gt: # if using ground truth we don't need to calculate this
-#       pbar = ProgressBar(len(attrib_names))
+      
+      
+      
+      n_attribs = len(attrib_names)
+      cpts = Parallel(n_jobs=self.config.n_cores, 
+                      verbose=self.config.logging.verbose)(
+                      delayed(cpt_for_attrib)(attrib_names[ii], 
+                                                   attrib_selector,
+                                                   np.array(self.clf_names),
+                                                   self.clf_res_discrete)
+                      for ii in range(n_attribs))
+                      
       for ii, attrib_name in enumerate(attrib_names):
-        self.CPT['p({}|theta)'.format(attrib_name)] = \
-          self.cpt_for_attrib(attrib_name, attrib_selector)
-#         pbar.animate(ii)
-#       print ''
+        self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
+      
+#       for ii, attrib_name in enumerate(attrib_names):
+#         print 'Attribute: {}'.format(attrib_name)
+#         self.CPT['p({}|theta)'.format(attrib_name)] = \
+#           self.cpt_for_attrib(attrib_name, attrib_selector)
         
         
     # P(class | attributes)
@@ -304,7 +306,7 @@ class BayesNet:
       else:
         discr = clf_res_discrete.iloc[ii]
         key = np.array(discr[attrib_names])
-      print "key: {}".format(key)
+#       print "key: {}".format(key)
       key = key.tostring()
       if (not class_prob_cache.has_key(key)):
         print "Never got this key before, computing...."
@@ -402,12 +404,13 @@ class BayesNet:
     model = mc.Model(nodes)
 #     mc.graph.dag(model).write_pdf('tmp.pdf')
     
-    if not self.use_gt:
-      MAP = mc.MAP(model)
-      MAP.fit() # first do MAP estimation
+#     if not self.use_gt:
+#       MAP = mc.MAP(model)
+#       MAP.fit() # first do MAP estimation
       
-    mcmc = mc.MCMC(MAP.variables)
-    mcmc.sample(10000, 3000)
+    mcmc = mc.MCMC(model)
+#     mcmc.sample(10000, 3000)
+    mcmc.sample(2000)
     print()
 
 ##     use    

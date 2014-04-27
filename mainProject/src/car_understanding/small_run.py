@@ -481,7 +481,7 @@ def bayes_net_generic(use_gt=False):
   
   print 'predicting!!!'
   
-  (class_probs, attrib_probs) = bnet.predict(test_annos.iloc[:])
+  (class_probs, attrib_probs) = bnet.predict(test_annos)
   dump({'class_probs': class_probs, 
         'attrib_probs': attrib_probs,
         'test_annos': test_annos,
@@ -537,6 +537,8 @@ def show_confusion_matrix(data_annos, class_meta, class_prob):
   plt.ylabel('True')
 #   fig.savefig('cm.pdf')
   plt.show() 
+  
+  return (cm, class_names)
 
 
 
