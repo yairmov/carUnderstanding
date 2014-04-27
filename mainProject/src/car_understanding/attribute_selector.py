@@ -26,9 +26,9 @@ class AttributeSelector:
     self.class_meta = class_meta.copy()
     self.attrib_meta = attrib_meta.copy()
     self.attrib_matrix = \
-        self.create_attrib_matrix(['uk', 'italy', 'germany'])
-#       self.create_attrib_matrix(np.concatenate([np.unique(attrib_meta[x]) 
-#                                                 for x in attrib_meta.columns]))
+      self.create_attrib_matrix(np.concatenate([np.unique(attrib_meta[x]) 
+                                                for x in attrib_meta.columns]))
+      #         self.create_attrib_matrix(['uk', 'italy', 'germany'])
     
     
     
