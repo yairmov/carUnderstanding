@@ -81,8 +81,8 @@ def main(argv=None):  # IGNORE:C0111
   print(args)
 
   config = get_config()
-  config.attribute.names = [str.lower(x) for x in args.attrib_names]
   (dataset, config) = fgu.get_all_metadata(config)
+  config.attribute.names = [str.lower(x) for x in args.attrib_names]
   
   if args.train:
     train(args, config, dataset)
