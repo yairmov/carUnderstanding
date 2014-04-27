@@ -15,7 +15,7 @@ import pandas as pd
 class AttributeSelector:
   """A class that provides easy selection of images based on a n attribute."""
   
-  def __init__(self, config, class_meta):
+  def __init__(self, config, class_meta, attrib_meta):
     """ Ctor.
     
     Args:
@@ -24,22 +24,23 @@ class AttributeSelector:
     """
     self.config  = config
     self.class_meta = class_meta.copy()
+    self.attribg_meta = attrib_meta.cop()
+    self.attrib_matrix = \
+      self.create_attrib_matrix(np.concatenate([np.unique(attrib_meta[x]) 
+                                                for x in attrib_meta.columns]))
     
     
     
-  def create_attrib_meta(self, attrib_names):
+  def create_attrib_matrix(self, attrib_names):
     classes = self.class_meta
-    attrib_meta = pd.DataFrame(np.zeros([classes.shape[0], len(attrib_names)],
+    attrib_matrix = pd.DataFrame(np.zeros([classes.shape[0], len(attrib_names)],
                                         dtype=int), 
                                columns = attrib_names,
                                index = classes.index)
-    for class_index in attrib_meta.index:
-      class_name = classes.class_name[class_index]
-      for name in attrib_meta.columns:
-        attrib_meta.ix[class_index, name] = \
-        AttributeSelector.has_attribute_by_name(class_name, name)
-      
-    return attrib_meta
+    for name in attrib_matrix.columns:
+      attrib_matrix[name] = np.sum(self.attrib_meta == name, axis=1)  > 0
+          
+    return attrib_matrix
     
   def class_ids_for_attribute(self, attrib_name):
     '''
