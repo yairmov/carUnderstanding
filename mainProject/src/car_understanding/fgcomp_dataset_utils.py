@@ -97,7 +97,7 @@ def get_all_metadata(config=None, args=None):
     config = get_config(args)
     
   class_meta  = read_class_meta(config.dataset.class_meta_file)
-  attrib_meta = read_image_annotations(config.dataset.attrib_meta_file)
+  attrib_meta = read_attribute_meta(config.dataset.attrib_meta_file)
   train_annos = read_image_annotations(config.dataset.train_annos_file)
   test_annos = read_image_annotations(config.dataset.test_annos_file,
                                       has_class_id=False)
