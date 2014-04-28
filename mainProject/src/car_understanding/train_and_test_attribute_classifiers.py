@@ -185,7 +185,7 @@ def apply_classifiers(config, features, data_annos, attrib_clfs):
   pred = {}
   for attrib_clf in attrib_clfs:
     print(attrib_clf.name)
-    print("")
+    print(" ")
 #     attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
     curr_res = attrib_clf.decision_function(features, 
                                             use_prob=config.attribute.use_prob)  
