@@ -89,8 +89,7 @@ def show_best_predictions(test_annos, attrib_names, html_file, config):
     img_files.extend(list(test_annos.loc[inds].img_path))
 
 
-  create_image_page(img_files, html_file, num_per_row=topK,
-                    split_every=topK, usr_str = names)
+  create_image_page(img_files, html_file, num_per_row=topK, usr_str = names)
     
   
 
@@ -100,6 +99,7 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
   k = 0;
   split_num = 0
+  group = 0
 
   width_str = 'width = ' + str(width)
   html_code_image = '<img src="data:image/jpeg;base64, {}" ' + width_str + ' style="border:1px solid white" >'
@@ -118,11 +118,13 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
     k += 1
 
     if (k % split_every == 0):
-      to_show = str(split_num) if usr_str is None else usr_str[split_num] 
-      html_str += '<hr>' + '<center> <h2> ' + to_show + '</h2></center> <br> <hr>'
+      html_str += '<hr>' + '<center> <h2> ' + str(split_num) + '</h2></center> <br> <hr>'
       split_num += 1
 
     if (k == num_per_row):
+      if not(usr_str is None):
+        html_str += '<hr>' + '<center> <h2> ' + usr_str[group] + '</h2></center> <br> <hr>'
+        group += 1
       k = 0
 #       html_str += '<hr>'
       html_str += str(split_num) + '<br> <hr>'
