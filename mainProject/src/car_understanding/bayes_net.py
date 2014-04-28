@@ -49,9 +49,10 @@ def cpt_for_attrib(attrib_name, attrib_selector,
     
     # normalize all the rows, to create a probability function
     cpt.normalize_rows()
-#     print "CPT for attrib: {}".format(attrib_name)
-#     print "----------------------------"
-#     print cpt
+    print "CPT for attrib: {}".format(attrib_name)
+    print "----------------------------"
+    print cpt
+    import sys;sys.exit(0)
     return cpt
 
 class BayesNet:
@@ -225,7 +226,7 @@ class BayesNet:
                       verbose=self.config.logging.verbose)(
                       delayed(cpt_for_attrib)(attrib_names[ii], 
                                                    attrib_selector,
-                                                   np.array(self.clf_names),
+                                                   np.array(attrib_names[ii]),
                                                    self.clf_res_discrete)
                       for ii in range(n_attribs))
                       
@@ -282,9 +283,6 @@ class BayesNet:
     
     if not use_gt:
       clf_res, clf_res_discrete = self.create_attrib_res_on_images(test_annos)
-#       clf_res_discrete = self.clf_res.copy()
-#       clf_res_discrete[self.clf_names] = \
-#           self.clf_res[self.clf_names] > self.config.attribute.high_thresh
         
     # using ground truth    
     if use_gt:
