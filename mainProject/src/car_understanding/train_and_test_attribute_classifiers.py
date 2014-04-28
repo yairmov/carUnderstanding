@@ -149,8 +149,7 @@ def test(args, config, dataset):
     print("--------------{}-------------".format(attrib_name)) 
     
     print(classification_report(true_labels, 
-                                np.array(res[str.lower(attrib_name)]) > 
-                                config.attribute.high_thresh, 
+                                np.array(pred[str.lower(attrib_name)]), 
                                 target_names=['not-{}'.format(attrib_name),
                                               attrib_name]))
     
@@ -160,7 +159,7 @@ def test(args, config, dataset):
     
     
     precision, recall, thresholds = precision_recall_curve(true_labels, 
-                                                           np.array(pred[str.lower(attrib_name)]))
+                                                           np.array(res[str.lower(attrib_name)]))
     score = auc(recall, precision)
     
     # random prediction
