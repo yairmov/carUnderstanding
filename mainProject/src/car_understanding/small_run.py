@@ -431,7 +431,7 @@ def get_args_from_file(fname):
 def bayes_net_generic(use_gt=False):
   makes = ['bmw', 'ford']
   types = ['sedan', 'suv']
-  args = makes + types
+  args = makes + types + ['germany', 'usa']
   
 #   args = get_args_from_file('sorted_attrib_list.txt')
   
