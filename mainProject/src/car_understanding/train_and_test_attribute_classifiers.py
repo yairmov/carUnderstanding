@@ -160,7 +160,10 @@ def test(args, config, dataset):
     
     precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
-    dump({'precision': precision, 'recall': recall, 'thresholds': thresholds}, 'tmp.dat')
+    dump({'precision': precision, 'recall': recall, 
+          'thresholds': thresholds,
+          'true_labels': true_labels, 
+          'predictions': np.array(res[str.lower(attrib_name)])}, 'tmp.dat')
     score = auc(recall, precision)
     
     # random prediction
