@@ -436,18 +436,18 @@ class BayesNet:
         samples = mcmc.trace(str(attrib_name))[:]
         attrib_probs[attrib_name] = samples.mean()
     
-    print "attrib_probs:"
-    print attrib_probs   
+#     print "attrib_probs:"
+#     print attrib_probs   
     
     class_probs = pd.Series(np.zeros([len(class_inds),]), index=class_inds)
     for class_index in class_inds:
       samples = mcmc.trace(str(class_index))[:]
       class_probs[class_index] = samples.mean()
     
-    print "class_probs:"
-    print class_probs 
+#     print "class_probs:"
+#     print class_probs 
     
-    import sys;sys.exit(0)
+#     import sys;sys.exit(0)
     return (class_probs, attrib_probs)
   
   
