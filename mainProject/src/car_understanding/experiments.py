@@ -360,6 +360,7 @@ def classify_using_attributes():
 #   classes = select_small_set_for_bayes_net(dataset, makes, types)
   classes = dataset['class_meta']
   train_annos = dataset['train_annos']
+  test_annos = dataset['test_annos']
   attrib_meta = dataset['attrib_meta']
 #   train_annos = train_annos[np.array(
 #                              train_annos.class_index.isin(classes.class_index))]
@@ -367,7 +368,7 @@ def classify_using_attributes():
   bnet = BayesNet(config, train_annos,
                   classes, attrib_classifiers, attrib_meta, desc=str(args))
 
-  res = bnet.create_attrib_res_on_images()
+  res = bnet.create_attrib_res_on_images(test_annos)
   from sklearn.externals.joblib import dump; dump({'res':res}, 'tmp.data')
   import sys;sys.exit(0)
 
