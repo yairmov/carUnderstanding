@@ -381,7 +381,7 @@ def classify_using_attributes():
 #   clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
   clf = svm.SVC(kernel='rbf')
 
-  clf.fit(np.array(attrib_res_test[attrib_names]), attrib_res_train.class_index)
+  clf.fit(np.array(attrib_res_train[attrib_names]), attrib_res_train.class_index)
 
   y_pred = np.array(clf.predict(attrib_res_test[attrib_names]))
   y_true = np.array(attrib_res_test.class_index)
