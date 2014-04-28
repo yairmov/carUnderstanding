@@ -46,6 +46,7 @@ class AttributeClassifier:
     self.desc         = desc
     self.probability  = config.attribute.use_prob
     self.n_cores      = config.n_cores
+    self.thresh       = 0
 #     self.clf          = SVC(kernel='rbf', 
 #                            class_weight='auto',
 #                            C=1, gamma=1e-3,
@@ -240,9 +241,10 @@ class AttributeClassifier:
     
     
   def predict(self, features):
-    return self.clf.predict(self.Scaler.transform(features))
+    return self.decision_function(features) > self.thresh
+#     return self.clf.predict(self.Scaler.transform(features))
   
-  def decision_function(self, features, use_prob=True):
+  def decision_function(self, features, use_prob=False):
     f = self.Scaler.transform(features)
     import sklearn
     if (use_prob and self.probability) or type(self.clf) == sklearn.ensemble.forest.RandomForestClassifier:

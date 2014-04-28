@@ -94,7 +94,7 @@ def test(args, config, dataset):
   print("Testing")
   print("========")
   print("")
-  test_annos = dataset['test_annos']
+  test_annos = dataset['dev_annos']
   attrib_selector = AttributeSelector(config, 
                                       dataset['class_meta'],
                                       dataset['attrib_meta'])
