@@ -127,7 +127,7 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
         group += 1
       k = 0
 #       html_str += '<hr>'
-      html_str += str(split_num) + '<br> <hr>'
+#       html_str += str(split_num) + '<br> <hr>'
       split_num += 1
 
 
