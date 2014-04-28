@@ -101,41 +101,12 @@ def test(args, config, dataset):
   
   print "Load image Bow histograms from disk"
   features = Bow.load_bow(test_annos, config)
-#   features = np.empty(shape=[len(test_annos), 
-#                              config.SIFT.BoW.num_clusters * 
-#                              len(config.SIFT.pool_boxes)])
-#   progress = ProgressBar(len(test_annos))
-#   for ii in range(len(test_annos)):
-#     img_name = test_annos.iloc[ii]['basename']
-#     img_name = os.path.splitext(img_name)[0]
-#     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-#                                  img_name) + '_hist.dat'
-#     hist = Bow.load(hist_filename) 
-#     features[ii, :] = hist
-#     progress.animate(ii)
-#   print("")
   
   print("Apply classifiers")
   res, pred = apply_classifiers(config, features, test_annos)
-#   res = {}
-#   pred = {}
-#   for ii, attrib_name in enumerate(config.attribute.names):
-#     print(attrib_name)
-#     print("")
-#     attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
-#     curr_res = attrib_clf.decision_function(features, 
-#                                             use_prob=config.attribute.use_prob)  
-#     curr_pred = attrib_clf.predict(features)
-#     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
-#     pred[attrib_clf.name] = curr_pred.reshape(len(curr_res))
-#   
-#   res = pd.DataFrame(data=res, index=test_annos.index)
-#   res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
-#   pred = pd.DataFrame(data=pred, index=test_annos.index)
-#   pred = pd.concat([pred, test_annos.ix[:, ['class_index']]], axis=1)
 #   dump({'res':res, 'features': features, 'pred': pred}, 'tmp.dat')
   
-  K = np.ceil(np.sqrt(len(args.attrib_names)))
+  
   table = PrettyTable(['Attribute', 'AP', 'AP random'])
   table.align['Attribute'] = 'l'
   table.padding_width = 1
@@ -181,8 +152,9 @@ def test(args, config, dataset):
     print("Area Under Curve: %0.2f" % score)
     print ("")
     if args.plot:
+      plot_grid_size = np.ceil(np.sqrt(len(args.attrib_names)))
       # Create the plot
-      plt.subplot(K,K,ii+1)
+      plt.subplot(plot_grid_size,plot_grid_size,ii+1)
       plt.plot(recall, precision, label='Precision-Recall curve')
       plt.hold('on')
       plt.plot(recall_r, precision_r, label='Precision-Recall random')
@@ -194,7 +166,7 @@ def test(args, config, dataset):
   
 #   table.border = False
   print table.get_string(sortby="AP", reversesort=True)
-  print results
+#   print results
     
   if args.plot:
     plt.draw()
@@ -244,6 +216,16 @@ def train(args, config, dataset):
                                        desc=attrib_name)
   
       attrib_clf.run_training_pipeline(grid_search=args.grid_search)
+      
+      # Find best threshold for classifier
+      test_annos = dataset['dev_annos']
+      features = Bow.load_bow(test_annos, config)
+      res = apply_classifiers(config, features, test_annos)
+      true_labels = np.array(res.class_index.isin(pos_class_ids))
+      precision, recall, thresholds = precision_recall_curve(true_labels, 
+                                                           np.array(res[str.lower(attrib_name)]))
+      
+      
       AttributeClassifier.save(attrib_clf, fname)
 
 
