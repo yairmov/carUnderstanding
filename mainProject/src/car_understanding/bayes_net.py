@@ -419,8 +419,9 @@ class BayesNet:
     mcmc.sample(2000) 
     print()
     
-#     from pymc.Matplot import plot as mcplot
-#     mcplot(mcmc.trace("bmw"), common_scale=False)
+    from pymc.Matplot import plot as mcplot
+    mcplot(mcmc.trace("bmw"), common_scale=False)
+    from matplotlib.pyplot import savefig; savefig('mcmc.pdf')
     import sys;sys.exit(0)
 
 ##     use    
