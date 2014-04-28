@@ -123,7 +123,7 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
 
     if (k == num_per_row):
       if not(usr_str is None):
-        html_str += '<h1>' + usr_str[group] + '</h1><br> <hr>'
+        html_str += '<h2>' + usr_str[group] + '</h2><br> <hr>'
 #         html_str += '<hr>' + '<center> <h2> ' + usr_str[group] + '</h2></center> <br> <hr>'
         group += 1
       k = 0
