@@ -171,10 +171,12 @@ class BayesNet:
     
     num_classes_with_attrib = 0
     for cind in self.class_meta.index:
-      print 'cind: {}, c_name: {}'.format(cind, self.class_meta.loc[cind]['class_name'])
+      flag = False
       if attribute_selector.has_list_attributes_by_index(cind, 
                                                       attrib_list):
         num_classes_with_attrib += 1
+        flag = True
+      print 'cind: {}, c_name: {} - {}'.format(cind, self.class_meta.loc[cind]['class_name'], flag)
          
          
 #     print "attrib_list: {}".format(attrib_list)
@@ -193,6 +195,7 @@ class BayesNet:
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
     print "---------------------------------"
     print cpt
+    import sys;sys.exit(0)
     return cpt
     
       
