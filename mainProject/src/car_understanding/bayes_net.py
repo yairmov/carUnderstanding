@@ -171,7 +171,6 @@ class BayesNet:
     
     num_classes_with_attrib = 0
     for cind in self.class_meta.index:
-      print 'cind: {}, c_name: {}'.format(cind, self.class_meta.loc[cind]['class_name'])
       flag = False
       if np.all(attribute_selector.has_list_attributes_by_index(cind, 
                                                       attrib_list)):
