@@ -466,7 +466,7 @@ def bayes_net_generic(use_gt=False):
 #                              train_annos.class_index.isin(classes.class_index))]
   
   bnet = BayesNet(config, train_annos, 
-                  classes, attrib_classifiers, 
+                  classes, attrib_classifiers, dataset['attrib_meta'], 
                   desc=str(args), use_gt=use_gt)
   bnet.init_CPT()
   

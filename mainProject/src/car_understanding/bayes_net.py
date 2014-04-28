@@ -58,7 +58,7 @@ def cpt_for_attrib(attrib_name, attrib_selector,
 class BayesNet:
   """A Bayes net model."""
   
-  def __init__(self, config, train_annos, class_meta, attrib_clfs, 
+  def __init__(self, config, train_annos, class_meta, attrib_clfs, attrib_meta,
                desc="", use_gt=False):
     """ Ctor.
     
@@ -93,7 +93,8 @@ class BayesNet:
     self.attrib_clfs = list(np.array(self.attrib_clfs)[inds]) 
     
     self.attrib_selector = AttributeSelector(self.config, 
-                                        self.class_meta)
+                                        self.class_meta,
+                                        attrib_meta)
     
     self.use_gt = use_gt
      
