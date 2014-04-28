@@ -194,6 +194,12 @@ def apply_classifiers(config, features, data_annos):
   
   return res, pred
   
+  
+def find_equal_err_rate(precision, recall, thresholds):
+  p = precision[:-1]
+  r = recall[:-1]
+  return thresholds[np.argmin(np.abs(p - r))]
+
 def train(args, config, dataset):
   print("Training")
   print("========")
@@ -225,7 +231,12 @@ def train(args, config, dataset):
       precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
       
-      
+      best = find_equal_err_rate(precision, recall, thresholds)
+      print 'precision: {}'.format(precision)
+      print 'recall: {}'.format(recall)
+      print 'thresholds: {}'.format(thresholds)
+      print 'best: {}'.format(best)
+      import sys; sys.exit(0)
       AttributeClassifier.save(attrib_clf, fname)
 
 
