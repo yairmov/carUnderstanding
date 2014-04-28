@@ -429,11 +429,11 @@ def get_args_from_file(fname):
   return args
   
 def bayes_net_generic(use_gt=False):
-#   makes = ['bmw', 'ford']
-#   types = ['sedan', 'suv']
-#   args = makes + types + ['germany', 'usa']
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'suv']
+  args = makes + types + ['germany', 'usa']
   
-  args = get_args_from_file('sorted_attrib_list.txt')
+#   args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
