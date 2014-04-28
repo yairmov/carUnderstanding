@@ -464,8 +464,6 @@ def bayes_net_generic(use_gt=False):
   # reduce the training set to be only classes with these attributes.
   classes = select_small_set_for_bayes_net(dataset, makes, types)
   attrib_meta = attrib_meta.loc[classes.index]
-  print attrib_meta
-  import sys;sys.exit(0)
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
   
