@@ -67,9 +67,7 @@ def explore_image_data(annos, config):
   plt.close()
 
 
-def show_best_predictions(test_annos, attrib_names, html_file, config):
-  topK = 5
-  
+def show_best_predictions(test_annos, attrib_names, html_file, config, topK=5):
   print("Load image Bow histograms from disk")
   features = Bow.load_bow(test_annos, config)
   
