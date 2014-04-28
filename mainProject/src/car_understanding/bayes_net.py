@@ -408,7 +408,7 @@ class BayesNet:
     nodes.extend(class_bnet_nodes.values())
     nodes.extend(theta)
     model = mc.Model(nodes)
-#     mc.graph.dag(model).write_pdf('tmp.pdf')
+    mc.graph.dag(model).write_pdf('tmp.pdf')
     
 #     if not self.use_gt:
 #       MAP = mc.MAP(model)
