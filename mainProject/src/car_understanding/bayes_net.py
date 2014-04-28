@@ -176,7 +176,7 @@ class BayesNet:
                                                       attrib_list)):
         num_classes_with_attrib += 1
         flag = True
-      print 'cind: {}, c_name: {} - {}'.format(cind, self.class_meta.loc[cind]['class_name'], flag)
+#       print 'cind: {}, c_name: {} - {}'.format(cind, self.class_meta.loc[cind]['class_name'], flag)
          
          
 #     print "attrib_list: {}".format(attrib_list)
@@ -195,7 +195,6 @@ class BayesNet:
     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
     print "---------------------------------"
     print cpt
-    import sys;sys.exit(0)
     return cpt
     
       
