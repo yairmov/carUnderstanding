@@ -115,22 +115,23 @@ def test(args, config, dataset):
   print("")
   
   print("Apply classifiers")
-  res = {}
-  pred = {}
-  for ii, attrib_name in enumerate(config.attribute.names):
-    print(attrib_name)
-    print("")
-    attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
-    curr_res = attrib_clf.decision_function(features, 
-                                            use_prob=config.attribute.use_prob)  
-    curr_pred = attrib_clf.predict(features)
-    res[attrib_clf.name] = curr_res.reshape(len(curr_res))
-    pred[attrib_clf.name] = curr_pred.reshape(len(curr_res))
-  
-  res = pd.DataFrame(data=res, index=test_annos.index)
-  res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
-  pred = pd.DataFrame(data=pred, index=test_annos.index)
-  pred = pd.concat([pred, test_annos.ix[:, ['class_index']]], axis=1)
+  res, pred = apply_classifiers(config, features, test_annos)
+#   res = {}
+#   pred = {}
+#   for ii, attrib_name in enumerate(config.attribute.names):
+#     print(attrib_name)
+#     print("")
+#     attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
+#     curr_res = attrib_clf.decision_function(features, 
+#                                             use_prob=config.attribute.use_prob)  
+#     curr_pred = attrib_clf.predict(features)
+#     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
+#     pred[attrib_clf.name] = curr_pred.reshape(len(curr_res))
+#   
+#   res = pd.DataFrame(data=res, index=test_annos.index)
+#   res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
+#   pred = pd.DataFrame(data=pred, index=test_annos.index)
+#   pred = pd.concat([pred, test_annos.ix[:, ['class_index']]], axis=1)
 #   dump({'res':res, 'features': features, 'pred': pred}, 'tmp.dat')
   
   K = np.ceil(np.sqrt(len(args.attrib_names)))
@@ -197,8 +198,28 @@ def test(args, config, dataset):
   if args.plot:
     plt.draw()
     plt.show()
-    
-    
+
+
+
+def apply_classifiers(config, features, data_annos):    
+  res = {}
+  pred = {}
+  for ii, attrib_name in enumerate(config.attribute.names):
+    print(attrib_name)
+    print("")
+    attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
+    curr_res = attrib_clf.decision_function(features, 
+                                            use_prob=config.attribute.use_prob)  
+    curr_pred = attrib_clf.predict(features)
+    res[attrib_clf.name] = curr_res.reshape(len(curr_res))
+    pred[attrib_clf.name] = curr_pred.reshape(len(curr_res))
+  
+  res = pd.DataFrame(data=res, index=data_annos.index)
+  res = pd.concat([res, data_annos.ix[:, ['class_index']]], axis=1)
+  pred = pd.DataFrame(data=pred, index=data_annos.index)
+  pred = pd.concat([pred, data_annos.ix[:, ['class_index']]], axis=1)
+  
+  return res, pred
   
 def train(args, config, dataset):
   print("Training")
