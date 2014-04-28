@@ -385,7 +385,8 @@ class BayesNet:
         cpt = self.CPT[identifier]
         p_function = mc.Lambda(identifier, 
                                self.prob_function_builder_for_mid_layer(cpt, 
-                                                                        theta[ii]))
+                                                                        theta,
+                                                                        ii))
         attrib_bnet_nodes[attrib_name] = mc.Bernoulli(attrib_name, p_function)
       
      
