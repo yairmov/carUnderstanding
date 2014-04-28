@@ -376,23 +376,15 @@ def classify_using_attributes():
 
   attrib_res_train,l = bnet.create_attrib_res_on_images(train_annos)
   attrib_res_test,l = bnet.create_attrib_res_on_images(test_annos)
-  from sklearn.externals.joblib import dump; dump({'attrib_res_train':attrib_res_train, 'attrib_res_test':attrib_res_test}, 'tmp.dat')
-  import sys;sys.exit(0)
 
   # define a classifier that uses the attribute scores
 #   clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
   clf = svm.SVC(kernel='rbf')
 
-  scores = cross_validation.cross_val_score(clf, res[attrib_names],
-                                            res.class_index, cv=2)
-  print("")
-  print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-  print("-------------------------------------------")
+  clf.fit(np.array(attrib_res_test[attrib_names]), attrib_res_train.class_index)
 
-  clf.fit(res[attrib_names], res.class_index)
-
-  y_pred = np.array(clf.predict(res[attrib_names]))
-  y_true = np.array(res.class_index)
+  y_pred = np.array(clf.predict(attrib_res_test[attrib_names]))
+  y_true = np.array(attrib_res_test.class_index)
 
   print(classification_report(y_true, y_pred,
                               labels=classes.index,
