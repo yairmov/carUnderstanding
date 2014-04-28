@@ -232,11 +232,12 @@ def train(args, config, dataset):
                                                            np.array(res[str.lower(attrib_name)]))
       
       best = find_equal_err_rate(precision, recall, thresholds)
-      print 'precision: {}'.format(precision)
-      print 'recall: {}'.format(recall)
-      print 'thresholds: {}'.format(thresholds)
-      print 'best: {}'.format(best)
-      import sys; sys.exit(0)
+      attrib_clf.thresh = best
+      
+#       print 'precision: {}'.format(precision)
+#       print 'recall: {}'.format(recall)
+#       print 'thresholds: {}'.format(thresholds)
+#       print 'best: {}'.format(best)
       AttributeClassifier.save(attrib_clf, fname)
 
 
