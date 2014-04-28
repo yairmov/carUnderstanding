@@ -94,7 +94,7 @@ def test(args, config, dataset):
   print("Testing")
   print("========")
   print("")
-  test_annos = dataset['dev_annos']
+  test_annos = dataset['validation_annos']
   attrib_selector = AttributeSelector(config, 
                                       dataset['class_meta'],
                                       dataset['attrib_meta'])
@@ -230,7 +230,7 @@ def train(args, config, dataset):
       attrib_clf.run_training_pipeline(grid_search=args.grid_search)
       
       # Find best threshold for classifier
-      test_annos = dataset['dev_annos']
+      test_annos = dataset['validation_annos']
       features = Bow.load_bow(test_annos, config)
       res, pred = apply_classifiers(config, features, test_annos, [attrib_clf])
       true_labels = np.array(res.class_index.isin(pos_class_ids))
