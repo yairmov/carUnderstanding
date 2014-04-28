@@ -223,13 +223,21 @@ class BayesNet:
       
       
       n_attribs = len(attrib_names)
-      cpts = Parallel(n_jobs=self.config.n_cores, 
-                      verbose=self.config.logging.verbose)(
-                      delayed(cpt_for_attrib)(attrib_names[ii], 
-                                                   attrib_selector,
-                                                   np.array(attrib_names[ii]),
-                                                   self.clf_res_discrete)
-                      for ii in range(n_attribs))
+      cpts=[]
+#       cpts = Parallel(n_jobs=self.config.n_cores, 
+#                       verbose=self.config.logging.verbose)(
+#                       delayed(cpt_for_attrib)(attrib_names[ii], 
+#                                                    attrib_selector,
+#                                                    np.array(attrib_names[ii]),
+#                                                    self.clf_res_discrete)
+#                       for ii in range(n_attribs))
+
+
+      for ii, attrib_name in enumerate(attrib_names):
+        cpts[ii] = cpt_for_attrib(attrib_names[ii], 
+                                  attrib_selector,
+                                  np.array(attrib_names[ii]),
+                                  self.clf_res_discrete)
                       
       for ii, attrib_name in enumerate(attrib_names):
         self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
