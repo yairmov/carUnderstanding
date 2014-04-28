@@ -116,17 +116,22 @@ def test(args, config, dataset):
   
   print("Apply classifiers")
   res = {}
+  pred = {}
   for ii, attrib_name in enumerate(config.attribute.names):
     print(attrib_name)
     print("")
     attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
     curr_res = attrib_clf.decision_function(features, 
                                             use_prob=config.attribute.use_prob)  
+    curr_pred = attrib_clf.predict(features)
     res[attrib_clf.name] = curr_res.reshape(len(curr_res))
+    pred[attrib_clf.name] = curr_pred.reshape(len(curr_res))
   
   res = pd.DataFrame(data=res, index=test_annos.index)
   res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
-  dump({'res':res, 'features': features}, 'tmp.dat')
+  pred = pd.DataFrame(data=pred, index=test_annos.index)
+  pred = pd.concat([pred, test_annos.ix[:, ['class_index']]], axis=1)
+  dump({'res':res, 'features': features, 'pred': pred}, 'tmp.dat')
   
   K = np.ceil(np.sqrt(len(args.attrib_names)))
   table = PrettyTable(['Attribute', 'AP', 'AP random'])
@@ -143,7 +148,9 @@ def test(args, config, dataset):
     true_labels = np.array(res.class_index.isin(pos_classes))
     print("--------------{}-------------".format(attrib_name)) 
     
-    print(classification_report(true_labels, np.array(res[str.lower(attrib_name)]) > config.attribute.high_thresh, 
+    print(classification_report(true_labels, 
+                                np.array(res[str.lower(attrib_name)]) > 
+                                config.attribute.high_thresh, 
                                 target_names=['not-{}'.format(attrib_name),
                                               attrib_name]))
     
@@ -153,7 +160,7 @@ def test(args, config, dataset):
     
     
     precision, recall, thresholds = precision_recall_curve(true_labels, 
-                                                           np.array(res[str.lower(attrib_name)]))
+                                                           np.array(pred[str.lower(attrib_name)]))
     score = auc(recall, precision)
     
     # random prediction
