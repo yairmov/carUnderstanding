@@ -417,6 +417,7 @@ class BayesNet:
     mcmc = mc.MCMC(model)
 #     mcmc.sample(10000, 3000)
     mcmc.sample(2000)
+    from sklearn.externals.joblib import dump; dump({'mcmc': mcmc}, 'mcmc.dat')
     print()
 
 ##     use    
