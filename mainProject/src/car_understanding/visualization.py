@@ -78,22 +78,25 @@ def show_best_predictions(test_annos, attrib_names, html_file, config):
     attrib_clfs.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(name)))
     
     
-  img_files = []  
+  img_files = []
+  names = []  
   for attrib_clf in attrib_clfs:
     print(attrib_clf.name)
+    names.append(attrib_clf.name)
     res = pd.DataFrame(data=attrib_clf.decision_function(features), 
                        index=test_annos.index)
     inds = np.array(res.sort([0], ascending=False).index[:topK])
     img_files.extend(list(test_annos.loc[inds].img_path))
 
 
-  create_image_page(img_files, html_file, num_per_row=topK)
+  create_image_page(img_files, html_file, num_per_row=topK,
+                    split_every=topK, usr_str = names)
     
   
 
 
 def create_image_page(img_files, html_file, width=200, num_per_row=9,
-                                  split_every=np.Inf):
+                                  split_every=np.Inf, usr_str=None):
 
   k = 0;
   split_num = 0
@@ -115,7 +118,8 @@ def create_image_page(img_files, html_file, width=200, num_per_row=9,
     k += 1
 
     if (k % split_every == 0):
-      html_str += '<hr>' + '<center> <h2> ' + str(split_num) + '</h2></center> <br> <hr>'
+      to_show = str(split_num) if usr_str is None else usr_str[split_num] 
+      html_str += '<hr>' + '<center> <h2> ' + to_show + '</h2></center> <br> <hr>'
       split_num += 1
 
     if (k == num_per_row):
