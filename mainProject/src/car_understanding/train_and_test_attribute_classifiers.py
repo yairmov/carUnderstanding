@@ -102,8 +102,14 @@ def test(args, config, dataset):
   print "Load image Bow histograms from disk"
   features = Bow.load_bow(test_annos, config)
   
-  print("Apply classifiers")
-  res, pred = apply_classifiers(config, features, test_annos)
+  print 'load classifiers'
+  attrib_clfs = []
+  for name in config.attribute.names:
+    attrib_clfs.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(name)))
+  
+  print ("Apply classifiers")
+  res, pred = apply_classifiers(config, features, 
+                                test_annos, attrib_clfs)
 #   dump({'res':res, 'features': features, 'pred': pred}, 'tmp.dat')
   
   
@@ -174,13 +180,13 @@ def test(args, config, dataset):
 
 
 
-def apply_classifiers(config, features, data_annos):    
+def apply_classifiers(config, features, data_annos, attrib_clfs):    
   res = {}
   pred = {}
-  for ii, attrib_name in enumerate(config.attribute.names):
-    print(attrib_name)
+  for attrib_clf in attrib_clfs:
+    print(attrib_clf.name)
     print("")
-    attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
+#     attrib_clf = AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name))
     curr_res = attrib_clf.decision_function(features, 
                                             use_prob=config.attribute.use_prob)  
     curr_pred = attrib_clf.predict(features)
@@ -226,7 +232,7 @@ def train(args, config, dataset):
       # Find best threshold for classifier
       test_annos = dataset['dev_annos']
       features = Bow.load_bow(test_annos, config)
-      res, pred = apply_classifiers(config, features, test_annos)
+      res, pred = apply_classifiers(config, features, test_annos, [attrib_clf])
       true_labels = np.array(res.class_index.isin(pos_class_ids))
       precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
