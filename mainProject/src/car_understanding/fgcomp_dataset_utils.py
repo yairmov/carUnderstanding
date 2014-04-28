@@ -141,7 +141,7 @@ def get_all_metadata(config=None, args=None):
            'real_test_annos': test_annos,
            'train_annos': train_used,
            'test_annos': test_used,
-           'dev_annos': dev_annos_test, 
+           'validation_annos': dev_annos_test, 
             'class_meta': class_meta,
             'domain_meta': domain_meta,
             'attrib_meta': attrib_meta,
