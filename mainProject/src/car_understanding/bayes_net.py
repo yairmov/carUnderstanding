@@ -416,9 +416,12 @@ class BayesNet:
       
     mcmc = mc.MCMC(model)
 #     mcmc.sample(10000, 3000)
-    mcmc.sample(2000)
-    from sklearn.externals.joblib import dump; dump({'mcmc': mcmc}, 'mcmc.dat')
+    mcmc.sample(2000) 
     print()
+    
+    from pymc.Matplot import plot as mcplot
+    mcplot(mcmc.trace("bmw"), common_scale=False)
+    import sys;sys.exit(0)
 
 ##     use    
 #     mcmc.summary()
