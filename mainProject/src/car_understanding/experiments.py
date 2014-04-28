@@ -379,16 +379,50 @@ def classify_using_attributes():
 
   # define a classifier that uses the attribute scores
 #   clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
-  clf = svm.SVC(kernel='rbf')
+#   clf = svm.SVC(kernel='rbf')
+  clf = svm.LinearSVC()
 
-  clf.fit(np.array(attrib_res_train[attrib_names]), attrib_res_train.class_index)
+  labels_train = np.array(attrib_res_train.class_index)
+  features_train = np.array(attrib_res_train[attrib_names])
+  clf.fit(features_train, labels_train)
 
-  y_pred = np.array(clf.predict(attrib_res_test[attrib_names]))
-  y_true = np.array(attrib_res_test.class_index)
 
-  print(classification_report(y_true, y_pred,
+  features_test = np.array(attrib_res_test[attrib_names])
+  y_pred = clf.predict(features_test)
+  labels_test = np.array(attrib_res_test.class_index)
+
+  print(classification_report(labels_test, y_pred,
                               labels=classes.index,
                               target_names=[c for c in classes.class_name]))
+  
+  print("Accuracy: {}".format(accuracy_score(labels_test, y_pred)))
+  print("Mean Accuracy: {}".format(clf.score(features_test, labels_test)))
+  
+  
+  print ''
+  print 'Accuracy at N:'
+  scorer = AccuracyAtN(clf.decision_function(features_test), 
+                       labels_test, class_names=np.unique(labels_train))
+  for ii in range(1, 11):
+    print 'Accuracy at {}: {}'.format(ii, scorer.get_accuracy_at(ii))
+    
+  
+  
+  
+  dummy_1 = DummyClassifier(strategy='most_frequent').fit(features_train, labels_train)
+  dummy_2 = DummyClassifier(strategy='stratified').fit(features_train, labels_train)
+  dummy_3 = DummyClassifier(strategy='stratified').fit(features_train, labels_train)
+  
+  print ''
+  print 'Dummy Classifiers:'
+  print '-----------------'
+  print("Accuracy - most_frequent: {}".format(accuracy_score(labels_test, dummy_1.predict(features_test))))
+  print("Accuracy - stratified: {}".format(accuracy_score(labels_test, dummy_2.predict(features_test))))
+  print("Accuracy - uniform: {}".format(accuracy_score(labels_test, dummy_2.predict(features_test))))
+  
+  print("Mean Accuracy - most_frequent: {}".format(dummy_1.score(features_test, labels_test)))
+  print("Mean Accuracy - stratified: {}".format(dummy_2.score(features_test, labels_test)))
+  print("Mean Accuracy - uniform: {}".format(dummy_3.score(features_test, labels_test)))
 
 
 def get_args_from_file(fname):
