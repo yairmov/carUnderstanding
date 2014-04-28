@@ -343,26 +343,33 @@ def classify_using_attributes():
   from sklearn import cross_validation
 
 
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'SUV']
-  args = makes + types
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'SUV']
+#   args = makes + types
+  
+  args = get_args_from_file('sorted_attrib_list.txt')
   config = get_config(args)
   (dataset, config) = fgu.get_all_metadata(config)
+  config.attribute.names = args
 
   attrib_names = [str.lower(a) for a in args]
   attrib_classifiers = []
   for attrib_name in args:
     attrib_classifiers.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
 
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+  classes = dataset['class_meta']
   train_annos = dataset['train_annos']
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
+  attrib_meta = dataset['attrib_meta']
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
 
   bnet = BayesNet(config, train_annos,
-                  classes, attrib_classifiers, desc=str(args))
+                  classes, attrib_classifiers, attrib_meta, desc=str(args))
 
   res = bnet.create_attrib_res_on_images()
+  from sklearn.externals.joblib import dump; dump({'res':res}, 'tmp.data')
+  import sys;sys.exit(0)
 
   # define a classifier that uses the attribute scores
 #   clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
@@ -390,8 +397,8 @@ def get_args_from_file(fname):
   
   args = [str.lower(x.strip()) for x in args]  
   # use only top K
-  K = 36
-  args = args[:K]
+#   K = 36
+#   args = args[:K]
   return args
 
 def classify_using_sift():
