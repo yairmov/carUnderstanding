@@ -52,7 +52,6 @@ def cpt_for_attrib(attrib_name, attrib_selector,
     print "CPT for attrib: {}".format(attrib_name)
     print "----------------------------"
     print cpt
-    import sys;sys.exit(0)
     return cpt
 
 class BayesNet:
@@ -224,20 +223,20 @@ class BayesNet:
       
       n_attribs = len(attrib_names)
       cpts=[]
-#       cpts = Parallel(n_jobs=self.config.n_cores, 
-#                       verbose=self.config.logging.verbose)(
-#                       delayed(cpt_for_attrib)(attrib_names[ii], 
-#                                                    attrib_selector,
-#                                                    np.array(attrib_names[ii]),
-#                                                    self.clf_res_discrete)
-#                       for ii in range(n_attribs))
+      cpts = Parallel(n_jobs=self.config.n_cores, 
+                      verbose=self.config.logging.verbose)(
+                      delayed(cpt_for_attrib)(attrib_names[ii], 
+                                                   attrib_selector,
+                                                   np.array([attrib_names[ii]]),
+                                                   self.clf_res_discrete)
+                      for ii in range(n_attribs))
 
 
-      for ii, attrib_name in enumerate(attrib_names):
-        cpts[ii] = cpt_for_attrib(attrib_names[ii], 
-                                  attrib_selector,
-                                  np.array([attrib_names[ii]]),
-                                  self.clf_res_discrete)
+#       for ii, attrib_name in enumerate(attrib_names):
+#         cpts[ii] = cpt_for_attrib(attrib_names[ii], 
+#                                   attrib_selector,
+#                                   np.array([attrib_names[ii]]),
+#                                   self.clf_res_discrete)
                       
       for ii, attrib_name in enumerate(attrib_names):
         self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
@@ -247,7 +246,7 @@ class BayesNet:
 #         self.CPT['p({}|theta)'.format(attrib_name)] = \
 #           self.cpt_for_attrib(attrib_name, attrib_selector)
         
-        
+    import sys; sys.exit(0)    
     # P(class | attributes)
     #----------------------
     print('Building CPT classes')
