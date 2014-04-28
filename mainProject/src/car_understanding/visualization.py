@@ -19,6 +19,7 @@ import os
 import Bow
 from view_clustering import cluster
 from attribute_selector import AttributeSelector
+from attribute_classifier import AttributeClassifier
 
 # boxes should be a tuple/list of tuples. each inner tuple should be
 # of format (xmin, xmax, ymin, ymax)
@@ -66,6 +67,30 @@ def explore_image_data(annos, config):
   plt.close()
 
 
+def show_best_predictions(dataset, attrib_names, html_file, config):
+  topK = 5
+  test_annos = dataset['dev_annos']
+  
+  print("Load image Bow histograms from disk")
+  features = Bow.load_bow(test_annos, config)
+  
+  attrib_clfs = []
+  for name in attrib_names:
+    attrib_clfs.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(name)))
+    
+    
+  img_files = []  
+  for attrib_clf in attrib_clfs:
+    print(attrib_clf.name)
+    res = pd.DataFrame(data=attrib_clf.decision_function(features), 
+                       index=test_annos.index)
+    inds = np.array(res.sort([0], ascending=False).index[:topK])
+    img_files.extend(list(test_annos.loc[inds].img_path))
+
+
+  create_image_page(img_files, html_file, num_per_row=topK)
+    
+  
 
 
 def create_image_page(img_files, html_file, width=200, num_per_row=9,
