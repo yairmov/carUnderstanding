@@ -149,7 +149,7 @@ def test(args, config, dataset):
     print("--------------{}-------------".format(attrib_name)) 
     
     print(classification_report(true_labels, 
-                                np.array(res[str.lower(attrib_name)]) > 0.5, 
+                                np.array(res[str.lower(attrib_name)]) > 0, 
                                 target_names=['not-{}'.format(attrib_name),
                                               attrib_name]))
     
