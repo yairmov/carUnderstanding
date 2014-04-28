@@ -131,7 +131,7 @@ def test(args, config, dataset):
   res = pd.concat([res, test_annos.ix[:, ['class_index']]], axis=1)
   pred = pd.DataFrame(data=pred, index=test_annos.index)
   pred = pd.concat([pred, test_annos.ix[:, ['class_index']]], axis=1)
-  dump({'res':res, 'features': features, 'pred': pred}, 'tmp.dat')
+#   dump({'res':res, 'features': features, 'pred': pred}, 'tmp.dat')
   
   K = np.ceil(np.sqrt(len(args.attrib_names)))
   table = PrettyTable(['Attribute', 'AP', 'AP random'])
@@ -160,6 +160,7 @@ def test(args, config, dataset):
     
     precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
+    dump({'precision': precision, 'recall': recall, 'thresholds': thresholds}, 'tmp.dat')
     score = auc(recall, precision)
     
     # random prediction
