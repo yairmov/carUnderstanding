@@ -348,7 +348,7 @@ def classify_using_attributes():
 #   args = makes + types
   
   args = get_args_from_file('sorted_attrib_list.txt')
-  config = get_config(args)
+  config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
   config.attribute.names = args
 
