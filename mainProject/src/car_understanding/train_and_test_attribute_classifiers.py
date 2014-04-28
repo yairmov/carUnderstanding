@@ -220,7 +220,7 @@ def train(args, config, dataset):
       # Find best threshold for classifier
       test_annos = dataset['dev_annos']
       features = Bow.load_bow(test_annos, config)
-      res = apply_classifiers(config, features, test_annos)
+      res, pred = apply_classifiers(config, features, test_annos)
       true_labels = np.array(res.class_index.isin(pos_class_ids))
       precision, recall, thresholds = precision_recall_curve(true_labels, 
                                                            np.array(res[str.lower(attrib_name)]))
