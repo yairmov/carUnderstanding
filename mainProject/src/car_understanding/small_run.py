@@ -424,16 +424,16 @@ def get_args_from_file(fname):
   
   args = [str.lower(x.strip()) for x in args]  
   # use only top K
-  K = 36
-  args = args[:K]
+#   K = 36
+#   args = args[:K]
   return args
   
 def bayes_net_generic(use_gt=False):
-  makes = ['audi', 'bmw']
-  types = ['sedan', 'suv']
-  args = makes + types + ['germany', 'usa']
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'suv']
+#   args = makes + types + ['germany', 'usa']
   
-#   args = get_args_from_file('sorted_attrib_list.txt')
+  args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
@@ -462,10 +462,10 @@ def bayes_net_generic(use_gt=False):
   attrib_meta = dataset['attrib_meta']
   
   # reduce the training set to be only classes with these attributes.
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
-  attrib_meta = attrib_meta.loc[classes.index]
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   attrib_meta = attrib_meta.loc[classes.index]
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
   
   bnet = BayesNet(config, train_annos, 
                   classes, attrib_classifiers, attrib_meta, 
@@ -475,8 +475,8 @@ def bayes_net_generic(use_gt=False):
   
   test_annos = dataset['test_annos']
   # Select only images from the args "world"
-  test_annos = test_annos[np.array(
-                             test_annos.class_index.isin(classes.class_index))]
+#   test_annos = test_annos[np.array(
+#                              test_annos.class_index.isin(classes.class_index))]
     
 #   print 'TESTING ON TRAINING!!!!!!!'
 #   test_annos = train_annos.iloc[:train_annos.shape[0]/2]

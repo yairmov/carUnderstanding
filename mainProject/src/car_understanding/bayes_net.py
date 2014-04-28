@@ -49,9 +49,9 @@ def cpt_for_attrib(attrib_name, attrib_selector,
     
     # normalize all the rows, to create a probability function
     cpt.normalize_rows()
-    print "CPT for attrib: {}".format(attrib_name)
-    print "----------------------------"
-    print cpt
+#     print "CPT for attrib: {}".format(attrib_name)
+#     print "----------------------------"
+#     print cpt
     return cpt
 
 class BayesNet:
@@ -171,12 +171,9 @@ class BayesNet:
     
     num_classes_with_attrib = 0
     for cind in self.class_meta.index:
-      flag = False
       if np.all(attribute_selector.has_list_attributes_by_index(cind, 
                                                       attrib_list)):
         num_classes_with_attrib += 1
-        flag = True
-#       print 'cind: {}, c_name: {} - {}'.format(cind, self.class_meta.loc[cind]['class_name'], flag)
          
          
 #     print "attrib_list: {}".format(attrib_list)
@@ -192,9 +189,9 @@ class BayesNet:
 #     cpt.ix[[tuple(*np.ones(shape=[1, len(attrib_list)], 
 #                         dtype=int))], 'False'] = 1 - p
                         
-    print "CPT for class: {}".format(self.class_meta.class_name[class_index])
-    print "---------------------------------"
-    print cpt
+#     print "CPT for class: {}".format(self.class_meta.class_name[class_index])
+#     print "---------------------------------"
+#     print cpt
     return cpt
     
       
