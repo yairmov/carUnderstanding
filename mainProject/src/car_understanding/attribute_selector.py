@@ -55,12 +55,12 @@ class AttributeSelector:
     '''
     Does class:class_index has the attribute list atrrib_names?
     '''
-    print 'attrib_matrix'
-    print self.attrib_matrix
-    print 'self.attrib_matrix.loc[class_index]'
-    print self.attrib_matrix.loc[class_index]
-    print 'self.attrib_matrix.loc[class_index][attrib_names]'
-    print self.attrib_matrix.loc[class_index][attrib_names]
+#     print 'attrib_matrix'
+#     print self.attrib_matrix
+#     print 'self.attrib_matrix.loc[class_index]'
+#     print self.attrib_matrix.loc[class_index]
+#     print 'self.attrib_matrix.loc[class_index][attrib_names]'
+#     print self.attrib_matrix.loc[class_index][attrib_names]
     return list(self.attrib_matrix.loc[class_index][attrib_names])
     
   def has_attribute_by_index(self, class_index, attrib_name):
