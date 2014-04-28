@@ -100,19 +100,20 @@ def test(args, config, dataset):
                                       dataset['attrib_meta'])
   
   print "Load image Bow histograms from disk"
-  features = np.empty(shape=[len(test_annos), 
-                             config.SIFT.BoW.num_clusters * 
-                             len(config.SIFT.pool_boxes)])
-  progress = ProgressBar(len(test_annos))
-  for ii in range(len(test_annos)):
-    img_name = test_annos.iloc[ii]['basename']
-    img_name = os.path.splitext(img_name)[0]
-    hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-                                 img_name) + '_hist.dat'
-    hist = Bow.load(hist_filename) 
-    features[ii, :] = hist
-    progress.animate(ii)
-  print("")
+  features = Bow.load_bow(test_annos, config)
+#   features = np.empty(shape=[len(test_annos), 
+#                              config.SIFT.BoW.num_clusters * 
+#                              len(config.SIFT.pool_boxes)])
+#   progress = ProgressBar(len(test_annos))
+#   for ii in range(len(test_annos)):
+#     img_name = test_annos.iloc[ii]['basename']
+#     img_name = os.path.splitext(img_name)[0]
+#     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
+#                                  img_name) + '_hist.dat'
+#     hist = Bow.load(hist_filename) 
+#     features[ii, :] = hist
+#     progress.animate(ii)
+#   print("")
   
   print("Apply classifiers")
   res, pred = apply_classifiers(config, features, test_annos)
