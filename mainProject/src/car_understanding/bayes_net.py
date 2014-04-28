@@ -236,7 +236,7 @@ class BayesNet:
       for ii, attrib_name in enumerate(attrib_names):
         cpts[ii] = cpt_for_attrib(attrib_names[ii], 
                                   attrib_selector,
-                                  np.array(attrib_names[ii]),
+                                  np.array([attrib_names[ii]]),
                                   self.clf_res_discrete)
                       
       for ii, attrib_name in enumerate(attrib_names):
