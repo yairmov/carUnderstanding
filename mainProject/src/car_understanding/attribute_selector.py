@@ -54,6 +54,7 @@ class AttributeSelector:
   def has_list_attributes_by_index(self, class_index, attrib_names):
     '''
     Does class:class_index has the attribute list atrrib_names?
+    Returns a list L where L[i] == True if the class has attrib_names[i]. 
     '''
 #     print 'attrib_matrix'
 #     print self.attrib_matrix
