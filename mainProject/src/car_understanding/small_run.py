@@ -429,7 +429,7 @@ def get_args_from_file(fname):
   return args
   
 def bayes_net_generic(use_gt=False):
-  makes = ['bmw', 'ford']
+  makes = ['audi', 'bmw']
   types = ['sedan', 'suv']
   args = makes + types + ['germany', 'usa']
   

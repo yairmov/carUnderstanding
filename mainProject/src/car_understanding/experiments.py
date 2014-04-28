@@ -12,6 +12,12 @@ import time
 import pandas as pd
 import os
 from path import path
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import svm
+from sklearn.metrics import classification_report, accuracy_score
+from sklearn import cross_validation
+from sklearn.grid_search import GridSearchCV
+from sklearn.dummy import DummyClassifier
 
 import fgcomp_dataset_utils as fgu
 from configuration import get_config
@@ -404,12 +410,6 @@ def get_args_from_file(fname):
   return args
 
 def classify_using_sift():
-  from sklearn.ensemble import RandomForestClassifier
-  from sklearn import svm
-  from sklearn.metrics import classification_report, accuracy_score
-  from sklearn import cross_validation
-  from sklearn.grid_search import GridSearchCV
-  from sklearn.dummy import DummyClassifier
 
 #   makes = ['bmw', 'ford']
 #   types = ['sedan', 'SUV']
