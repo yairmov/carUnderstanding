@@ -368,8 +368,9 @@ def classify_using_attributes():
   bnet = BayesNet(config, train_annos,
                   classes, attrib_classifiers, attrib_meta, desc=str(args))
 
-  res = bnet.create_attrib_res_on_images(test_annos)
-  from sklearn.externals.joblib import dump; dump({'res':res}, 'tmp.data')
+  attrib_res_train,l = bnet.create_attrib_res_on_images(train_annos)
+  attrib_res_test,l = bnet.create_attrib_res_on_images(test_annos)
+  from sklearn.externals.joblib import dump; dump({'attrib_res_train':attrib_res_train, 'attrib_res_test':attrib_res_test}, 'tmp.dat')
   import sys;sys.exit(0)
 
   # define a classifier that uses the attribute scores
