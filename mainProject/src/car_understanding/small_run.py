@@ -475,9 +475,15 @@ def bayes_net_generic(use_gt=False):
   
   
   
+  # train logistic regression classifier
+  from sklearn.linear_model import LogisticRegression
+  m_clf = LogisticRegression(class_weight='auto')
+  features = Bow.load_bow(train_annos, config)
+  m_clf.fit(features, np.array(train_annos.class_index))
+  
   bnet = BayesNet(config, train_annos, 
                   classes, attrib_classifiers, attrib_meta, 
-                  desc=str(args), use_gt=use_gt)
+                  multi_class_clf=m_clf, desc=str(args), use_gt=use_gt)
   bnet.init_CPT()  
     
   
