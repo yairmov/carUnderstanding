@@ -231,6 +231,7 @@ class BayesNet:
         curr_cpt.set_value(row_ind, 'False', self.attrib_clfs[ii].stats.loc['False', 'False'])
         
         self.CPT['p({}|theta)'.format(attrib_name)] = curr_cpt
+        print attrib_name
         print self.CPT['p({}|theta)'.format(attrib_name)]
         import sys; sys.exit(0)
       
