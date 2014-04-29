@@ -313,8 +313,6 @@ class BayesNet:
     m_proba = pd.DataFrame(data=m_proba, 
                            index=test_annos.index, 
                            columns=class_inds)
-    print m_proba
-    import sys;sys.exit(0)
         
     
     # Create cache for results:
@@ -333,6 +331,9 @@ class BayesNet:
       else:
         discr = clf_res_discrete.iloc[ii]
         key = np.array(discr[attrib_names])
+      
+      m_proba_one = m_proba.iloc[ii]
+      key = np.concatenate(key, np.array(m_proba_one))
       print "key: {}".format(key)
       key = key.tostring()
       if (not class_prob_cache.has_key(key)):
