@@ -368,6 +368,8 @@ def classify_using_attributes():
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
   attrib_meta = dataset['attrib_meta']
+  
+  attrib_meta = attrib_meta.loc[classes.index]
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
   test_annos = test_annos[np.array(
@@ -460,10 +462,8 @@ def classify_using_sift():
   classes = dataset['class_meta']
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
-  attrib_meta = dataset['attrib_meta']
   
   classes = select_small_set_for_bayes_net(dataset, makes, types)
-  attrib_meta = attrib_meta.loc[classes.index]
   train_annos = train_annos[np.array(
                              train_annos.class_index.isin(classes.class_index))]
   test_annos = test_annos[np.array(
