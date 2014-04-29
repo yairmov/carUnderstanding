@@ -376,11 +376,13 @@ def classify_using_attributes():
   test_annos = test_annos[np.array(
                               test_annos.class_index.isin(classes.class_index))]
 
+  ftr = Bow.load_bow(train_annos, config)
+  fte = Bow.load_bow(test_annos, config)
   bnet = BayesNet(config, train_annos,
                   classes, attrib_classifiers, attrib_meta, desc=str(args))
 
-  attrib_res_train,l = bnet.create_attrib_res_on_images(train_annos)
-  attrib_res_test,l = bnet.create_attrib_res_on_images(test_annos)
+  attrib_res_train,l = bnet.create_attrib_res_on_images(train_annos, ftr)
+  attrib_res_test,l = bnet.create_attrib_res_on_images(test_annos, fte)
   
   features_train = Bow.load_bow(train_annos, config)
   features_test = Bow.load_bow(test_annos, config)
