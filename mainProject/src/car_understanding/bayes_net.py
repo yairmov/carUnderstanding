@@ -418,7 +418,8 @@ class BayesNet:
         attrib_bnet_nodes[attrib_name] = mc.Bernoulli(attrib_name, p_function)
       
      
-    # The top layer Each class is connected to the attributes it has 
+    # The top layer Each class is connected to the attributes it has  and to the
+    # multi class classifier
     attrib_selector = self.attrib_selector
     
     class_bnet_nodes = {}
@@ -429,9 +430,13 @@ class BayesNet:
       cpt = self.CPT[class_key]
       curr_attribs = [attrib_bnet_nodes[name] for name in attrib_name_list]
       
+      
+      location = np.find(multi_clf_probs.columns == class_index)
       p_function = mc.Lambda(class_key, 
                              self.prob_function_builder_for_class_layer(cpt, 
-                                                                      curr_attribs))
+                                                                      curr_attribs,
+                                                                      M,
+                                                                      location))
       class_bnet_nodes[class_index] = mc.Bernoulli(str(class_index), p_function)
       
     nodes = attrib_bnet_nodes.values()
@@ -439,6 +444,7 @@ class BayesNet:
     nodes.extend(theta)
     model = mc.Model(nodes)
     mc.graph.dag(model).write_pdf('tmp.pdf')
+    import sys;sys.exit(0)
     
 #     if not self.use_gt:
 #       MAP = mc.MAP(model)
@@ -483,10 +489,12 @@ class BayesNet:
     return (class_probs, attrib_probs)
   
   
-  def prob_function_builder_for_class_layer(self, cpt, attribs):
+  def prob_function_builder_for_class_layer(self, cpt, attribs, M, ii):
 #     return lambda attribs=attribs: np.float(cpt.ix[[tuple([int(a) for a in attribs])],
 #                                                         'True'])
-    return lambda attribs=attribs: np.float(cpt.get_value(tuple([a for a in attribs]), 'True'))
+#     return lambda attribs=attribs: np.float(cpt.get_value(tuple([a for a in attribs]), 'True'))
+    return lambda attribs=attribs, M=M: np.float(cpt.get_value(tuple([a for a in attribs]), 'True')) \
+                                        * M[ii]
   
   def prob_function_builder_for_mid_layer(self, cpt, theta, ii):    
 #     return lambda theta=theta: np.float(cpt.ix[[tuple(theta)],'True'])
