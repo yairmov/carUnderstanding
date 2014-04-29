@@ -349,11 +349,11 @@ def classify_using_attributes():
   from sklearn import cross_validation
 
 
-#   makes = ['bmw', 'ford']
-#   types = ['sedan', 'SUV']
-#   args = makes + types
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types + ['germany', 'usa']
   
-  args = get_args_from_file('sorted_attrib_list.txt')
+#   args = get_args_from_file('sorted_attrib_list.txt')
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
   config.attribute.names = args
@@ -363,13 +363,15 @@ def classify_using_attributes():
   for attrib_name in args:
     attrib_classifiers.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
 
-#   classes = select_small_set_for_bayes_net(dataset, makes, types)
-  classes = dataset['class_meta']
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   classes = dataset['class_meta']
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
   attrib_meta = dataset['attrib_meta']
-#   train_annos = train_annos[np.array(
-#                              train_annos.class_index.isin(classes.class_index))]
+  train_annos = train_annos[np.array(
+                             train_annos.class_index.isin(classes.class_index))]
+  test_annos = test_annos[np.array(
+                              test_annos.class_index.isin(classes.class_index))]
 
   bnet = BayesNet(config, train_annos,
                   classes, attrib_classifiers, attrib_meta, desc=str(args))
