@@ -381,8 +381,8 @@ def classify_using_attributes():
   features_test = Bow.load_bow(test_annos, config)
   
   # combine attribs and features
-  features_train = np.concatenate([features_train, attrib_res_train], axis=1)
-  features_test = np.concatenate([features_test, attrib_res_test], axis=1)
+  features_train = np.concatenate([features_train, attrib_res_train[attrib_names]], axis=1)
+  features_test = np.concatenate([features_test, attrib_res_test[attrib_names]], axis=1)
 
 
   # define a classifier that uses the attribute scores
@@ -391,11 +391,11 @@ def classify_using_attributes():
   clf = svm.LinearSVC()
 
   labels_train = np.array(attrib_res_train.class_index)
-  features_train = np.array(attrib_res_train[attrib_names])
+#   features_train = np.array(attrib_res_train[attrib_names])
   clf.fit(features_train, labels_train)
 
 
-  features_test = np.array(attrib_res_test[attrib_names])
+#   features_test = np.array(attrib_res_test[attrib_names])
   y_pred = clf.predict(features_test)
   labels_test = np.array(attrib_res_test.class_index)
 
