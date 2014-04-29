@@ -17,7 +17,7 @@ from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 # from sklearn.ensemble import GradientBoostingClassifier
-# from sklearn.ensemble.forest import RandomForestClassifier
+from sklearn.ensemble.forest import RandomForestClassifier
 import numpy as np
 import os
 import pandas as pd
