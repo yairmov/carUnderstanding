@@ -333,7 +333,7 @@ class BayesNet:
         key = np.array(discr[attrib_names])
       
       m_proba_one = m_proba.iloc[ii]
-      key = key.tostring() + np.array(m_proba_one).tostring()
+      key = np.concatenate(key, np.array(m_proba_one))
       print "key: {}".format(key)
       key = key.tostring()
       if (not class_prob_cache.has_key(key)):
