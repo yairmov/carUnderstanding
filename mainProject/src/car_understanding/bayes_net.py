@@ -431,7 +431,7 @@ class BayesNet:
       curr_attribs = [attrib_bnet_nodes[name] for name in attrib_name_list]
       
       
-      location = np.find(multi_clf_probs.columns == class_index)
+      location = np.where(multi_clf_probs.columns == class_index)[0][0]
       p_function = mc.Lambda(class_key, 
                              self.prob_function_builder_for_class_layer(cpt, 
                                                                       curr_attribs,
