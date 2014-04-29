@@ -335,7 +335,7 @@ class BayesNet:
       m_proba_one = m_proba.iloc[ii]
       print key.shape
       print np.array(m_proba_one).shape
-      key = np.concatenate(key, np.array(m_proba_one))
+      key = np.concatenate([key, np.array(m_proba_one)])
       print "key: {}".format(key)
       key = key.tostring()
       if (not class_prob_cache.has_key(key)):
