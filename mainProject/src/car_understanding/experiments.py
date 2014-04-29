@@ -393,8 +393,8 @@ def classify_using_attributes():
 
 
   # define a classifier that uses the attribute scores
-#   clf = RandomForestClassifier(n_estimators=50, n_jobs=-2)
-  clf = svm.SVC(kernel='rbf')
+  clf = RandomForestClassifier(n_estimators=50, n_jobs=-2)
+#   clf = svm.SVC(kernel='rbf')
 #   clf = svm.LinearSVC()
 
   labels_train = np.array(attrib_res_train.class_index)
