@@ -20,6 +20,7 @@ from sklearn.pipeline import Pipeline
 # from sklearn.ensemble.forest import RandomForestClassifier
 import numpy as np
 import os
+import pandas as pd
 
 import Bow as Bow
 import util
@@ -128,18 +129,36 @@ class AttributeClassifier:
     
     
     # fit on k folds to find best theshold and confidence
+    n_folds = 4
+    self.my_print('Running {} folds to find bext threshold and confidence of classifier.'.format(n_folds))
     eer = [] 
     skf = sk.cross_validation.StratifiedKFold(labels, 
-                                              n_folds=4)
+                                              n_folds=n_folds)
+    clfs = []
+    stats = pd.DataFrame(index = ['True', 'False'], columns=['True', 'False'])
     for train_index, test_index in skf:
       self.clf.fit(features[train_index,:], labels[train_index])
+      clfs.append(np.copy(self.clf))
       responses = self.clf.decision_function(features[test_index,:])
-      eer.append(util.find_equal_err_rate(labels[test_index], responses))
+      curr_eer = util.find_equal_err_rate(labels[test_index], responses)
+      eer.append(curr_eer)
+      pred = responses > curr_eer
+      l = labels[test_index]
+      stats.loc['True']['True'] = stats.loc['True']['True'] + np.sum(np.logical_and(pred, l))
+      stats.loc['True']['False'] = stats.loc['True']['False'] + np.sum(np.logical_and(pred, np.logical_not(l)))
+      stats.loc['False']['True'] = stats.loc['True']['True'] + np.sum(np.logical_and(np.logical_not(pred), l))
+      stats.loc['True']['False'] = stats.loc['True']['True'] + np.sum(np.logical_and(np.logical_not(pred), np.logical_not(l)))
+      print stats
       
     self.my_print("Equal Error Rates: {}".format(eer))
-    selected = np.array(eer).mean()
-    self.my_print('selected: {}'.format(selected))
-    import sys;sys.exit(0)
+    self.thresh = np.array(eer).mean()
+    self.my_print('selected: {}'.format(self.thresh))
+     
+    stats = np.zeros(shape=[2,2]) 
+    ii = 0
+    for train_index, test_index in skf:
+      clf = clfs[ii]
+      pred = clf.decision_function(features[test_index,:]) > e
       
       
   
