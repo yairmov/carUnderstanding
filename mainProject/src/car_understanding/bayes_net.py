@@ -60,7 +60,7 @@ class BayesNet:
   """A Bayes net model."""
   
   def __init__(self, config, train_annos, class_meta, attrib_clfs, attrib_meta,
-               desc="", use_gt=False):
+               multi_class_clf = None, desc="", use_gt=False):
     """ Ctor.
     
     Args:
@@ -98,10 +98,11 @@ class BayesNet:
                                         attrib_meta)
     
     self.use_gt = use_gt
+    self.multi_class_clf = multi_class_clf
      
     
   
-  def create_attrib_res_on_images(self, data_annos):
+  def create_attrib_res_on_images(self, data_annos, features=None):
     '''
     Calculates the predicion of all attribute classifiers on training images.
     This table can be used to caclulate all the Conditional Probability tables
@@ -115,8 +116,9 @@ class BayesNet:
     config = self.config
     attrib_classifiers = self.attrib_clfs
     
-    print "Load image Bow histograms from disk"
-    features = Bow.load_bow(data_annos, config)
+    if features is None:
+      print "Load image Bow histograms from disk"
+      features = Bow.load_bow(data_annos, config)
   
     print "Apply attribute classifiers on images"
     res = {}
@@ -292,13 +294,28 @@ class BayesNet:
                               index=test_annos.index, 
                               columns=attrib_names)
     
+    
+    print "Load image Bow histograms from disk"
+    features = Bow.load_bow(test_annos, self.config)
+    
     if not use_gt:
-      clf_res, clf_res_discrete = self.create_attrib_res_on_images(test_annos)
+      clf_res, clf_res_discrete = self.create_attrib_res_on_images(test_annos,
+                                                                   features)
         
     # using ground truth    
     if use_gt:
       attrib_meta = self.attrib_selector.create_attrib_meta(attrib_names)
         
+        
+    # apply multi class classifier on test annos
+    m_proba = self.multi_class_clf.predict_proba(features)
+    m_proba = pd.DataFrame(data=m_proba, 
+                           index=test_annos.index, 
+                           columns=class_inds)
+    print m_proba
+    import sys;sys.exit(0)
+        
+    
     # Create cache for results:
     # we don't want to waste time on options we have seen before.
     class_prob_cache = {}
@@ -354,8 +371,9 @@ class BayesNet:
     
     return    
   
-  def predict_one_pymc(self, clf_res_discrete):
+  def predict_one_pymc(self, clf_res_discrete, multi_clf_probs):
     use_gt = self.use_gt
+    class_inds = self.class_inds
     # building model
     # first start with observed variables - the results of all the classifiers 
     # on the image
@@ -367,6 +385,11 @@ class BayesNet:
                                observed=True,
                                value=clf_res_discrete[self.clf_names])
     
+    
+    M = mc.DiscreteUniform('M', 0, 1,
+                               size=len(class_inds),
+                               observed=True,
+                               value=multi_clf_probs)
     
     
     # The hidden layer. Each attriute is connected to all attribute classifiers
@@ -392,7 +415,6 @@ class BayesNet:
       
      
     # The top layer Each class is connected to the attributes it has 
-    class_inds = self.class_inds
     attrib_selector = self.attrib_selector
     
     class_bnet_nodes = {}
