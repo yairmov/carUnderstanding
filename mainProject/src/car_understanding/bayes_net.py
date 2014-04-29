@@ -234,8 +234,6 @@ class BayesNet:
         print attrib_name
         print self.CPT['p({}|theta)'.format(attrib_name)]
         
-      import sys; sys.exit(0)
-      
 #       clf_res, clf_res_discrete = \
 #         self.create_attrib_res_on_images(self.train_annos)      
 #       n_attribs = len(attrib_names)
