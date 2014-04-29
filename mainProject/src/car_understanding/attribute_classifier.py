@@ -68,7 +68,7 @@ class AttributeClassifier:
   def create_feature_matrix(self, features=None):
     # Load histograms from disk into a matrix
     if features == None:
-      features = Bow.load(self.dataset, self.config)
+      features = Bow.load_bow(self.dataset, self.config)
   
   
     # create pos/neg labels
@@ -135,8 +135,8 @@ class AttributeClassifier:
       self.clf.fit(features[train_index,:], labels[train_index])
       responses = self.clf.decision_function(features[test_index,:])
       eer.append(util.find_equal_err_rate(labels[test_index], responses))
+      print eer
   
-    print eer
     import sys;sys.exit(0)
       
       
