@@ -333,8 +333,6 @@ class BayesNet:
         key = np.array(discr[attrib_names])
       
       m_proba_one = m_proba.iloc[ii]
-      print key.shape
-      print np.array(m_proba_one).shape
       key = np.concatenate([key, np.array(m_proba_one)])
       print "key: {}".format(key)
       key = key.tostring()
@@ -496,8 +494,8 @@ class BayesNet:
 #     return lambda attribs=attribs: np.float(cpt.ix[[tuple([int(a) for a in attribs])],
 #                                                         'True'])
 #     return lambda attribs=attribs: np.float(cpt.get_value(tuple([a for a in attribs]), 'True'))
-    return lambda attribs=attribs, M=M: np.float(cpt.get_value(tuple([a for a in attribs]), 'True')) \
-                                        * M
+    return lambda attribs=attribs, M=M: 0.5*np.float(cpt.get_value(tuple([a for a in attribs]), 'True')) \
+                                        + 0.5*M
   
   def prob_function_builder_for_mid_layer(self, cpt, theta, ii):    
 #     return lambda theta=theta: np.float(cpt.ix[[tuple(theta)],'True'])
