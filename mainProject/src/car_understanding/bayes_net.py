@@ -218,16 +218,33 @@ class BayesNet:
     print('Building CPT for attributes')
     if not self.use_gt: # if using ground truth we don't need to calculate this
       
-      clf_res, clf_res_discrete = \
-        self.create_attrib_res_on_images(self.train_annos)      
-      n_attribs = len(attrib_names)
-      cpts = Parallel(n_jobs=self.config.n_cores, 
-                      verbose=self.config.logging.verbose)(
-                      delayed(cpt_for_attrib)(attrib_names[ii], 
-                                                   attrib_selector,
-                                                   np.array([attrib_names[ii]]),
-                                                   clf_res_discrete)
-                      for ii in range(n_attribs))
+      # read tables from attrib classifiers
+      for ii, attrib_name in enumerate(attrib_names):
+        curr_cpt = CPT(smooth_value=0, name='{}_attribute_cpt'.format(attrib_name))
+        row_ind = tuple([True])
+        curr_cpt.create_row(row_ind)
+        curr_cpt.set_value(row_ind, 'True', self.attrib_clfs[ii].stats.loc['True', 'True'])
+        curr_cpt.set_value(row_ind, 'False', self.attrib_clfs[ii].stats.loc['True', 'False'])
+        row_ind = tuple([False])
+        curr_cpt.create_row(row_ind)
+        curr_cpt.set_value(row_ind, 'True', self.attrib_clfs[ii].stats.loc['False', 'True'])
+        curr_cpt.set_value(row_ind, 'False', self.attrib_clfs[ii].stats.loc['False', 'False'])
+        
+        self.CPT['p({}|theta)'.format(attrib_name)] = curr_cpt
+        print self.CPT['p({}|theta)'.format(attrib_name)]
+        import sys; sys.exit(0)
+      
+      
+#       clf_res, clf_res_discrete = \
+#         self.create_attrib_res_on_images(self.train_annos)      
+#       n_attribs = len(attrib_names)
+#       cpts = Parallel(n_jobs=self.config.n_cores, 
+#                       verbose=self.config.logging.verbose)(
+#                       delayed(cpt_for_attrib)(attrib_names[ii], 
+#                                                    attrib_selector,
+#                                                    np.array([attrib_names[ii]]),
+#                                                    clf_res_discrete)
+#                       for ii in range(n_attribs))
       
       
       # K fold split to get the cpt (based on classifier confidence)
@@ -271,10 +288,10 @@ class BayesNet:
 #                                   attrib_selector,
 #                                   np.array([attrib_names[ii]]),
 #                                   clf_res_discrete)
-                      
-      for ii, attrib_name in enumerate(attrib_names):
-#         cpts[ii].normalize_rows()
-        self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
+#                       
+#       for ii, attrib_name in enumerate(attrib_names):
+# #         cpts[ii].normalize_rows()
+#         self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
       
 
 
