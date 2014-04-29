@@ -364,6 +364,7 @@ def classify_using_attributes():
     attrib_classifiers.append(AttributeClassifier.load('../../../attribute_classifiers/{}.dat'.format(attrib_name)))
 
   classes = select_small_set_for_bayes_net(dataset, makes, types)
+  print classes
 #   classes = dataset['class_meta']
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
