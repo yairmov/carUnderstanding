@@ -130,7 +130,7 @@ class AttributeClassifier:
     
     # fit on k folds to find best theshold and confidence
     n_folds = 4
-    self.my_print('Running {} folds to find bext threshold and confidence of classifier.'.format(n_folds))
+    self.my_print('Running {} folds to find best threshold and confidence of classifier.'.format(n_folds))
     eer = [] 
     skf = sk.cross_validation.StratifiedKFold(labels, 
                                               n_folds=n_folds)
@@ -147,8 +147,8 @@ class AttributeClassifier:
       l = labels[test_index]
       stats.loc['True']['True'] = stats.loc['True']['True'] + np.sum(np.logical_and(pred, l))
       stats.loc['True']['False'] = stats.loc['True']['False'] + np.sum(np.logical_and(pred, np.logical_not(l)))
-      stats.loc['False']['True'] = stats.loc['True']['True'] + np.sum(np.logical_and(np.logical_not(pred), l))
-      stats.loc['True']['False'] = stats.loc['True']['True'] + np.sum(np.logical_and(np.logical_not(pred), np.logical_not(l)))
+      stats.loc['False']['True'] = stats.loc['False']['True'] + np.sum(np.logical_and(np.logical_not(pred), l))
+      stats.loc['True']['False'] = stats.loc['True']['False'] + np.sum(np.logical_and(np.logical_not(pred), np.logical_not(l)))
       print stats
       
     self.my_print("Equal Error Rates: {}".format(eer))
