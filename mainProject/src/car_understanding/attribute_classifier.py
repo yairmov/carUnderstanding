@@ -17,11 +17,12 @@ from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 # from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble.forest import RandomForestClassifier
+# from sklearn.ensemble.forest import RandomForestClassifier
 import numpy as np
 import os
 
 import Bow as Bow
+import util
 
 
 class AttributeClassifier:
@@ -121,42 +122,57 @@ class AttributeClassifier:
     Fits the classifier. 
     Can use gridsearch for finding best parameters.
     '''
-    if not grid_search:
-      self.clf.fit(features, labels)
-    else:
-      # Set the parameters by cross-validation
-      tuned_parameters_SVC = [
+    if grid_search:
+      self.clf = self.grid_search(features, labels)
+      return
+    
+    
+    # fit on k folds to find best theshold and confidence
+    eer = [] 
+    skf = sk.cross_validation.StratifiedKFold(labels, 
+                                              n_folds=4)
+    for train_index, test_index in skf:
+      self.clf.fit(features[train_index,:], labels[train_index])
+      responses = self.clf.decision_function(features[test_index,:])
+      eer.append(util.find_equal_err_rate(labels[test_index], responses))
+  
+    print eer
+    import sys;sys.exit(0)
+      
+      
+  def grid_search(self, features, labels):
+    raise Exception('Check this code, it is old.')
+  
+    # Set the parameters by cross-validation
+    tuned_parameters_SVC = [
 #                           {'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
 #                            'C': [1, 10, 100, 1000], 
 # #                            'class_weight': ['auto']
 #                            },
-                          {'kernel': ['linear'], 'C': [1, 10, 100, 1000],
-                            'class_weight': ['auto']
-                           }
-                          ]
-      
-      tuned_parameters_LinearSVC = [{'penalty': ['l2', 'l1'],
-                           'C': [1e-4, 1e-3, 1e-2, 1e-1, 1],
-                           'class_weight': ['auto']}]
-      
-      tuned_parameters_GradientBoosting = [{'n_estimators': [100, 1000],
-                           'learning_rate': [1, 0.1, 0.01],
-                           'max_depth': [1, 2, 3]}]
-
-      tuned_parameters_RandomForest = [{'n_estimators': [100, 200, 1000],
-                                        'max_depth': [1, 10, 20],
-                                        'min_samples_split': [1, 2, 5]}]
-
-      
-      print("# Tuning hyper-parameters")
-      print('')
+                        {'kernel': ['linear'], 'C': [1, 10, 100, 1000],
+                          'class_weight': ['auto']
+                         }
+                        ]
     
+    tuned_parameters_LinearSVC = [{'penalty': ['l2', 'l1'],
+                         'C': [1e-4, 1e-3, 1e-2, 1e-1, 1],
+                         'class_weight': ['auto']}]
+    
+    tuned_parameters_GradientBoosting = [{'n_estimators': [100, 1000],
+                         'learning_rate': [1, 0.1, 0.01],
+                         'max_depth': [1, 2, 3]}]
+
+    tuned_parameters_RandomForest = [{'n_estimators': [100, 200, 1000],
+                                      'max_depth': [1, 10, 20],
+                                      'min_samples_split': [1, 2, 5]}]
+
+    
+    print("# Tuning hyper-parameters")
+    print('')
+  
 #       clf = GridSearchCV(SVC(C=1), tuned_parameters_SVC, cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=3)
-      clf = GridSearchCV(LinearSVC(C=1, dual=False), tuned_parameters_LinearSVC, cv=5, scoring='precision',
-                          n_jobs=self.n_cores,
-                          verbose=3)
 #       clf = GridSearchCV(GradientBoostingClassifier(), tuned_parameters_GradientBoosting, cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=1)
@@ -165,44 +181,26 @@ class AttributeClassifier:
 #                          cv=5, scoring='precision',
 #                           n_jobs=self.n_cores,
 #                           verbose=3)
-      clf.fit(features, labels)
+    clf = GridSearchCV(LinearSVC(C=1, dual=False), 
+                       tuned_parameters_LinearSVC, cv=5, scoring='precision',
+                        n_jobs=self.n_cores,
+                        verbose=3)
+    clf.fit(features, labels)
+  
+    print("Best parameters set found on development set:")
+    print()
+    print(clf.best_estimator_)
+    print()
+    print("Grid scores on development set:")
+    print()
+    for params, mean_score, scores in clf.grid_scores_:
+        print("%0.3f (+/-%0.03f) for %r"
+              % (mean_score, scores.std() / 2, params))
+    print()
     
-      print("Best parameters set found on development set:")
-      print()
-      print(clf.best_estimator_)
-      print()
-      print("Grid scores on development set:")
-      print()
-      for params, mean_score, scores in clf.grid_scores_:
-          print("%0.3f (+/-%0.03f) for %r"
-                % (mean_score, scores.std() / 2, params))
-      print()
-      
-      self.clf = clf.best_estimator_
-      self.fit(features, labels)
+    self.clf = clf.best_estimator_
+    self.fit(features, labels)
     
-    
-  def cross_validate(self, features, labels):
-    self.my_print("Num pos examples: {}".format(np.sum(labels)))
-    cv = 5
-    score_method = 'precision'
-#     score_method = 'accuracy'
-#     cv = sk.cross_validation.StratifiedKFold(labels, 3)
-    scores = sk.cross_validation.cross_val_score(self.clf, 
-                                                 features, 
-                                                 labels,
-                                                 n_jobs=min(cv, self.n_cores), 
-                                                 verbose=1,
-                                                 cv=cv,
-                                                 scoring=score_method)
-    
-    # Report results
-    self.my_print("scores: {}".format(scores))
-    self.my_print(score_method + ": %0.2f (+/- %0.2f)" % 
-                  (scores.mean(), scores.std() * 2))
-    rand_pred = np.random.choice([True, False], size=labels.shape)
-    self.my_print("Random (precision): {}".format(
-                               metrics.precision_score(labels, rand_pred)))
     
   def my_print(self, s):
     print "AttributeCLassifier(" + self.name + "):" + s
