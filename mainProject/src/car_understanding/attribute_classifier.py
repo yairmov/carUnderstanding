@@ -156,7 +156,7 @@ class AttributeClassifier:
     self.my_print('selected: {}'.format(self.thresh))
      
     sk.preprocessing.normalize(stats ,axis=1,norm='l1')
-    self.my_print(stats)
+    self.my_print(''.format(stats))
       
   
   
