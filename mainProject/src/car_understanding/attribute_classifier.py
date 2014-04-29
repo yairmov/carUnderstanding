@@ -135,7 +135,8 @@ class AttributeClassifier:
     skf = sk.cross_validation.StratifiedKFold(labels, 
                                               n_folds=n_folds)
     clfs = []
-    stats = pd.DataFrame(index = ['True', 'False'], columns=['True', 'False'])
+    stats = pd.DataFrame(index = ['True', 'False'], columns=['True', 'False'], dtype=np.float32)
+    stats[:] = 0
     for train_index, test_index in skf:
       self.clf.fit(features[train_index,:], labels[train_index])
       clfs.append(np.copy(self.clf))
@@ -154,12 +155,8 @@ class AttributeClassifier:
     self.thresh = np.array(eer).mean()
     self.my_print('selected: {}'.format(self.thresh))
      
-    stats = np.zeros(shape=[2,2]) 
-    ii = 0
-    for train_index, test_index in skf:
-      clf = clfs[ii]
-      pred = clf.decision_function(features[test_index,:]) > e
-      
+    sk.preprocessing.normalize(stats ,axis=1,norm='l1')
+    self.my_print(stats)
       
   
   
