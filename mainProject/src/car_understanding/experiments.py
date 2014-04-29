@@ -439,11 +439,11 @@ def get_args_from_file(fname):
 
 def classify_using_sift():
 
-#   makes = ['bmw', 'ford']
-#   types = ['sedan', 'SUV']
-#   args = makes + types
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types
   
-  args = get_args_from_file('sorted_attrib_list.txt')
+#   args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
@@ -453,11 +453,11 @@ def classify_using_sift():
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
   
-#   classes = select_small_set_for_bayes_net(dataset, makes, types)
-#   train_annos = train_annos[np.array(
-#                              train_annos.class_index.isin(classes.class_index))]
-#   test_annos = test_annos[np.array(
-#                              test_annos.class_index.isin(classes.class_index))]
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
+  train_annos = train_annos[np.array(
+                             train_annos.class_index.isin(classes.class_index))]
+  test_annos = test_annos[np.array(
+                              test_annos.class_index.isin(classes.class_index))]
 
 
   print "Loading features."
@@ -468,16 +468,6 @@ def classify_using_sift():
   
   assert features_train.shape[1] == features_test.shape[1], 'test and train features not of same dim'
   
-#   features = np.empty(shape=[len(train_annos),
-#                                  config.SIFT.BoW.num_clusters])
-#   for ii in range(len(train_annos)):
-#     img_name = train_annos.iloc[ii]['basename']
-#     img_name = os.path.splitext(img_name)[0]
-#     hist_filename = os.path.join(config.SIFT.BoW.hist_dir,
-#                                  img_name) + '_hist.dat'
-#     hist = Bow.load(hist_filename)
-#     features[ii, :] = hist
-
 
   labels_train = np.array(train_annos.class_index)
   labels_test = np.array(test_annos.class_index)
@@ -647,9 +637,9 @@ if __name__ == '__main__':
 #   cv_for_params()
 #   precision_recall()
 #   bayes_net_test()
-  classify_using_attributes()
+#   classify_using_attributes()
 #   feature_test()
-#   classify_using_sift()
+  classify_using_sift()
 
 
 

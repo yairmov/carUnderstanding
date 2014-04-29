@@ -243,53 +243,8 @@ class BayesNet:
 #                                                    attrib_selector,
 #                                                    np.array([attrib_names[ii]]),
 #                                                    clf_res_discrete)
-#                       for ii in range(n_attribs))
-      
-      
-      # K fold split to get the cpt (based on classifier confidence)
-#       features = Bow.load_bow(self.train_annos, self.config)
-#       skf = cross_validation.StratifiedKFold(self.train_annos.class_index, 
-#                                              n_folds=4)
-#       
-#       cpts = []
-#       for train_index, test_index in skf:
-#         # train attrib_classifiers
-#         for clf in self.attrib_clfs:
-#           clf.dataset = self.train_annos.iloc[train_index]
-#           clf.run_training_pipeline(features[train_index])
-#           # find best threshold
-#           responses = clf.decision_function(features[test_index])
-#           y_true = np.array(self.train_annos.iloc[train_index].class_index)
-#           clf.thresh = util.find_equal_err_rate(y_true, responses)
-#           
-#       
-#         # build cpt table for current split
-#         clf_res, clf_res_discrete = \
-#         self.create_attrib_res_on_images(self.train_annos.iloc[test_index])      
-#         n_attribs = len(attrib_names)
-#         curr_cpts = Parallel(n_jobs=self.config.n_cores, 
-#                         verbose=self.config.logging.verbose)(
-#                         delayed(cpt_for_attrib)(attrib_names[ii], 
-#                                                      attrib_selector,
-#                                                      np.array([attrib_names[ii]]),
-#                                                      clf_res_discrete)
-#                         for ii in range(n_attribs))
-#                         
-#         if len(cpts) == 0:
-#           cpts = curr_cpts
-#         else:
-#           for ii in len(cpts):
-#             cpts[ii].cpt = cpts[ii].cpt + curr_cpts[ii] 
-
-
+#                       for ii in range(n_attribs))                       
 #       for ii, attrib_name in enumerate(attrib_names):
-#         cpts[ii] = cpt_for_attrib(attrib_names[ii], 
-#                                   attrib_selector,
-#                                   np.array([attrib_names[ii]]),
-#                                   clf_res_discrete)
-#                       
-#       for ii, attrib_name in enumerate(attrib_names):
-# #         cpts[ii].normalize_rows()
 #         self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
       
 
