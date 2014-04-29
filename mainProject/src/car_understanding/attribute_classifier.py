@@ -137,11 +137,18 @@ class AttributeClassifier:
       eer.append(util.find_equal_err_rate(labels[test_index], responses))
       
     self.my_print("Equal Error Rates: {}".format(eer))
-    selected = eer.mean()
+    selected = np.array(eer).mean()
     self.my_print('selected: {}'.format(selected))
     import sys;sys.exit(0)
       
       
+  
+  
+  
+  
+  
+  
+  
   def grid_search(self, features, labels):
     raise Exception('Check this code, it is old.')
   
