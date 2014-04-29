@@ -292,7 +292,7 @@ def load_bow(data_annos, config):
     hist = load(hist_filename)
     features[ii, :] = hist
     progress.animate(ii)
-  print('')
+  print('\n')
 
   return features
 
