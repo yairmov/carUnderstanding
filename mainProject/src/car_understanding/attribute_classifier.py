@@ -132,13 +132,13 @@ class AttributeClassifier:
     skf = sk.cross_validation.StratifiedKFold(labels, 
                                               n_folds=4)
     for train_index, test_index in skf:
-      print 'size train: {}'.format(train_index.shape)
-      print 'size test: {}'.format(test_index.shape)
       self.clf.fit(features[train_index,:], labels[train_index])
       responses = self.clf.decision_function(features[test_index,:])
       eer.append(util.find_equal_err_rate(labels[test_index], responses))
-      print eer
-  
+      
+    self.my_print("Equal Error Rates: {}".format(eer))
+    selected = eer.mean()
+    self.my_print('selected: {}'.format(selected))
     import sys;sys.exit(0)
       
       
