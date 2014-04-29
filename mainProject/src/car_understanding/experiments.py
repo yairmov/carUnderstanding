@@ -350,7 +350,7 @@ def classify_using_attributes():
 
 
   makes = ['bmw', 'ford']
-  types = ['sedan', 'SUV']
+  types = ['sedan', 'suv']
   args = makes + types + ['germany', 'usa']
   
 #   args = get_args_from_file('sorted_attrib_list.txt')

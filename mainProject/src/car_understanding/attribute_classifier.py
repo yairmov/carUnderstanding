@@ -246,8 +246,8 @@ class AttributeClassifier:
   
   def decision_function(self, features, use_prob=False):
     f = self.Scaler.transform(features)
-    import sklearn
-    if (use_prob and self.probability) or type(self.clf) == sklearn.ensemble.forest.RandomForestClassifier:
+    from sklearn.ensemble.forest import RandomForestClassifier
+    if (use_prob and self.probability) or type(self.clf) == RandomForestClassifier:
       return self.clf.predict_proba(f)[:,1]
     return self.clf.decision_function(f)
     
