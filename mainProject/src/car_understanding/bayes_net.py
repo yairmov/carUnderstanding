@@ -126,6 +126,7 @@ class BayesNet:
     pbar = ProgressBar(len(attrib_classifiers))
     for ii in range(len(attrib_classifiers)):
       attrib_clf = attrib_classifiers[ii]
+      print attrib_clf.name
       curr_res = attrib_clf.decision_function(features,
                                               use_prob=config.attribute.use_prob)
       curr_res_d = attrib_clf.predict(features)
