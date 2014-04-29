@@ -220,7 +220,7 @@ class BayesNet:
       
       
       # K fold split to get the cpt (based on classifier confidence)
-      features = Bow.load(self.train_annos, self.config)
+      features = Bow.load_bow(self.train_annos, self.config)
       skf = cross_validation.StratifiedKFold(self.train_annos.class_index, 
                                              n_folds=4)
       
