@@ -432,6 +432,7 @@ class BayesNet:
       
       print multi_clf_probs.index
       location = np.where(multi_clf_probs.index == class_index)[0][0]
+      print location
       p_function = mc.Lambda(class_key, 
                              self.prob_function_builder_for_class_layer(cpt, 
                                                                       curr_attribs,
