@@ -390,10 +390,10 @@ class BayesNet:
                                value=clf_res_discrete[self.clf_names])
     
     
-    M = mc.DiscreteUniform('M', 0, 1,
-                               size=len(class_inds),
-                               observed=True,
-                               value=multi_clf_probs)
+#     M = mc.DiscreteUniform('M', 0, 1,
+#                                size=len(class_inds),
+#                                observed=True,
+#                                value=multi_clf_probs)
     
     
     # The hidden layer. Each attriute is connected to all attribute classifiers
@@ -422,6 +422,7 @@ class BayesNet:
     # multi class classifier
     attrib_selector = self.attrib_selector
     
+    M = []
     class_bnet_nodes = {}
     for class_index in class_inds:
       attrib_name_list = attrib_selector.prune_attributes(class_index, attrib_names)
@@ -431,11 +432,12 @@ class BayesNet:
       curr_attribs = [attrib_bnet_nodes[name] for name in attrib_name_list]
       
       location = np.where(multi_clf_probs.index == class_index)[0][0]
+      M[location] = mc.DiscreteUniform('M_{}'.format(class_index),
+                                       observed=True,value=np.array(multi_clf_probs)[location])
       p_function = mc.Lambda(class_key, 
                              self.prob_function_builder_for_class_layer(cpt, 
                                                                       curr_attribs,
-                                                                      M,
-                                                                      location))
+                                                                      M[location]))
       class_bnet_nodes[class_index] = mc.Bernoulli(str(class_index), p_function)
       
     nodes = attrib_bnet_nodes.values()
@@ -488,12 +490,12 @@ class BayesNet:
     return (class_probs, attrib_probs)
   
   
-  def prob_function_builder_for_class_layer(self, cpt, attribs, M, ii):
+  def prob_function_builder_for_class_layer(self, cpt, attribs, M):
 #     return lambda attribs=attribs: np.float(cpt.ix[[tuple([int(a) for a in attribs])],
 #                                                         'True'])
 #     return lambda attribs=attribs: np.float(cpt.get_value(tuple([a for a in attribs]), 'True'))
     return lambda attribs=attribs, M=M: np.float(cpt.get_value(tuple([a for a in attribs]), 'True')) \
-                                        * M[ii]
+                                        * M
   
   def prob_function_builder_for_mid_layer(self, cpt, theta, ii):    
 #     return lambda theta=theta: np.float(cpt.ix[[tuple(theta)],'True'])
