@@ -376,6 +376,8 @@ def classify_using_attributes():
 
   attrib_res_train,l = bnet.create_attrib_res_on_images(train_annos)
   attrib_res_test,l = bnet.create_attrib_res_on_images(test_annos)
+  
+  assert (attrib_res_train.shape[1] == attrib_res_train.shape[1]), 'test features not the same size as train features'
 
   # define a classifier that uses the attribute scores
   clf = RandomForestClassifier(n_estimators=50, n_jobs=-2)
