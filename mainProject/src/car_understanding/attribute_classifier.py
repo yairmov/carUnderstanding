@@ -145,10 +145,10 @@ class AttributeClassifier:
       eer.append(curr_eer)
       pred = responses > curr_eer
       l = labels[test_index]
-      stats.loc['True']['True'] = stats.loc['True']['True'] + np.sum(np.logical_and(pred, l))
-      stats.loc['True']['False'] = stats.loc['True']['False'] + np.sum(np.logical_and(pred, np.logical_not(l)))
-      stats.loc['False']['True'] = stats.loc['False']['True'] + np.sum(np.logical_and(np.logical_not(pred), l))
-      stats.loc['True']['False'] = stats.loc['True']['False'] + np.sum(np.logical_and(np.logical_not(pred), np.logical_not(l)))
+      stats.loc['True', 'True'] = stats.loc['True', 'True'] + np.sum(np.logical_and(pred, l))
+      stats.loc['True', 'False'] = stats.loc['True', 'False'] + np.sum(np.logical_and(pred, np.logical_not(l)))
+      stats.loc['False','True'] = stats.loc['False', 'True'] + np.sum(np.logical_and(np.logical_not(pred), l))
+      stats.loc['False', 'False'] = stats.loc['False', 'False'] + np.sum(np.logical_and(np.logical_not(pred), np.logical_not(l)))
       print stats
       
     self.my_print("Equal Error Rates: {}".format(eer))
