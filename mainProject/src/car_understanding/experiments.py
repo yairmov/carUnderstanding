@@ -474,22 +474,22 @@ def classify_using_sift():
   assert np.array_equal(np.unique(labels_train), 
                         np.unique(labels_test)), 'test labels not equal train labels'
   
-  clf = RandomForestClassifier(n_estimators=5000, 
-                               max_depth=3,
-#                                min_samples_split=1,
-#                                min_samples_leaf=1,
-                               oob_score=True,
-                               n_jobs=11)
+#   clf = RandomForestClassifier(n_estimators=1000, 
+#                                max_depth=10,
+# #                                min_samples_split=1,
+# #                                min_samples_leaf=1,
+#                                oob_score=True,
+#                                n_jobs=11)
    
 
-#   from sklearn.externals.joblib import dump
-#   dump({'features_train': features_train, 
-#         'features_test': features_test, 
-#         'labels_train': labels_train,
-#         'labels_test': labels_test},
-#        'tmp.dat')
-#   import sys; sys.exit(0)
-#   clf = svm.LinearSVC(C=1)
+  from sklearn.externals.joblib import dump
+  dump({'features_train': features_train, 
+        'features_test': features_test, 
+        'labels_train': labels_train,
+        'labels_test': labels_test},
+       'tmp.dat')
+  import sys; sys.exit(0)
+  clf = svm.LinearSVC(C=1)
 
 #   
 #   tuned_parameters_RandomForest = [{'n_estimators': [100, 200, 1000],
