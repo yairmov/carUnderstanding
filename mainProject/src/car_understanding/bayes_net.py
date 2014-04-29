@@ -430,9 +430,7 @@ class BayesNet:
       cpt = self.CPT[class_key]
       curr_attribs = [attrib_bnet_nodes[name] for name in attrib_name_list]
       
-      print multi_clf_probs.index
       location = np.where(multi_clf_probs.index == class_index)[0][0]
-      print location
       p_function = mc.Lambda(class_key, 
                              self.prob_function_builder_for_class_layer(cpt, 
                                                                       curr_attribs,
@@ -445,7 +443,7 @@ class BayesNet:
     nodes.extend(theta)
     model = mc.Model(nodes)
     mc.graph.dag(model).write_pdf('tmp.pdf')
-    import sys;sys.exit(0)
+#     import sys;sys.exit(0)
     
 #     if not self.use_gt:
 #       MAP = mc.MAP(model)
