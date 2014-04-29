@@ -340,7 +340,7 @@ class BayesNet:
       key = key.tostring()
       if (not class_prob_cache.has_key(key)):
         print "Never got this key before, computing...."
-        (class_prob_ii, attrib_prob_ii) = self.predict_one(discr)
+        (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_proba_one)
         class_prob_cache[key] = class_prob_ii
         attrrib_prob_cache[key] = attrib_prob_ii
       
@@ -349,11 +349,11 @@ class BayesNet:
       
     return (class_prob, attrib_prob)
   
-  def predict_one(self, clf_res_discrete, method='pymc'):
+  def predict_one(self, clf_res_discrete, m_proba_one, method='pymc'):
     if method == 'pymc':
-      return self.predict_one_pymc(clf_res_discrete)
+      return self.predict_one_pymc(clf_res_discrete, m_proba_one)
     else:
-      return self.predict_one_ebayes(clf_res_discrete)
+      return self.predict_one_ebayes(clf_res_discrete, m_proba_one)
     
   def predict_one_ebayes(self, clf_res_discrete):
     from bayesian.bbn import build_bbn
