@@ -432,17 +432,19 @@ class BayesNet:
       curr_attribs = [attrib_bnet_nodes[name] for name in attrib_name_list]
       
       location = np.where(multi_clf_probs.index == class_index)[0][0]
-      M[location] = mc.DiscreteUniform('M_{}'.format(class_index),
+      m = mc.DiscreteUniform('M_{}'.format(class_index),
                                        observed=True,value=np.array(multi_clf_probs)[location])
+      M.append(m)
       p_function = mc.Lambda(class_key, 
                              self.prob_function_builder_for_class_layer(cpt, 
                                                                       curr_attribs,
-                                                                      M[location]))
+                                                                      m))
       class_bnet_nodes[class_index] = mc.Bernoulli(str(class_index), p_function)
       
     nodes = attrib_bnet_nodes.values()
     nodes.extend(class_bnet_nodes.values())
     nodes.extend(theta)
+    nodes.extend(M)
     model = mc.Model(nodes)
     mc.graph.dag(model).write_pdf('tmp.pdf')
 #     import sys;sys.exit(0)
