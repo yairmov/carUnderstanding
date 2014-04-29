@@ -377,12 +377,18 @@ def classify_using_attributes():
   attrib_res_train,l = bnet.create_attrib_res_on_images(train_annos)
   attrib_res_test,l = bnet.create_attrib_res_on_images(test_annos)
   
-  assert (attrib_res_train.shape[1] == attrib_res_train.shape[1]), 'test features not the same size as train features'
+  features_train = Bow.load_bow(train_annos, config)
+  features_test = Bow.load_bow(test_annos, config)
+  
+  # combine attribs and features
+  features_train = np.concatenate([features_train, attrib_res_train], axis=1)
+  features_test = np.concatenate([features_test, attrib_res_test], axis=1)
+
 
   # define a classifier that uses the attribute scores
-  clf = RandomForestClassifier(n_estimators=50, n_jobs=-2)
+#   clf = RandomForestClassifier(n_estimators=50, n_jobs=-2)
 #   clf = svm.SVC(kernel='rbf')
-#   clf = svm.LinearSVC()
+  clf = svm.LinearSVC()
 
   labels_train = np.array(attrib_res_train.class_index)
   features_train = np.array(attrib_res_train[attrib_names])
