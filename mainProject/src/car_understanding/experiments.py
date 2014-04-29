@@ -476,8 +476,8 @@ def classify_using_sift():
   
   clf = RandomForestClassifier(n_estimators=1000, 
                                max_depth=10,
-                               min_samples_split=1,
-                               min_samples_leaf=1,
+#                                min_samples_split=1,
+#                                min_samples_leaf=1,
                                oob_score=True,
                                n_jobs=11)
    
