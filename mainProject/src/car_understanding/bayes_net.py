@@ -49,9 +49,9 @@ def cpt_for_attrib(attrib_name, attrib_selector,
     
     # normalize all the rows, to create a probability function
     cpt.normalize_rows()
-#     print "CPT for attrib: {}".format(attrib_name)
-#     print "----------------------------"
-#     print cpt
+    print "CPT for attrib: {}".format(attrib_name)
+    print "----------------------------"
+    print cpt
     return cpt
 
 class BayesNet:
