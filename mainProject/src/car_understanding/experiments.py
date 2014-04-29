@@ -378,9 +378,9 @@ def classify_using_attributes():
   attrib_res_test,l = bnet.create_attrib_res_on_images(test_annos)
 
   # define a classifier that uses the attribute scores
-#   clf = RandomForestClassifier(n_estimators=50, n_jobs=-1)
+  clf = RandomForestClassifier(n_estimators=50, n_jobs=-2)
 #   clf = svm.SVC(kernel='rbf')
-  clf = svm.LinearSVC()
+#   clf = svm.LinearSVC()
 
   labels_train = np.array(attrib_res_train.class_index)
   features_train = np.array(attrib_res_train[attrib_names])
@@ -645,9 +645,9 @@ if __name__ == '__main__':
 #   cv_for_params()
 #   precision_recall()
 #   bayes_net_test()
-#   classify_using_attributes()
+  classify_using_attributes()
 #   feature_test()
-  classify_using_sift()
+#   classify_using_sift()
 
 
 
