@@ -475,7 +475,7 @@ def bayes_net_generic(use_gt=False):
   
   
   
-  bnet = BayesNet(config, train_annos, 
+  bnet = BayesNet(config, test_annos, 
                   classes, attrib_classifiers, attrib_meta, 
                   desc=str(args), use_gt=use_gt)
   bnet.init_CPT()  
