@@ -494,8 +494,25 @@ class BayesNet:
 #     return lambda attribs=attribs: np.float(cpt.ix[[tuple([int(a) for a in attribs])],
 #                                                         'True'])
 #     return lambda attribs=attribs: np.float(cpt.get_value(tuple([a for a in attribs]), 'True'))
-    return lambda attribs=attribs, M=M: max(np.float(cpt.get_value(tuple([a for a in attribs]), 'True')),
-                                            M)
+
+    def func(attribs=attribs, M=M):
+      attrib_prob = np.float(cpt.get_value(tuple([a for a in attribs]), 'True'))
+      multi_prob = M
+      from_attrib = attrib_prob > 1e-2
+      from_multi = multi_prob >= 0.5
+      
+      if from_attrib and from_multi:
+        return (multi_prob + attrib_prob)/2.0
+      if from_attrib and (not from_multi):
+        return attrib_prob
+      if (not from_attrib) and from_multi:
+        return multi_prob
+      return attrib_prob
+      
+  
+    return func                         
+#     return lambda attribs=attribs, M=M: max(np.float(cpt.get_value(tuple([a for a in attribs]), 'True')),
+#                                             M)
   
   def prob_function_builder_for_mid_layer(self, cpt, theta, ii):    
 #     return lambda theta=theta: np.float(cpt.ix[[tuple(theta)],'True'])
