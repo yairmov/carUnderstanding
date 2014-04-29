@@ -26,6 +26,7 @@ from configuration import get_config
 from util import ProgressBar
 import Bow
 import fgcomp_dataset_utils as fgu
+import util
 
 __date__ = '2014-03-13'
 
@@ -200,11 +201,6 @@ def apply_classifiers(config, features, data_annos, attrib_clfs):
   
   return res, pred
   
-  
-def find_equal_err_rate(precision, recall, thresholds):
-  p = precision[:-1]
-  r = recall[:-1]
-  return thresholds[np.argmin(np.abs(p - r))]
 
 def train(args, config, dataset):
   print("Training")
@@ -234,10 +230,10 @@ def train(args, config, dataset):
       features = Bow.load_bow(test_annos, config)
       res, pred = apply_classifiers(config, features, test_annos, [attrib_clf])
       true_labels = np.array(res.class_index.isin(pos_class_ids))
-      precision, recall, thresholds = precision_recall_curve(true_labels, 
-                                                           np.array(res[str.lower(attrib_name)]))
       
-      best = find_equal_err_rate(precision, recall, thresholds)
+      
+      best = util.find_equal_err_rate(true_labels, 
+                                 np.array(res[str.lower(attrib_name)]))
       attrib_clf.thresh = best
       
 #       print 'precision: {}'.format(precision)

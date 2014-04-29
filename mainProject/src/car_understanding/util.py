@@ -18,6 +18,7 @@ import distutils.dir_util as dir_util
 from numpy import sqrt
 import pandas as pd
 import numpy as np
+from sklearn.metrics import precision_recall_curve
 
 
 # import base64
@@ -219,6 +220,13 @@ class ProgressBar:
         return str(self.prog_bar)
 
 
+def find_equal_err_rate(true_labels, responses):
+  precision, recall, thresholds = precision_recall_curve(true_labels, 
+                                                         responses)
+  
+  p = precision[:-1]
+  r = recall[:-1]
+  return thresholds[np.argmin(np.abs(p - r))]
 
 class AccuracyAtN(object):
   def __init__(self, scores, true_labels, class_names=None):

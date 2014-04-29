@@ -19,10 +19,12 @@ from util import ProgressBar
 import pandas as pd
 import pymc as mc
 from sklearn.externals.joblib import Parallel, delayed
+from sklearn import cross_validation
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
 from conditional_prob_table import CPT
+import util
 
 
 def cpt_for_attrib(attrib_name, attrib_selector, 
@@ -49,9 +51,9 @@ def cpt_for_attrib(attrib_name, attrib_selector,
     
     # normalize all the rows, to create a probability function
     cpt.normalize_rows()
-    print "CPT for attrib: {}".format(attrib_name)
-    print "----------------------------"
-    print cpt
+#     print "CPT for attrib: {}".format(attrib_name)
+#     print "----------------------------"
+#     print cpt
     return cpt
 
 class BayesNet:
@@ -202,9 +204,6 @@ class BayesNet:
     Initialize the Conditional Probability Tables for all the nodes
     in the net.
     '''
-    if self.clf_res == None:
-      self.clf_res, self.clf_res_discrete = \
-      self.create_attrib_res_on_images(self.train_annos)
     
     attrib_selector = self.attrib_selector
     
@@ -220,31 +219,60 @@ class BayesNet:
     if not self.use_gt: # if using ground truth we don't need to calculate this
       
       
+      # K fold split to get the cpt (based on classifier confidence)
+      features = Bow.load(self.train_annos, self.config)
+      skf = cross_validation.StratifiedKFold(self.train_annos.class_index, 
+                                             n_folds=4)
       
-      n_attribs = len(attrib_names)
-      cpts=[]
-      cpts = Parallel(n_jobs=self.config.n_cores, 
-                      verbose=self.config.logging.verbose)(
-                      delayed(cpt_for_attrib)(attrib_names[ii], 
-                                                   attrib_selector,
-                                                   np.array([attrib_names[ii]]),
-                                                   self.clf_res_discrete)
-                      for ii in range(n_attribs))
+      cpts = []
+      for train_index, test_index in skf:
+        # train attrib_classifiers
+        for clf in self.attrib_clfs:
+          clf.dataset = self.train_annos.iloc[train_index]
+          clf.run_training_pipeline(features[train_index])
+          # find best threshold
+          responses = clf.decision_function(features[test_index])
+          y_true = np.array(self.train_annos.iloc[train_index].class_index)
+          clf.thresh = util.find_equal_err_rate(y_true, responses)
+          
+      
+        # build cpt table for current split
+        clf_res, clf_res_discrete = \
+        self.create_attrib_res_on_images(self.train_annos.iloc[test_index])      
+        n_attribs = len(attrib_names)
+        curr_cpts = Parallel(n_jobs=self.config.n_cores, 
+                        verbose=self.config.logging.verbose)(
+                        delayed(cpt_for_attrib)(attrib_names[ii], 
+                                                     attrib_selector,
+                                                     np.array([attrib_names[ii]]),
+                                                     clf_res_discrete)
+                        for ii in range(n_attribs))
+                        
+        if len(cpts) == 0:
+          cpts = curr_cpts
+        else:
+          for ii in len(cpts):
+            cpts[ii].cpt = cpts[ii].cpt + curr_cpts[ii] 
 
 
 #       for ii, attrib_name in enumerate(attrib_names):
 #         cpts[ii] = cpt_for_attrib(attrib_names[ii], 
 #                                   attrib_selector,
 #                                   np.array([attrib_names[ii]]),
-#                                   self.clf_res_discrete)
+#                                   clf_res_discrete)
                       
       for ii, attrib_name in enumerate(attrib_names):
+        cpts[ii].normalize_rows()
         self.CPT['p({}|theta)'.format(attrib_name)] = cpts[ii]
       
-#       for ii, attrib_name in enumerate(attrib_names):
-#         print 'Attribute: {}'.format(attrib_name)
-#         self.CPT['p({}|theta)'.format(attrib_name)] = \
-#           self.cpt_for_attrib(attrib_name, attrib_selector)
+
+
+
+
+
+
+
+
         
     # P(class | attributes)
     #----------------------

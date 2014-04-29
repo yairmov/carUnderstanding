@@ -62,29 +62,12 @@ class AttributeClassifier:
 #                                                    learning_rate=1.0, 
 #                                                    max_depth=1)
     self.Scaler       = StandardScaler()
-    
-#     self.clf          = Pipeline([('Scaler', Scaler()), 
-#                                   ('Classifier', SVC(kernel='linear',
-#                                                      class_weight='auto',
-#                                                      probability=True))])
-    
+      
   
   def create_feature_matrix(self, features=None):
     # Load histograms from disk into a matrix
     if features == None:
-      # Preallocate feature matrix
-      features = np.empty(shape=[len(self.dataset), 
-                                 self.config.SIFT.BoW.num_clusters *
-                                 len(self.config.SIFT.pool_boxes)])
-      for ii in range(len(self.dataset)):
-        img_name = self.dataset.iloc[ii]['basename']
-        img_name = os.path.splitext(img_name)[0]
-        hist_filename = os.path.join(self.config.SIFT.BoW.hist_dir, 
-                                     img_name) + '_hist.dat'
-        hist = Bow.load(hist_filename)
-#         if type(hist) == tuple:
-#           hist = hist[0]
-        features[ii, :] = hist
+      features = Bow.load(self.dataset, self.config)
   
   
     # create pos/neg labels
@@ -92,7 +75,6 @@ class AttributeClassifier:
     
     
     # preprocess features
-#     features = sk.preprocessing.scale(features)
     features = self.Scaler.fit_transform(features)
     
     num_pos = sum(labels)
@@ -225,17 +207,14 @@ class AttributeClassifier:
   def my_print(self, s):
     print "AttributeCLassifier(" + self.name + "):" + s
     
-  def run_training_pipeline(self, cv=False, grid_search=False):
+  def run_training_pipeline(self, features=None, grid_search=False):
     """ The full sequence of operations that trains an attribute classifier"""
+    
     
     self.my_print("Loading feature-word histograms from disk, and creating " + 
                   "matrix for attribute classification.")
-    (features, labels) = self.create_feature_matrix()
+    (features, labels) = self.create_feature_matrix(features)
     
-    if cv:
-      self.my_print("Training classifier [Cross Validation]")
-      self.cross_validate(features, labels)
-#     else:
     self.my_print("Training classifier")
     self.fit(features, labels, grid_search=grid_search)
     
