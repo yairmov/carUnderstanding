@@ -133,6 +133,7 @@ class BayesNet:
       res[attrib_clf.name] = curr_res.reshape(len(curr_res))
       res_descrete[attrib_clf.name] = curr_res_d.reshape(len(curr_res_d))
       pbar.animate(ii)
+    print ''
   
     res = pd.DataFrame(data=res, index=data_annos.index)
     res_descrete = pd.DataFrame(data=res_descrete, index=data_annos.index)
