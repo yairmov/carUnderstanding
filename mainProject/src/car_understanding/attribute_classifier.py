@@ -49,6 +49,7 @@ class AttributeClassifier:
     self.probability  = config.attribute.use_prob
     self.n_cores      = config.n_cores
     self.thresh       = 0
+    self.stats        = None
 #     self.clf          = SVC(kernel='rbf', 
 #                            class_weight='auto',
 #                            C=1, gamma=1e-3,
@@ -149,20 +150,17 @@ class AttributeClassifier:
       stats.loc['True', 'False'] = stats.loc['True', 'False'] + np.sum(np.logical_and(pred, np.logical_not(l)))
       stats.loc['False','True'] = stats.loc['False', 'True'] + np.sum(np.logical_and(np.logical_not(pred), l))
       stats.loc['False', 'False'] = stats.loc['False', 'False'] + np.sum(np.logical_and(np.logical_not(pred), np.logical_not(l)))
-      print stats
       
     self.my_print("Equal Error Rates: {}".format(eer))
     self.thresh = np.array(eer).mean()
     self.my_print('selected: {}'.format(self.thresh))
      
     sk.preprocessing.normalize(stats ,axis=1,norm='l1')
-    self.my_print('{}'.format(stats))
-      
-  
-  
-  
-  
-  
+    self.my_print('\n{}'.format(stats))
+    self.stats = stats
+    
+    # Now retrain the classifier with all the data  
+    self.clf.fit(features, labels) 
   
   
   def grid_search(self, features, labels):
