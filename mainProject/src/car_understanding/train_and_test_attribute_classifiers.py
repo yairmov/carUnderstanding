@@ -126,8 +126,8 @@ def test(args, config, dataset):
   for ii, attrib_name in enumerate(args.attrib_names):
     pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
     true_labels = np.array(res.class_index.isin(pos_classes))
-#     dump({'res':res, 'features': features, 
-#           'pred': pred, 'true_labels': true_labels}, 'tmp.dat')
+    dump({'res':res, 'features': features, 
+          'pred': pred, 'true_labels': true_labels}, 'tmp.dat')
     print("--------------{}-------------".format(attrib_name)) 
     
     print(classification_report(true_labels, 
