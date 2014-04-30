@@ -18,6 +18,7 @@ from sklearn.metrics import classification_report, accuracy_score
 from sklearn import cross_validation
 from sklearn.grid_search import GridSearchCV
 from sklearn.dummy import DummyClassifier
+from sklearn.externals.joblib import dump, load
 
 import fgcomp_dataset_utils as fgu
 from configuration import get_config
@@ -452,11 +453,11 @@ def get_args_from_file(fname):
 
 def classify_using_sift():
 
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'SUV']
-  args = makes + types
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'SUV']
+#   args = makes + types
   
-#   args = get_args_from_file('sorted_attrib_list.txt')
+  args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
@@ -466,11 +467,11 @@ def classify_using_sift():
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
   
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
-  test_annos = test_annos[np.array(
-                              test_annos.class_index.isin(classes.class_index))]
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
+#   test_annos = test_annos[np.array(
+#                               test_annos.class_index.isin(classes.class_index))]
 
 
   print "Loading features."
@@ -539,6 +540,7 @@ def classify_using_sift():
   clf.fit(features_train, labels_train)
 
   y_pred = clf.predict(features_test)
+  dump({'y_pred': y_pred, 'labels_test': labels_test}, 'tmp.dat')
 
   print(classification_report(labels_test, y_pred,
                               target_names=[c for c in classes.class_name]))
@@ -554,9 +556,7 @@ def classify_using_sift():
   for ii in range(1, 11):
     print 'Accuracy at {}: {}'.format(ii, scorer.get_accuracy_at(ii))
     
-  
-  
-  
+
   dummy_1 = DummyClassifier(strategy='most_frequent').fit(features_train, labels_train)
   dummy_2 = DummyClassifier(strategy='stratified').fit(features_train, labels_train)
   dummy_3 = DummyClassifier(strategy='stratified').fit(features_train, labels_train)
@@ -571,25 +571,6 @@ def classify_using_sift():
   print("Mean Accuracy - most_frequent: {}".format(dummy_1.score(features_test, labels_test)))
   print("Mean Accuracy - stratified: {}".format(dummy_2.score(features_test, labels_test)))
   print("Mean Accuracy - uniform: {}".format(dummy_3.score(features_test, labels_test)))
-  
-  
-  
-
-#   loo = cross_validation.LeaveOneOut(len(labels))
-#   ii = 0
-#   y_pred = np.zeros_like(labels)
-#   progress = ProgressBar(len(labels))
-#   for train_index, test_index in loo:
-# #     print("TRAIN:", train_index, "TEST:", test_index)
-#     X_train, X_test = features[train_index], features[test_index]
-#     y_train, y_test = labels[train_index], labels[test_index]
-#     clf.fit(X_train, y_train)
-#     y_pred[ii] = np.array(clf.predict(X_test))
-#     progress.animate(ii)
-#     ii +=1
-# 
-#   print(classification_report(labels, y_pred,
-#                               target_names=[c for c in classes.class_name]))
 
 
 
@@ -650,9 +631,9 @@ if __name__ == '__main__':
 #   cv_for_params()
 #   precision_recall()
 #   bayes_net_test()
-  classify_using_attributes()
+#   classify_using_attributes()
 #   feature_test()
-#   classify_using_sift()
+  classify_using_sift()
 
 
 
