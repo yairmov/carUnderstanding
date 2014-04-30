@@ -111,7 +111,7 @@ def test(args, config, dataset):
   print ("Apply classifiers")
   res, pred = apply_classifiers(config, features, 
                                 test_annos, attrib_clfs)
-#   dump({'res':res, 'features': features, 'pred': pred}, 'tmp.dat')
+
   
   
   table = PrettyTable(['Attribute', 'AP', 'AP random'])
@@ -126,6 +126,8 @@ def test(args, config, dataset):
   for ii, attrib_name in enumerate(args.attrib_names):
     pos_classes = attrib_selector.class_ids_for_attribute(attrib_name)
     true_labels = np.array(res.class_index.isin(pos_classes))
+#     dump({'res':res, 'features': features, 
+#           'pred': pred, 'true_labels': true_labels}, 'tmp.dat')
     print("--------------{}-------------".format(attrib_name)) 
     
     print(classification_report(true_labels, 
