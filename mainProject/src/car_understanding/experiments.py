@@ -647,10 +647,10 @@ def multiclass_clf():
                               test_annos.class_index.isin(classes.class_index))]
   
   
-  features_test = Bow.load_bow(test_annos, config)
+  
   m_clf = MultiClassClassifier(train_annos, classes, config)
 
-  
+  features_test = Bow.load_bow(test_annos, config)
   y_pred = m_clf.predict(test_annos, features_test)
   labels_test = np.array(test_annos.class_index)
   labels_train = m_clf.labels_train
