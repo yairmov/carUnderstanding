@@ -91,7 +91,8 @@ class BayesNet2():
       prior = pd.DataFrame(data=[class_priors[ii], 1-class_priors[ii]],
                            columns=['True', 'False'])
       self.CPT['p({})'.format(self.class_inds[ii])] = prior
-        
+    
+    print self.CPT    
   
   def init_attrib_nodes_CPT(self):
     has_attrib_prob = 0.99
