@@ -33,7 +33,7 @@ class MultiClassClassifier(object):
     self.class_meta = class_meta.copy()
     self.config = config
     
-    self.clf = LinearSVC(class_weight='auto', loss='l2', C=1e-3)
+    self.clf = LinearSVC(class_weight='auto', loss='l2')
     self.scaler = StandardScaler()
     
     self.class_inds = np.array(class_meta.class_index)
@@ -59,8 +59,6 @@ class MultiClassClassifier(object):
     for train_index, test_index in skf:
       ii += 1
       print('Training using fold {} of {}'.format(ii, self.n_folds))
-      print('train index type, shape: {}, {}'.format(type(train_index), train_index.shape))
-      print('test index type, shape: {}, {}'.format(type(test_index), test_index.shape)) 
       self.clf.fit(features[train_index,:], labels[train_index])
       self.train_pred_labels[test_index] = \
         self.clf.predict(features[test_index,:])
