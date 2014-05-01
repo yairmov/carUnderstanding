@@ -15,6 +15,7 @@ import cv2 as cv
 import pandas as pd
 import collections
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
 
 from configuration import get_config
 import fgcomp_dataset_utils as fgu
@@ -27,12 +28,12 @@ from util import ProgressBar
 # def preprocess(args):
 #   config = get_config(args)
 #   (train_annos, class_meta, domain_meta) = fgu.get_all_metadata(config)
-# 
+#
 #   # Filter the class meta and train annotations according to the small use
 #   # case definitions
 #   class_meta = class_meta[class_meta['domain_index'] == config.dataset.domains[0]]
 #   train_annos = train_annos[train_annos.class_index.isin(class_meta.class_index)]
-# 
+#
 #   return ({'train_annos': train_annos,
 #              'class_meta': class_meta,
 #              'domain_meta': domain_meta},
@@ -103,7 +104,7 @@ def load_SIFT_from_a_file(curr_anno, config):
 #   inds = np.zeros(shape=[len(kp),], dtype=bool)
 #   for jj in range(len(kp)):
 #     inds[jj] = contains(box, kp[jj].pt)
-  
+
   n_pts = int(kp.shape[0])
   inds = np.zeros(shape=[n_pts,], dtype=bool)
   for jj in range(n_pts):
@@ -151,8 +152,8 @@ def create_feature_matrix(dataset, config):
   train_annos = dataset['train_annos']
 
   # Preallocate feature matrix
-  features = np.empty(shape=[len(train_annos), 
-                             config.SIFT.BoW.num_clusters * 
+  features = np.empty(shape=[len(train_annos),
+                             config.SIFT.BoW.num_clusters *
                              len(config.SIFT.pool_boxes)])
 
   # Load histograms from disk into a matrix
@@ -274,7 +275,7 @@ def run_attrib_training(args, cross_validation=False):
 ##   print "Loaded %d SIFT features from disk" % features.shape[0]
 ##   print "K-Means CLustering"
 ##   bow_model = Bow.create_BoW_model(features, config)
-  
+
 #   bow_model = Bow.fit_model(dataset['train_annos'], config)
 #   print("number of actual clusters found: {}".format(bow_model.n_clusters))
 #   Bow.save(bow_model, config.SIFT.BoW.model_file)
@@ -301,7 +302,7 @@ def run_attrib_training(args, cross_validation=False):
                                      desc=attrib_name)
 
     attrib_clf.run_training_pipeline(cross_validation)
-    
+
     AttributeClassifier.save(attrib_clf, os.path.join(config.attribute.dir,
                                                       attrib_clf.name + '.dat'))
 
@@ -333,8 +334,8 @@ def select_small_set_for_bayes_net(dataset, makes, types):
 
 def create_attrib_res_on_images(train_annos, attrib_classifiers, config):
   print "Load image Bow histograms from disk"
-  features = np.empty(shape=[len(train_annos), 
-                             config.SIFT.BoW.num_clusters * 
+  features = np.empty(shape=[len(train_annos),
+                             config.SIFT.BoW.num_clusters *
                              len(config.SIFT.pool_boxes)])
   for ii in range(len(train_annos)):
     img_name = train_annos.iloc[ii]['basename']
@@ -421,28 +422,28 @@ def predict_using_bayes(clf_res, prob_c, mu, sig, dataset, config):
 def get_args_from_file(fname):
   with open(fname, 'r') as f:
     args = f.readlines()
-  
-  args = [str.lower(x.strip()) for x in args]  
+
+  args = [str.lower(x.strip()) for x in args]
   # use only top K
 #   K = 36
 #   args = args[:K]
   return args
-  
+
 def bayes_net_generic(use_gt=False):
   makes = ['bmw', 'ford']
   types = ['sedan', 'suv']
   args = makes + types + ['germany', 'usa']
-  
+
 #   args = get_args_from_file('sorted_attrib_list.txt')
-  
+
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
   config.attribute.names = args
-  
-  train_annos = dataset['train_annos']  
+
+  train_annos = dataset['train_annos']
   classes = dataset['class_meta']
   attrib_meta = dataset['attrib_meta']
-  
+
   # reduce the training set to be only classes with these attributes.
   classes = select_small_set_for_bayes_net(dataset, makes, types)
   attrib_meta = attrib_meta.loc[classes.index]
@@ -452,67 +453,66 @@ def bayes_net_generic(use_gt=False):
   # Select only images from the args "world"
   test_annos = test_annos[np.array(
                              test_annos.class_index.isin(classes.class_index))]
-  
-  
-  
+
+
+
 #   print "training attrib classifiers"
 #   run_attrib_training(args, cross_validation=False)
 #   print "Returning after training attrib classifiers"
 #   return
-  
+
   attrib_classifiers = []
   if use_gt:
     class dummy:
       def __init__(self, name):
         self.name = name
-    
+
     for name in args:
       attrib_classifiers.append(dummy(name))
   else:
     for name in args:
       filename = os.path.join(config.attribute.dir, name + '.dat')
       attrib_classifiers.append(AttributeClassifier.load(filename))
-  
-  
-  
+
+
+
   # train logistic regression classifier
-  from sklearn.linear_model import LogisticRegression
   m_clf = LogisticRegression(class_weight='auto')
   features = Bow.load_bow(train_annos, config)
   m_clf.fit(features, np.array(train_annos.class_index))
-  
-  bnet = BayesNet(config, train_annos, 
-                  classes, attrib_classifiers, attrib_meta, 
+
+  bnet = BayesNet(config, train_annos,
+                  classes, attrib_classifiers, attrib_meta,
                   multi_class_clf=m_clf, desc=str(args), use_gt=use_gt)
-  bnet.init_CPT()  
-    
-  
+  bnet.init_CPT()
+
+
   print 'predicting!!!'
-  
+
   (class_probs, attrib_probs) = bnet.predict(test_annos)
-  dump({'class_probs': class_probs, 
+  dump({'class_probs': class_probs,
         'attrib_probs': attrib_probs,
         'test_annos': test_annos,
         'classes': classes,
         'bnet':bnet},
        'bnet_res.dat')
   show_confusion_matrix(test_annos, classes, class_probs)
-  
-  
-  
-  
+
+
+
+
 def show_confusion_matrix(data_annos, class_meta, class_prob):
   from sklearn.metrics import confusion_matrix
   from sklearn.preprocessing import normalize
   from sklearn.metrics import classification_report
   from sklearn.metrics import accuracy_score
   from util import AccuracyAtN
-  
+
   class_true = data_annos.class_index
   y_pred_class  = class_prob.idxmax(axis=1)
-  
+
 #   y_pred_attrib = attrib_prob.idxmax(axis=1)
-  
+
   class_inds = np.sort(np.array(class_prob.columns))
   class_names = class_meta.class_name[class_inds]
   cc = class_names.apply(lambda x: str.find(str.lower(x), 'sedan') != -1)
@@ -522,16 +522,16 @@ def show_confusion_matrix(data_annos, class_meta, class_prob):
   print "Accuracy: {}".format(accuracy_score(class_true, y_pred_class))
   cm = confusion_matrix(class_true, y_pred_class, class_names.index) + 0.0
   cm = normalize(cm, norm='l1', axis=1)
-  
-  
+
+
   print ''
   print 'Accuracy at N:'
-  scorer = AccuracyAtN(class_prob, 
+  scorer = AccuracyAtN(class_prob,
                        class_true, class_names=class_prob.columns)
   for ii in range(1, 11):
     print 'Accuracy at {}: {}'.format(ii, scorer.get_accuracy_at(ii))
-  
-  
+
+
   # Show confusion matrix in a separate window
   fig = plt.figure(figsize=(10,10))
   ax = fig.add_subplot(111)
@@ -545,8 +545,8 @@ def show_confusion_matrix(data_annos, class_meta, class_prob):
   plt.xlabel('Predicted')
   plt.ylabel('True')
 #   fig.savefig('cm.pdf')
-  plt.show() 
-  
+  plt.show()
+
   return (cm, class_names)
 
 
@@ -555,48 +555,48 @@ if __name__ == '__main__':
 
 #   args = ["sedan", "SUV", "2012", "Audi", "bmw", "ford",
 #           "chevrolet", "coupe", "hatchback", "dodge", "hyundai"]
-  
+
 #   args = ["sedan", "SUV", "bmw", "ford"]
 #   args = ["sedan"]
-# 
-#   run_attrib_training(args, cross_validation=True) 
+#
+#   run_attrib_training(args, cross_validation=True)
 
 #   # Small Bayes net (naive bayes...)
 #   makes = ['bmw', 'ford']
 #   types = ['sedan', 'SUV']
 #   args = makes + types
 #   (dataset, config) = preprocess(args)
-# 
+#
 #   # Select only images from the args "world"
 #   classes = select_small_set_for_bayes_net(dataset, makes, types)
 #   train_annos = dataset['train_annos']
 #   train_annos = train_annos[np.array(
 #                              train_annos.class_index.isin(classes.class_index))]
-# 
+#
 #   attrib_classifiers = []
 #   for name in args:
 #     filename = os.path.join(config.attribute.dir, name + '.dat')
 #     attrib_classifiers.append(AttributeClassifier.load(filename))
-# 
+#
 #   clf_res = create_attrib_res_on_images(train_annos, attrib_classifiers, config)
-# 
-# 
+#
+#
 #   print "clf_res\n-------"
 #   print clf_res.head()
-# 
+#
 #   stats = calc_stats(clf_res)
-# 
+#
 #   dump({'clf_res': clf_res, 'stats':stats}, 'tmp.dat')
-# 
+#
 #   post = predict_using_bayes(clf_res, stats['prob_c'], stats['mu'], stats['sig'],
 #                       dataset, config)
-# 
+#
 #   print "Accuracy = {}".format(sum(post.success) / float(len(post)))
 
-  
+
   # Using the more generic BayesNet class
   #-------------------------------------
-  
+
   bayes_net_generic(use_gt=False)
 
 
@@ -614,13 +614,13 @@ if __name__ == '__main__':
 #   args = makes + types
 # #   (dataset, config) = preprocess(args)
 #   config = get_config(args)
-#   (dataset, config) = fgu.get_all_metadata(config)  
-# 
+#   (dataset, config) = fgu.get_all_metadata(config)
+#
 #   classes = select_small_set_for_bayes_net(dataset, makes, types)
 #   train_annos = dataset['train_annos']
 #   train_annos = train_annos[np.array(
 #                              train_annos.class_index.isin(classes.class_index))]
-#   
+#
 #   a = load('bnet_res.dat')
 #   class_prob = a['class_probs']
 #   attrib_prob = a['attrib_probs']
