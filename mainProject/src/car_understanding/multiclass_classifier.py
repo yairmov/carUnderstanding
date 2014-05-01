@@ -49,7 +49,7 @@ class MultiClassClassifier(object):
     
     # load features form disk
     features = Bow.load_bow(self.train_annos, self.config)
-    features = self.Scaler.fit_transform(features)
+    features = self.scaler.fit_transform(features)
     
     labels = self.labels
     
