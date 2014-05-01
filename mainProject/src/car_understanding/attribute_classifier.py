@@ -65,6 +65,9 @@ class AttributeClassifier(object):
 #                                                    learning_rate=1.0, 
 #                                                    max_depth=1)
     self.Scaler       = StandardScaler()
+    # Used to gather "out-of-bag" stats about the classifier's performance
+    self.train_pred_labels = None
+    self.labels_train = None
       
   
   def create_feature_matrix(self, features=None):
@@ -80,32 +83,8 @@ class AttributeClassifier(object):
     # preprocess features
     features = self.Scaler.fit_transform(features)
     
-    num_pos = sum(labels)
-    num_neg = labels.shape[0] - num_pos
-    
-    print "num_pos: {}, num_neg: {}".format(num_pos, num_neg)
-    assert num_neg >= num_pos, "num_neg >= num_pos"
-    
 #     dump([features, labels], 'features_all.tmp')
-    
-    
-    # make pos/neg sets of equal size
-  #     pos_inds = labels.nonzero()[0]
-  #     neg_inds = np.logical_not(labels).nonzero()[0]
-  #     neg_inds = np.random.permutation(neg_inds)[:num_pos]
-  #         
-  #     features = features[np.concatenate([pos_inds, neg_inds]), :]
-  #     labels  = np.concatenate([np.ones(shape=pos_inds.shape, dtype=bool),
-  #                              np.zeros(shape=neg_inds.shape, dtype=bool)])
-     
-     
-    num_pos = sum(labels)
-    num_neg = labels.shape[0] - num_pos
-    print "equalized sets: num_pos: {}, num_neg: {}".format(num_pos, num_neg)
-#     assert num_neg == num_pos, "num_neg == num_pos"
-    assert features.shape[0] == num_pos + num_neg, \
-    "features.shape[0] == num_pos + num_neg"
-     
+      
      
 #     string_labels = np.empty(shape=labels.shape, dtype=np.object)
 #     trueval = self.name
@@ -138,6 +117,7 @@ class AttributeClassifier(object):
     clfs = []
     stats = pd.DataFrame(index = ['True', 'False'], columns=['True', 'False'], dtype=np.float32)
     stats[:] = 0
+    train_pred_labels = np.zeros_like(labels)
     for train_index, test_index in skf:
       self.clf.fit(features[train_index,:], labels[train_index])
       clfs.append(np.copy(self.clf))
@@ -145,19 +125,27 @@ class AttributeClassifier(object):
       curr_eer = util.find_equal_err_rate(labels[test_index], responses)
       eer.append(curr_eer)
       pred = responses > curr_eer
-      l = labels[test_index]
-      stats.loc['True', 'True'] = stats.loc['True', 'True'] + np.sum(np.logical_and(pred, l))
-      stats.loc['True', 'False'] = stats.loc['True', 'False'] + np.sum(np.logical_and(pred, np.logical_not(l)))
-      stats.loc['False','True'] = stats.loc['False', 'True'] + np.sum(np.logical_and(np.logical_not(pred), l))
-      stats.loc['False', 'False'] = stats.loc['False', 'False'] + np.sum(np.logical_and(np.logical_not(pred), np.logical_not(l)))
+      train_pred_labels[test_index] = pred
       
+      
+#       l = labels[test_index]
+#       stats.loc['True', 'True'] = stats.loc['True', 'True'] + np.sum(np.logical_and(pred, l))
+#       stats.loc['True', 'False'] = stats.loc['True', 'False'] + np.sum(np.logical_and(pred, np.logical_not(l)))
+#       stats.loc['False','True'] = stats.loc['False', 'True'] + np.sum(np.logical_and(np.logical_not(pred), l))
+#       stats.loc['False', 'False'] = stats.loc['False', 'False'] + np.sum(np.logical_and(np.logical_not(pred), np.logical_not(l)))
+
+#     sk.preprocessing.normalize(stats ,axis=1,norm='l1')
+#     self.my_print('\n{}'.format(stats))
+#     self.stats = stats
+          
     self.my_print("Equal Error Rates: {}".format(eer))
     self.thresh = np.array(eer).mean()
     self.my_print('selected: {}'.format(self.thresh))
-     
-    sk.preprocessing.normalize(stats ,axis=1,norm='l1')
-    self.my_print('\n{}'.format(stats))
-    self.stats = stats
+    
+    # save "out of bag" predictions
+    self.train_pred_labels = train_pred_labels
+    self.labels_train = labels
+    
     
     # Now retrain the classifier with all the data  
     self.clf.fit(features, labels) 
