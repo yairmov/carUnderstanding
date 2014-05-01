@@ -28,6 +28,8 @@ from bayes_net import BayesNet
 import Bow
 from util import ProgressBar, AccuracyAtN
 from dense_SIFT import load_from_disk, save_to_disk, normalize_sift
+from multiclass_classifier import MultiClassClassifier
+
 
 
 def run_norm_sift(dirname):
@@ -623,6 +625,69 @@ def feature_test():
     plt.show()
 
 
+def multiclass_clf():
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types
+  
+#   args = get_args_from_file('sorted_attrib_list.txt')
+  
+  config = get_config()
+  (dataset, config) = fgu.get_all_metadata(config)
+  config.attribute.names = args
+  
+  classes = dataset['class_meta']
+  train_annos = dataset['train_annos']
+  test_annos = dataset['test_annos']
+  
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
+  train_annos = train_annos[np.array(
+                             train_annos.class_index.isin(classes.class_index))]
+  test_annos = test_annos[np.array(
+                              test_annos.class_index.isin(classes.class_index))]
+  
+  
+  features_test = Bow.load_bow(test_annos, config)
+  m_clf = MultiClassClassifier(train_annos, classes, config)
+
+  
+  y_pred = m_clf.predict(test_annos, features_test)
+  labels_test = np.array(test_annos.class_index)
+  labels_train = m_clf.labels_train
+  
+  dump({'y_pred': y_pred, 'labels_test': labels_test}, 'tmp.dat')
+
+  print(classification_report(labels_test, y_pred,
+                              target_names=[c for c in classes.class_name]))
+  
+  print("Accuracy: {}".format(accuracy_score(labels_test, y_pred)))
+  print("Mean Accuracy: {}".format(m_clf.clf.score(features_test, labels_test)))
+  
+  
+  print ''
+  print 'Accuracy at N:'
+  scorer = AccuracyAtN(m_clf.clf.decision_function(features_test), 
+                       labels_test, class_names=np.unique(labels_train))
+  for ii in range(1, 11):
+    print 'Accuracy at {}: {}'.format(ii, scorer.get_accuracy_at(ii))
+    
+
+  dummy_1 = DummyClassifier(strategy='most_frequent').fit(np.zeros_like(labels_train), labels_train)
+  dummy_2 = DummyClassifier(strategy='stratified').fit(np.zeros_like(labels_train), labels_train)
+  dummy_3 = DummyClassifier(strategy='stratified').fit(np.zeros_like(labels_train), labels_train)
+  
+  print ''
+  print 'Dummy Classifiers:'
+  print '-----------------'
+  print("Accuracy - most_frequent: {}".format(accuracy_score(labels_test, dummy_1.predict(features_test))))
+  print("Accuracy - stratified: {}".format(accuracy_score(labels_test, dummy_2.predict(features_test))))
+  print("Accuracy - uniform: {}".format(accuracy_score(labels_test, dummy_2.predict(features_test))))
+  
+  print("Mean Accuracy - most_frequent: {}".format(dummy_1.score(features_test, labels_test)))
+  print("Mean Accuracy - stratified: {}".format(dummy_2.score(features_test, labels_test)))
+  print("Mean Accuracy - uniform: {}".format(dummy_3.score(features_test, labels_test)))
+
+
 if __name__ == '__main__':
 #   test_fg_utils()
 #   dbg_clustering()
@@ -633,9 +698,10 @@ if __name__ == '__main__':
 #   cv_for_params()
 #   precision_recall()
 #   bayes_net_test()
-  classify_using_attributes()
+#   classify_using_attributes()
 #   feature_test()
 #   classify_using_sift()
+  multiclass_clf()
 
 
 

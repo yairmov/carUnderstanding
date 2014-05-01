@@ -39,10 +39,10 @@ class MultiClassClassifier(object):
     self.class_inds = np.array(class_meta.class_index)
     self.n_folds = 4 # used for gathering stats
     
-    self.labels = np.array(self.train_annos.class_index)
+    self.labels_train = np.array(self.train_annos.class_index)
     # predicted labels for training data. each instance is predicted when its
     # fold was used as a validation set
-    self.train_pred_labels = np.zeros_like(self.labels)
+    self.train_pred_labels = np.zeros_like(self.labels_train)
     
   
   def fit(self):
@@ -51,9 +51,9 @@ class MultiClassClassifier(object):
     features = Bow.load_bow(self.train_annos, self.config)
     features = self.scaler.fit_transform(features)
     
-    labels = self.labels
+    labels = self.labels_train
     
-    skf = cross_validation.StratifiedKFold(self.labels, n_folds=self.n_folds)
+    skf = cross_validation.StratifiedKFold(self.labels_train, n_folds=self.n_folds)
     
     ii = 0
     for train_index, test_index in skf:
