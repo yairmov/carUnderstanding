@@ -88,8 +88,9 @@ class BayesNet2():
     class_priors = class_counts / n_imgs
     
     for ii in range(len(self.class_inds)):
-      prior = pd.DataFrame({'True': class_priors[ii],
-                            'False': 1-class_priors[ii]})
+      prior = pd.DataFrame(data={'True': [class_priors[ii]],
+                            'False': [1-class_priors[ii]]},
+                           columns=['True', 'False'])
 #       prior = pd.DataFrame(data=[class_priors[ii], 1-class_priors[ii]],
 #                            columns=['True', 'False'])
       self.CPT['p({})'.format(self.class_inds[ii])] = prior
