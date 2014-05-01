@@ -22,7 +22,7 @@
   }, 
   "multiclass_classifier": {
   	"path": "../../../cache/multi_clf.dat"
-  }
+  },
   "hostname": "palfrey.vasc.ri.cmu.edu", 
   "config_file": "config.json", 
   "dataset": {
