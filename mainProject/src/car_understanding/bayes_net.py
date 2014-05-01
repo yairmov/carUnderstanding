@@ -82,7 +82,8 @@ class BayesNet2():
     '''
     Learning a CPT for p(c) using prior on the labels.
     '''
-    class_counts = np.array([sum(self.train_annos.class_index == ind) 
+    n_imgs = float(self.train_annos.shape[0])
+    class_counts = np.array([sum(self.train_annos.class_index == ind) / n_imgs 
                     for ind in self.class_inds])
     self.CPT.update(dict(zip(self.class_inds, class_counts)))
     
