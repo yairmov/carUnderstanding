@@ -20,6 +20,9 @@
     "dir": "../../../attribute_classifiers", 
     "use_prob": false
   }, 
+  "multiclass_classifier": {
+  	"path": "../../../cache/multi_clf.dat"
+  }
   "hostname": "palfrey.vasc.ri.cmu.edu", 
   "config_file": "config.json", 
   "dataset": {
