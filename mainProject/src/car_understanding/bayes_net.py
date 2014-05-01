@@ -117,7 +117,7 @@ class BayesNet2():
       n_postive = float(np.sum(y_true))
       n_negative = y_true.shape[0] - n_postive
       n_tp = np.sum(np.logical_and(y_pred, y_true))
-      n_fp = np.logical_and(y_pred, np.logical_not(y_true))
+      n_fp = np.sum(np.logical_and(y_pred, np.logical_not(y_true)))
       
       p_clf_given_attrib =  n_tp / n_postive
       p_clf_given_not_attrib =  n_fp / n_negative
