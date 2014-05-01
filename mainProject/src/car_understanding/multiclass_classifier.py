@@ -49,7 +49,7 @@ class MultiClassClassifier(object):
     
     # load features form disk
     features = Bow.load_bow(self.train_annos, self.config)
-#     features = self.scaler.fit_transform(features)
+    features = self.scaler.fit_transform(features)
     
     labels = self.labels_train
     
@@ -71,7 +71,7 @@ class MultiClassClassifier(object):
     if features is None:
       features = Bow.load_bow(test_annos, self.config)
       
-#     features = self.scaler.transform(features)
+    features = self.scaler.transform(features)
     
     return self.clf.predict(features)
   
