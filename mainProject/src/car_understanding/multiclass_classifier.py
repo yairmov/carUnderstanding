@@ -74,7 +74,17 @@ class MultiClassClassifier(object):
     features = self.Scaler.transform(features)
     
     return self.clf.predict(features)
+  
+  
+  # Static" functions
+  # -----------------
+  @staticmethod  
+  def save(clf, filename):
+    dump(clf, filename, compress=3)
     
+  @staticmethod    
+  def load(filename):
+    return load(filename)
     
     
     
