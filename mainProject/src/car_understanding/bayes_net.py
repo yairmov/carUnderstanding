@@ -101,7 +101,7 @@ class BayesNet2():
     class_inds = self.class_inds
     
     
-    for a_name in self.attrib_names:
+#     for a_name in self.attrib_names:
       
 
 
