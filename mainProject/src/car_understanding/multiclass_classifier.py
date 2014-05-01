@@ -71,7 +71,7 @@ class MultiClassClassifier(object):
     if features is None:
       features = Bow.load_bow(test_annos, self.config)
       
-    features = self.Scaler.transform(features)
+    features = self.scaler.transform(features)
     
     return self.clf.predict(features)
   
