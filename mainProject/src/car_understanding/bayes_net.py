@@ -55,10 +55,10 @@ class BayesNet2():
     # sort by attrib name (keep the attributs sorted at all times!)
     #-----
     self.attrib_clfs  = attrib_clfs 
-    self.clf_names    = [self.attrib_clfs[ii].name for 
+    self.attrib_names    = [self.attrib_clfs[ii].name for 
                                   ii in range(len(self.attrib_clfs))]
-    inds = np.argsort(self.clf_names)
-    self.clf_names = list(np.array(self.clf_names)[inds])
+    inds = np.argsort(self.attrib_names)
+    self.attrib_names = list(np.array(self.attrib_names)[inds])
     self.attrib_clfs = list(np.array(self.attrib_clfs)[inds])
     #----- 
     
@@ -75,20 +75,33 @@ class BayesNet2():
   def init_CPT(self):
     self.is_init = True
     
-    self.init_class_nodes()
+    self.init_class_nodes_CPT()
     
 
-  def init_class_nodes(self):
+  def init_class_nodes_CPT(self):
     '''
     Learning a CPT for p(c) using prior on the labels.
     '''
     n_imgs = float(self.train_annos.shape[0])
-    class_counts = np.array([sum(self.train_annos.class_index == ind) / n_imgs 
+    class_counts = np.array([sum(self.train_annos.class_index == ind) 
                     for ind in self.class_inds])
-    self.CPT.update(dict(zip(self.class_inds, class_counts)))
+    class_priors = class_counts / n_imgs
     
-    print self.CPT
+    for ii in range(len(self.class_inds)):
+      prior = pd.DataFrame(data=[class_priors[ii], 1-class_priors[ii]],
+                           columns=['True', 'False'])
+      self.CPT['p({})'.format(self.class_inds[ii])] = prior
+        
+  
+  def init_attrib_nodes_CPT(self):
+    has_attrib_prob = 0.99
     
+    attrib_names = self.attrib_names
+    class_inds = self.class_inds
+    
+    
+    for a_name in self.attrib_names:
+      
 
 
 
