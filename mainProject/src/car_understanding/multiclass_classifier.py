@@ -59,8 +59,8 @@ class MultiClassClassifier(object):
     for train_index, test_index in skf:
       ii += 1
       print('Training using fold {} of {}'.format(ii, self.n_folds))
-      print('train index: {}'.format(train_index))
-      print('test index: {}'.format(test_index)) 
+      print('train index type, shape: {}, {}'.format(type(train_index), train_index.shape))
+      print('test index type, shape: {}, {}'.format(type(test_index), test_index.shape)) 
       self.clf.fit(features[train_index,:], labels[train_index])
       self.train_pred_labels[test_index,:] = \
         self.clf.predict(features[test_index,:])
