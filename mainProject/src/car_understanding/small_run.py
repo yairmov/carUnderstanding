@@ -22,8 +22,9 @@ import fgcomp_dataset_utils as fgu
 from dense_SIFT import dense_SIFT, save_to_disk, load_from_disk
 import Bow as Bow
 from attribute_classifier import AttributeClassifier
-from bayes_net import BayesNet
+import bayes_net
 from util import ProgressBar
+from multiclass_classifier import MultiClassClassifier
 
 # def preprocess(args):
 #   config = get_config(args)
@@ -476,17 +477,24 @@ def bayes_net_generic(use_gt=False):
 
 
 
-  # train logistic regression classifier
-  m_clf = LogisticRegression(class_weight='auto')
-  features = Bow.load_bow(train_annos, config)
-  m_clf.fit(features, np.array(train_annos.class_index))
+  # load multi class classifier
+  m_clf = MultiClassClassifier.load(config.multiclassifier.path)
+  
+  
+#   bnet = bayes_net.BayesNet(config, train_annos, 
+#                   classes, attrib_classifiers, attrib_meta, 
+#                   multi_class_clf=m_clf, desc=str(args), use_gt=use_gt)
 
-  bnet = BayesNet(config, train_annos,
-                  classes, attrib_classifiers, attrib_meta,
+  bnet = bayes_net.BayesNet2(config, train_annos, 
+                  classes, attrib_classifiers, attrib_meta, 
                   multi_class_clf=m_clf, desc=str(args), use_gt=use_gt)
-  bnet.init_CPT()
 
+  
 
+  bnet.init_CPT()  
+  return
+    
+  
   print 'predicting!!!'
 
   (class_probs, attrib_probs) = bnet.predict(test_annos)
