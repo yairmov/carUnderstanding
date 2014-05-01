@@ -76,6 +76,8 @@ class BayesNet2():
     self.is_init = True
     
     self.init_class_nodes_CPT()
+#     self.init_class_nodes_CPT()
+    self.init_attrib_clf_nodes_CPT()
     
 
   def init_class_nodes_CPT(self):
@@ -91,13 +93,11 @@ class BayesNet2():
       prior = pd.DataFrame(data={'True': [class_priors[ii]],
                             'False': [1-class_priors[ii]]},
                            columns=['True', 'False'])
-#       prior = pd.DataFrame(data=[class_priors[ii], 1-class_priors[ii]],
-#                            columns=['True', 'False'])
       self.CPT['p({})'.format(self.class_inds[ii])] = prior
     
-    print self.CPT    
   
   def init_attrib_nodes_CPT(self):
+    raise Exception('not implemented')
     has_attrib_prob = 0.99
     
     attrib_names = self.attrib_names
@@ -105,7 +105,30 @@ class BayesNet2():
     
     
 #     for a_name in self.attrib_names:
+
+
+  def init_attrib_clf_nodes_CPT(self):
+    attrib_clfs = self.attrib_clfs
+    
+    for clf in attrib_clfs:
+      y_true = clf.labels_train
+      y_pred = clf.train_pred_labels
       
+      n_postive = float(np.sum(y_true))
+      n_negative = y_true.shape[0] - n_postive
+      n_tp = np.sum(np.logical_and(y_pred, y_true))
+      n_fp = np.logical_and(y_pred, np.logical_not(y_true))
+      
+      p_clf_given_attrib =  n_tp / n_postive
+      p_clf_given_not_attrib =  n_fp / n_negative
+      
+      cpt = pd.DataFrame(index=['True', 'False'], columns=['True', 'False'])
+      cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
+      cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
+      
+      print cpt
+    
+      self.CPT['p({0}_clf|{0})'.format(clf.name)]
 
 
 
