@@ -27,6 +27,70 @@ from conditional_prob_table import CPT
 import util
 
 
+class BayesNet2():
+  """A Bayes net model ("arrows going down")"""
+  
+  
+  def __init__(self, config, train_annos, class_meta, attrib_clfs, attrib_meta,
+               multi_class_clf= None, desc="", use_gt=False):
+    """ Ctor.
+    
+    Args:
+          config      - Config object created by configuration.get_config()
+          train_annos - Pandas table defining the training data (see fgcomp_dataset_utils)
+          class_meta  - (see fgcomp_dataset_utils)
+          attrib_clfs - A list of AttributeClassifiers
+          desc        - Longer string description of attribute (optional)
+          For debugging - use ground truth labels instead of attribute classifier scores
+          
+    """
+    self.config       = config.copy()
+    self.train_annos  = train_annos.copy()
+    self.class_meta   = class_meta.copy()
+    self.class_inds   = self.class_meta.class_index.unique()
+
+    self.desc         = desc
+    self.CPT          = {}
+    self.clf_names    = [self.attrib_clfs[ii].name for 
+                                  ii in range(len(self.attrib_clfs))]
+    
+    # sort by attrib name (keep the attributs sorted at all times!)
+    inds = np.argsort(self.clf_names)
+    self.clf_names = list(np.array(self.clf_names)[inds])
+    self.attrib_clfs = list(np.array(self.attrib_clfs)[inds]) 
+    
+    self.attrib_selector = AttributeSelector(self.config, 
+                                        self.class_meta,
+                                        attrib_meta)
+    
+    self.use_gt = use_gt
+    self.multi_class_clf = multi_class_clf
+    
+    self.is_init = False
+    
+    
+  def init_CPT(self):
+    self.is_init = True
+    
+    self.init_class_nodes()
+    
+
+  def init_class_nodes(self):
+    '''
+    Learning a CPT for p(c) using prior on the labels.
+    '''
+    class_counts = np.array([sum(self.train_annos.class_index == ind) 
+                    for ind in self.class_inds])
+    self.CPT.update(dict(zip(self.class_inds, class_counts)))
+    
+    print self.CPT
+    
+
+
+
+
+#----------------------------OLD-----------------------------------------------
+
 def cpt_for_attrib(attrib_name, attrib_selector, 
                      clf_names, clf_res_discrete):
     
@@ -142,11 +206,6 @@ class BayesNet:
     res = pd.concat([res, data_annos.ix[:, ['class_index']]], axis=1)
     res_descrete = pd.concat([res_descrete, data_annos.ix[:, ['class_index']]], axis=1)
     
-    
-#     from sklearn.externals.joblib import dump; dump({'res': res, 
-#                                                      'res_descrete': res_descrete,
-#                                                      'features': features}, 'tmp.dat')
-#     import sys; sys.exit(0)
     
     return res, res_descrete
   
