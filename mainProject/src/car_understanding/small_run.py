@@ -478,7 +478,7 @@ def bayes_net_generic(use_gt=False):
 
 
   # load multi class classifier
-  m_clf = MultiClassClassifier.load(config.multiclassifier.path)
+  m_clf = MultiClassClassifier.load(config.multiclass_classifier.path)
   
   
 #   bnet = bayes_net.BayesNet(config, train_annos, 
