@@ -26,7 +26,7 @@ import Bow as Bow
 import util
 
 
-class AttributeClassifier:
+class AttributeClassifier(object):
   """A module for classifying attributes."""
   
   def __init__(self, config, dataset, pos_inds, name, desc=""):
