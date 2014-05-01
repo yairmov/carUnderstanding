@@ -152,7 +152,7 @@ class AttributeClassifier(object):
   
   
   def grid_search(self, features, labels):
-    raise Exception('Check this code, it is old.')
+    raise Exception('Old code, make sure you want to use this!!!')
   
     # Set the parameters by cross-validation
     tuned_parameters_SVC = [
