@@ -656,8 +656,10 @@ def multiclass_clf():
   labels_test = np.array(test_annos.class_index)
   labels_train = m_clf.labels_train
   
-  dump({'y_pred': y_pred, 'labels_test': labels_test}, 'tmp.dat')
-
+  
+  MultiClassClassifier.save(m_clf, config.multiclass_classifier.path)
+  
+  
   print(classification_report(labels_test, y_pred,
                               target_names=[c for c in classes.class_name]))
   
