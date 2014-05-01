@@ -62,7 +62,7 @@ class MultiClassClassifier(object):
       print('train index type, shape: {}, {}'.format(type(train_index), train_index.shape))
       print('test index type, shape: {}, {}'.format(type(test_index), test_index.shape)) 
       self.clf.fit(features[train_index,:], labels[train_index])
-      self.train_pred_labels[test_index,:] = \
+      self.train_pred_labels[test_index] = \
         self.clf.predict(features[test_index,:])
         
     # after all stats are gathered, retrain with all data for best perfromance.
