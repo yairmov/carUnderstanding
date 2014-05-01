@@ -33,7 +33,7 @@ class MultiClassClassifier(object):
     self.class_meta = class_meta.copy()
     self.config = config
     
-    self.clf = LinearSVC(class_weight='auto', loss='l2', C=1e-3)
+    self.clf = LinearSVC(C=1)
     self.scaler = StandardScaler()
     
     self.class_inds = np.array(class_meta.class_index)
