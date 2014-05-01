@@ -125,6 +125,8 @@ class BayesNet2():
       cpt = pd.DataFrame(index=['True', 'False'], columns=['True', 'False'])
       cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
       cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
+      
+      print 'p({0}_clf|{0})'.format(clf.name)
       print cpt
       
       self.CPT['p({0}_clf|{0})'.format(clf.name)] = cpt
