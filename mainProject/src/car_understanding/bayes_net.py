@@ -51,13 +51,16 @@ class BayesNet2():
 
     self.desc         = desc
     self.CPT          = {}
+
+    # sort by attrib name (keep the attributs sorted at all times!)
+    #-----
+    self.attrib_clfs
     self.clf_names    = [self.attrib_clfs[ii].name for 
                                   ii in range(len(self.attrib_clfs))]
-    
-    # sort by attrib name (keep the attributs sorted at all times!)
     inds = np.argsort(self.clf_names)
     self.clf_names = list(np.array(self.clf_names)[inds])
-    self.attrib_clfs = list(np.array(self.attrib_clfs)[inds]) 
+    self.attrib_clfs = list(np.array(self.attrib_clfs)[inds])
+    #----- 
     
     self.attrib_selector = AttributeSelector(self.config, 
                                         self.class_meta,
