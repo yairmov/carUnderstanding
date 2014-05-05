@@ -201,9 +201,8 @@ class BayesNet2():
     
     # Build functions for hidden attribute layer
     # make template function using string
-    f_str = '''
-    def f_{a_name}({a_name}, {class_list}):
-       return cpt.get_value(({class_list}), {a_name})
+    f_str = '''def f_{a_name}({a_name}, {class_list}):
+      return cpt.get_value(({class_list}), {a_name})
     '''
     
     for a_name in self.attrib_names:
