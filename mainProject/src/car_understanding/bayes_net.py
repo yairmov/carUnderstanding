@@ -75,9 +75,20 @@ class BayesNet2():
   def init_CPT(self):
     self.is_init = True
     
+    print 'init class nodes'
+    print '----------------'
     self.init_class_nodes_CPT()
-#     self.init_attrib_nodes_CPT()
+    
+    print '\n\ninit attrib nodes'
+    print '----------------'
+    self.init_attrib_nodes_CPT()
+    
+    print '\n\ninit attrib clf nodes'
+    print '----------------'
     self.init_attrib_clf_nodes_CPT()
+    
+    print '\n\ninit multiclass clf nodes'
+    print '----------------'
     self.init_multi_class_clf_nodes_CPT()
     
 
