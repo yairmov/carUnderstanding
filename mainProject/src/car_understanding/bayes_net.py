@@ -216,7 +216,7 @@ class BayesNet2():
       functions.append(locals()[f_name])
       
       print '---------------------------'
-      functions[-1]('True', *['False' for x in classes_for_attrib])
+      print functions[-1]('True', *['False' for x in classes_for_attrib])
       return
       domains.update({'a_' + a_name: ['True', 'false']})
       
