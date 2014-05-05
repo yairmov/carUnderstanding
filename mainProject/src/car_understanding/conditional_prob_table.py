@@ -84,7 +84,7 @@ class CPT(object):
     s += '\n'
     s += 'unobserved rows: [{}, {}]'.format(self.default_true_value,
                                             1-self.default_true_value)
-    return 
+    return s
     
   def normalize_rows(self):
     '''
