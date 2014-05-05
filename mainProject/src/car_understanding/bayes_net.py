@@ -123,7 +123,7 @@ class BayesNet2():
       l = classes_for_attrib.shape[0]
       cpt = CPT(default_true_value=has_attrib_prob, 
                 name='p({0}|{1})'.format(a_name, classes_for_attrib))
-      false_row_key = str([False for x in range(l)])
+      false_row_key = ['False' for x in range(l)]
       cpt.create_row(false_row_key)
       cpt.set_value(false_row_key, cpt.TRUE, 0.01)
       cpt.set_value(false_row_key, cpt.FALSE, 0.99)
