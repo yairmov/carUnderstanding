@@ -197,7 +197,6 @@ class BayesNet2():
       curr_d = {str(class_id): ['True', 'False']} 
       functions.append(curr_f)
       domains.update(curr_d)
-      print "curr_f('True') = {}".format(curr_f('True'))
       
     
     # Build functions for hidden attribute layer
@@ -214,14 +213,14 @@ class BayesNet2():
       f_name = 'f_{}'.format(a_name)
       cpt = self.CPT['p({}|{})'.format(a_name, classes_for_attrib)]
       
-      print 'class_list: {}'.format(class_list)
-      print 'f_name: {}'.format(f_name)
-      print 'cpt: {}'.format(cpt)
-      return
+#       print 'class_list: {}'.format(class_list)
+#       print 'f_name: {}'.format(f_name)
+#       print 'cpt: {}'.format(cpt)
+#       return
       
-#       exec f_str.format(a_name=a_name, class_list=class_list) 
-#       functions.append(locals()[f_name])
-#       domains.update({a_name: ['True', 'false']})
+      exec f_str.format(a_name=a_name, class_list=class_list) 
+      functions.append(locals()[f_name])
+      domains.update({a_name: ['True', 'false']})
   
       
   def build_bnet(self):
