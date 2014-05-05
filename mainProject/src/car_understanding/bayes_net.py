@@ -217,10 +217,11 @@ class BayesNet2():
       print 'class_list: {}'.format(class_list)
       print 'f_name: {}'.format(f_name)
       print 'cpt: {}'.format(cpt)
+      return
       
-      exec f_str.format(a_name=a_name, class_list=class_list) 
-      functions.append(locals()[f_name])
-      domains.update({a_name: ['True', 'false']})
+#       exec f_str.format(a_name=a_name, class_list=class_list) 
+#       functions.append(locals()[f_name])
+#       domains.update({a_name: ['True', 'false']})
   
       
   def build_bnet(self):
