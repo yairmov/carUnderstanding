@@ -265,7 +265,7 @@ class BayesNet2():
     
     
 def function_builder(f_str, f_name, cpt):
-  exec f_str in globals()
+  exec f_str in locals(), globals()
   return globals()[f_name]
   
 
