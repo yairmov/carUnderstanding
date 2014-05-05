@@ -78,6 +78,7 @@ class BayesNet2():
     self.init_class_nodes_CPT()
 #     self.init_attrib_nodes_CPT()
     self.init_attrib_clf_nodes_CPT()
+    self.init_multi_class_clf_nodes_CPT()
     
 
   def init_class_nodes_CPT(self):
@@ -135,7 +136,29 @@ class BayesNet2():
       self.CPT['p({0}_clf|{0})'.format(clf.name)] = cpt
 
 
-
+  def init_multi_class_clf_nodes_CPT(self):
+    
+    for class_id in self.class_inds:
+      y_true = self.multi_class_clf.labels_train == class_id
+      y_pred = self.multi_class_clf.train_pred_labels == class_id
+      
+      n_postive = float(np.sum(y_true))
+      n_negative = y_true.shape[0] - n_postive
+      n_tp = np.sum(np.logical_and(y_pred, y_true))
+      n_fp = np.sum(np.logical_and(y_pred, np.logical_not(y_true)))
+      
+      p_clf_given_attrib =  n_tp / n_postive
+      p_clf_given_not_attrib =  n_fp / n_negative
+      
+      cpt = pd.DataFrame(index=['True', 'False'], columns=['True', 'False'])
+      cpt.index.name = 'Hidden attrib value'
+      cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
+      cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
+    
+      print 'p(m_clf_{0}|{0})'.format(class_id)
+      print cpt
+      
+      self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
 
 
 #------------------------------------------------------------------------------
