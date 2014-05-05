@@ -200,6 +200,7 @@ class BayesNet2():
     for class_id in self.class_inds:
       cpt = self.CPT['p({})'.format(class_id)]
       f_name = 'f_c_{}'.format(class_id)
+      global curr_f
       curr_f = function_builder(f_str.format(class_id=class_id), f_name, cpt)
 #       setattr(self, f_name, classmethod(curr_f))
 #       exec f_str.format(class_id=class_id) in globals()
