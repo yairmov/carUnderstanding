@@ -260,6 +260,8 @@ class BayesNet2():
       
   def build_bnet(self):
     functions, domains = self.build_functions_for_nodes()
+    for k,v in domains.items():
+      print (k,v)
     self.g = build_bbn(*functions, domains=domains)
     
     
