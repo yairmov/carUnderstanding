@@ -52,6 +52,7 @@ class BayesNet2():
 
     self.desc         = desc
     self.CPT          = {}
+    self.g            = None # Will hold the bnet graph
 
     # sort by attrib name (keep the attributs sorted at all times!)
     #-----
