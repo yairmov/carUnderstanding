@@ -489,7 +489,7 @@ def bayes_net_generic(use_gt=False):
                   classes, attrib_classifiers, attrib_meta, 
                   multi_class_clf=m_clf, desc=str(args), use_gt=use_gt)
 
-  bnet.init_CPT()  
+  bnet.init()  
   return
     
   
