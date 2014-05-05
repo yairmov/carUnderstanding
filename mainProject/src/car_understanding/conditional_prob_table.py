@@ -29,6 +29,8 @@ class CPT(object):
     self.cpt = pd.DataFrame(columns=columns)
     self.is_normalized = False
     self.default_true_value = default_true_value
+    self.TRUE = 'True'
+    self.FALSE = 'False'
     
   
   def make_key(self, row_ind):
@@ -46,7 +48,7 @@ class CPT(object):
     row_ind = self.make_key(row_ind)
     if not self.has_row(row_ind):
       self.cpt.loc[row_ind] = pd.Series(data=np.array([0,0]), 
-                                        index=['True', 'False'])
+                                        index=[self.TRUE, self.FALSE])
       self.index.add(row_ind)
   
   def set_value(self, row_ind, column, value):
@@ -69,16 +71,12 @@ class CPT(object):
     
   def get_value(self, row_ind, column):
     row_ind = self.make_key(row_ind)
-#     s =  'row: {}, col: {} '.format(row_ind, column)
     if not self.has_row(row_ind):
       if self.is_normalized:
-#         print s + 'val: {}'.format(str(self.default_true_value if column else 1 - self.default_true_value))
-        return self.default_true_value if column else 1 - self.default_true_value
+        return self.default_true_value if (column == self.TRUE) else 1 - self.default_true_value
       else:
-#         print s + 'val: 0' 
         return 0
     
-#     print s + 'val: {}'.format(self.cpt.ix[row_ind, column])
     return self.cpt.ix[row_ind, column]
   
   def __str__(self):

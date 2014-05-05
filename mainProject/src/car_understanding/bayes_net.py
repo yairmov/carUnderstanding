@@ -101,13 +101,23 @@ class BayesNet2():
   
   def init_attrib_nodes_CPT(self):
     raise Exception('not implemented')
-    has_attrib_prob = 0.99
+    has_attrib_prob = 0.9
     
-    attrib_names = self.attrib_names
-    class_inds = self.class_inds
-    
-    
-#     for a_name in self.attrib_names:
+    for a_name in self.attrib_names:
+      classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
+      classes_for_attrib = np.sort(classes_for_attrib)
+      l = classes_for_attrib.shape[0]
+      cpt = CPT(default_true_value=has_attrib_prob, 
+                name='p({0}|{1})'.format(a_name, classes_for_attrib))
+      false_row_key = [False for x in range(l)]
+      cpt.create_row(false_row_key)
+      cpt.set_value(false_row_key, cpt.TRUE, 0.01)
+      cpt.set_value(false_row_key, cpt.FALSE, 0.99)
+      cpt.is_normalized = True
+      
+      self.CPT['p({}|{})'.format(a_name, classes_for_attrib)] = cpt
+      print 'p({}|{})'.format(a_name, classes_for_attrib)
+      print cpt 
 
 
   def init_attrib_clf_nodes_CPT(self):
