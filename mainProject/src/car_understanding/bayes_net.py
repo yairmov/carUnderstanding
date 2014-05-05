@@ -218,7 +218,7 @@ class BayesNet2():
 #       print 'cpt: {}'.format(cpt)
 #       return
       
-      exec f_str.format(a_name=a_name, class_list=class_list) 
+      exec f_str.format(a_name=a_name, class_list=class_list) in locals()
       functions.append(locals()[f_name])
       domains.update({a_name: ['True', 'false']})
   
