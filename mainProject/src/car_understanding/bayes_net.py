@@ -216,10 +216,8 @@ class BayesNet2():
       class_list = ','.join(['c_' + str(x) for x in classes_for_attrib])
       f_name = 'f_a_{}'.format(a_name)
       cpt = self.CPT['p({}|{})'.format(a_name, classes_for_attrib)]
-      
       exec f_str.format(a_name=a_name, class_list=class_list) in locals()
       functions.append(locals()[f_name])
-      
       domains.update({'a_' + a_name: ['True', 'false']})
       
   
@@ -231,6 +229,9 @@ class BayesNet2():
     for a_name in self.attrib_names:
       cpt = self.CPT['p({0}_clf|{0})'.format(a_name)]
       exec f_str.format(a_name=a_name)
+      f_name = 'f_clf_{}'.format(a_name)
+      functions.append(locals()[f_name])
+      domains.update({'clf_' + a_name: ['True', 'false']})
       
       
     print 'function: {}'.format(functions)
