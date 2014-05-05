@@ -202,7 +202,7 @@ class BayesNet2():
       exec f_str.format(class_id=class_id) in locals(), globals()
       curr_d = {'c_' + str(class_id): ['True', 'False']} 
       f_name = 'f_c_{}'.format(class_id)
-      functions.append(locals()[f_name])
+      functions.append(globals()[f_name])
       domains.update(curr_d)
       
     
@@ -219,7 +219,7 @@ class BayesNet2():
       f_name = 'f_a_{}'.format(a_name)
       cpt = self.CPT['p({}|{})'.format(a_name, classes_for_attrib)]
       exec f_str.format(a_name=a_name, class_list=class_list) in locals(), globals()
-      functions.append(locals()[f_name])
+      functions.append(globals()[f_name])
       domains.update({'a_' + a_name: ['True', 'false']})
       
   
@@ -232,7 +232,7 @@ class BayesNet2():
       cpt = self.CPT['p({0}_clf|{0})'.format(a_name)]
       exec f_str.format(a_name=a_name) in locals(), globals()
       f_name = 'f_clf_{}'.format(a_name)
-      functions.append(locals()[f_name])
+      functions.append(globals()[f_name])
       domains.update({'clf_' + a_name: ['True', 'false']})
       
     
