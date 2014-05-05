@@ -94,6 +94,8 @@ class BayesNet2():
                             'False': [1-class_priors[ii]]},
                            columns=['True', 'False'])
       self.CPT['p({})'.format(self.class_inds[ii])] = prior
+      print 'p({})'.format(self.class_inds[ii])
+      print prior 
     
   
   def init_attrib_nodes_CPT(self):
