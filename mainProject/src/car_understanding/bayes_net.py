@@ -28,7 +28,7 @@ from attribute_selector import AttributeSelector
 from conditional_prob_table import CPT
 import util
 
-CPT = None
+global_CPT = None
 
 class BayesNet2():
   """A Bayes net model ("arrows going down")"""
@@ -194,8 +194,8 @@ class BayesNet2():
     functions = []
     domains = {}
      
-    global CPT
-    CPT = copy.deepcopy(self.CPT)
+    global global_CPT
+    global_CPT = copy.deepcopy(self.CPT)
     
     #build functions for class priors
     # Build functions for hidden attribute layer
@@ -203,7 +203,7 @@ class BayesNet2():
       return cpt.iloc[0][c_{class_id}]
     '''
     for class_id in self.class_inds:
-      cpt = CPT['p({})'.format(class_id)]
+      cpt = global_CPT['p({})'.format(class_id)]
       f_name = 'f_c_{}'.format(class_id)
       curr_f = function_builder(f_str.format(class_id=class_id), f_name, cpt)
 #       setattr(self, f_name, classmethod(curr_f))
@@ -225,7 +225,7 @@ class BayesNet2():
       classes_for_attrib = np.sort(classes_for_attrib)
       class_list = ','.join(['c_' + str(x) for x in classes_for_attrib])
       f_name = 'f_a_{}'.format(a_name)
-      cpt = CPT['p({}|{})'.format(a_name, classes_for_attrib)]
+      cpt = global_CPT['p({}|{})'.format(a_name, classes_for_attrib)]
       curr_f = function_builder(f_str.format(a_name=a_name, class_list=class_list),
                                 f_name, cpt)
 #       exec f_str.format(a_name=a_name, class_list=class_list) in globals()
@@ -239,7 +239,7 @@ class BayesNet2():
       return cpt.loc[a_{a_name}][clf_{a_name}]
     '''
     for a_name in self.attrib_names:
-      cpt = CPT['p({0}_clf|{0})'.format(a_name)]
+      cpt = global_CPT['p({0}_clf|{0})'.format(a_name)]
       f_name = 'f_clf_{}'.format(a_name)
       curr_f = function_builder(f_str.format(a_name=a_name), 
                                 f_name, cpt)
