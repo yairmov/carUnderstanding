@@ -212,7 +212,7 @@ class BayesNet2():
     # Build functions for hidden attribute layer
     # make template function using string
     f_str = '''def f_a_{a_name}(a_{a_name}, {class_list}):
-      return cpt.get_value(({class_list}), {a_name})
+      return cpt.get_value(({class_list}), a_{a_name})
     '''
     
     for a_name in self.attrib_names:
@@ -260,8 +260,6 @@ class BayesNet2():
       
   def build_bnet(self):
     functions, domains = self.build_functions_for_nodes()
-    for k,v in domains.items():
-      print (k,v)
     self.g = build_bbn(*functions, domains=domains)
     
     
