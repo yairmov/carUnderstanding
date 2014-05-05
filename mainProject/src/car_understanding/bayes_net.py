@@ -197,10 +197,9 @@ class BayesNet2():
       curr_d = {str(class_id): ['True', 'False']} 
       functions.append(curr_f)
       domains.update(curr_d)
+      print "curr_f('True') = {}".format(curr_f('True'))
       
     
-    print functions
-    print domains
     # Build functions for hidden attribute layer
     # make template function using string
     f_str = '''
