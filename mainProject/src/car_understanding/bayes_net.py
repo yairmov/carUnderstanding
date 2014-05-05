@@ -20,6 +20,7 @@ import pandas as pd
 import pymc as mc
 from sklearn.externals.joblib import Parallel, delayed
 from sklearn import cross_validation
+from bayesian.bbn import build_bbn
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
@@ -246,13 +247,12 @@ class BayesNet2():
         functions.append(locals()[f_name])
         domains.update({'m_' + str(class_id): ['True', 'false']})
       
-    print 'function: {}'.format(functions)
-    print 'domains: {}'.format(domains)
-  
+
+    return functions, domains
       
   def build_bnet(self):
-    self.build_functions_for_nodes()
-    return
+    functions, domains = self.build_functions_for_nodes()
+    self.g = build_bbn(*functions, domains=domains)
 
 #------------------------------------------------------------------------------
 #----------------------------OLD-----------------------------------------------
