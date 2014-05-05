@@ -39,13 +39,14 @@ class CPT(object):
 #     if type(row_ind) == tuple:
 #       return str(row_ind)
     else:
-      return str(tuple([v for v in row_ind]))
+      return str(tuple([bool(v) for v in row_ind]))
   
   def has_row(self, row_ind):
     return self.make_key(row_ind) in self.index
     
   def create_row(self, row_ind):
     row_ind = self.make_key(row_ind)
+    print row_ind
     if not self.has_row(row_ind):
       self.cpt.loc[row_ind] = pd.Series(data=np.array([0,0]), 
                                         index=[self.TRUE, self.FALSE])
