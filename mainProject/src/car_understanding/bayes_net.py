@@ -229,7 +229,7 @@ class BayesNet2():
       return cpt.loc[a_{a_name}][clf_{a_name}]
     '''
     for a_name in self.attrib_names:
-      cpt = self.CPT['p({0_clf}|{0})'.format(a_name)]
+      cpt = self.CPT['p({0}_clf|{0})'.format(a_name)]
       exec f_str.format(a_name)
       
       
