@@ -220,7 +220,7 @@ class BayesNet2():
       cpt = self.CPT['p({}|{})'.format(a_name, classes_for_attrib)]
       exec f_str.format(a_name=a_name, class_list=class_list) in locals(), globals()
       functions.append(globals()[f_name])
-      domains.update({'a_' + a_name: ['True', 'false']})
+      domains.update({'a_' + a_name: ['True', 'False']})
       
   
     # Build functions for attribute classifier layer
@@ -233,7 +233,7 @@ class BayesNet2():
       exec f_str.format(a_name=a_name) in locals(), globals()
       f_name = 'f_clf_{}'.format(a_name)
       functions.append(globals()[f_name])
-      domains.update({'clf_' + a_name: ['True', 'false']})
+      domains.update({'clf_' + a_name: ['True', 'False']})
       
     
     # Build functions for multiclass classifier layer
@@ -246,7 +246,7 @@ class BayesNet2():
         exec f_str.format(class_id=class_id)
         f_name = 'f_m_{}'.format(class_id)
         functions.append(locals()[f_name])
-        domains.update({'m_' + str(class_id): ['True', 'false']})
+        domains.update({'m_' + str(class_id): ['True', 'False']})
       
 
     return functions, domains
