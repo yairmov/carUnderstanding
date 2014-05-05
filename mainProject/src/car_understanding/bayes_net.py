@@ -195,23 +195,23 @@ class BayesNet2():
     #build functions for class priors
     # Build functions for hidden attribute layer
     f_str = '''
-    @staticmethod
     def f_c_{class_id}(c_{class_id}):
       return cpt.iloc[0][c_{class_id}]
     '''
     for class_id in self.class_inds:
       cpt = self.CPT['p({})'.format(class_id)]
-      exec f_str.format(class_id=class_id) in globals()
-      curr_d = {'c_' + str(class_id): ['True', 'False']} 
       f_name = 'f_c_{}'.format(class_id)
-      functions.append(globals()[f_name])
+      curr_f = function_builder(f_str, f_name, cpt)
+#       exec f_str.format(class_id=class_id) in globals()
+      curr_d = {'c_' + str(class_id): ['True', 'False']} 
+      
+      functions.append(curr_f)
       domains.update(curr_d)
       
     
     # Build functions for hidden attribute layer
     # make template function using string
     f_str = '''
-    @staticmethod
     def f_a_{a_name}(a_{a_name}, {class_list}):
       return cpt.get_value(({class_list}), {a_name})
     '''
@@ -230,7 +230,6 @@ class BayesNet2():
     # Build functions for attribute classifier layer
     # make template function using string
     f_str = '''
-    @staticmethod
     def f_clf_{a_name}(clf_{a_name}, a_{a_name}):
       return cpt.loc[a_{a_name}][clf_{a_name}]
     '''
@@ -260,6 +259,13 @@ class BayesNet2():
   def build_bnet(self):
     functions, domains = self.build_functions_for_nodes()
     self.g = build_bbn(*functions, domains=domains)
+    
+    
+    
+def function_builder(f_str, f_name, cpt):
+  exec f_str in globals()
+  return globals()[f_name]
+  
 
 #------------------------------------------------------------------------------
 #----------------------------OLD-----------------------------------------------
