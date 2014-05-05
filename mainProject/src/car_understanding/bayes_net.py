@@ -254,7 +254,7 @@ class BayesNet2():
       return cpt.loc[c_{class_id}][m_{class_id}]
     '''
     for class_id in self.class_inds:
-        cpt = CPT['p(m_clf_{0}|{0})'.format(class_id)]
+        cpt = global_CPT['p(m_clf_{0}|{0})'.format(class_id)]
         exec f_str.format(class_id=class_id)
         f_name = 'f_m_{}'.format(class_id)
         functions.append(locals()[f_name])
