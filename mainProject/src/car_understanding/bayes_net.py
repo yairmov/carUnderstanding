@@ -111,7 +111,6 @@ class BayesNet2():
     
   
   def init_attrib_nodes_CPT(self):
-    raise Exception('not implemented')
     has_attrib_prob = 0.9
     
     for a_name in self.attrib_names:
