@@ -76,7 +76,7 @@ class BayesNet2():
     self.is_init = True
     
     self.init_class_nodes_CPT()
-#     self.init_class_nodes_CPT()
+#     self.init_attrib_nodes_CPT()
     self.init_attrib_clf_nodes_CPT()
     
 
