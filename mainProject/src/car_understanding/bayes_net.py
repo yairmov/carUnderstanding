@@ -201,6 +201,7 @@ class BayesNet2():
       cpt = self.CPT['p({})'.format(class_id)]
       f_name = 'f_c_{}'.format(class_id)
       curr_f = function_builder(f_str.format(class_id=class_id), f_name, cpt)
+      setattr(BayesNet2, f_name, staticmethod(curr_f))
 #       exec f_str.format(class_id=class_id) in globals()
       curr_d = {'c_' + str(class_id): ['True', 'False']} 
       
