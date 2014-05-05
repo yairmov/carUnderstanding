@@ -193,7 +193,7 @@ class BayesNet2():
     #build functions for class priors
     for class_id in self.class_inds:
       curr_f = lambda val: self.CPT['p({})'.format(class_id)].iloc[0][val]
-      curr_f.__name__ = 'f_{}'.format(class_id)
+      curr_f.__name__ = 'f_c_{}'.format(class_id)
       curr_d = {'c_' + str(class_id): ['True', 'False']} 
       functions.append(curr_f)
       domains.update(curr_d)
@@ -201,7 +201,7 @@ class BayesNet2():
     
     # Build functions for hidden attribute layer
     # make template function using string
-    f_str = '''def f_{a_name}({a_name}, {class_list}):
+    f_str = '''def f_a_{a_name}({a_name}, {class_list}):
       return cpt.get_value(({class_list}), {a_name})
     '''
     
@@ -209,7 +209,7 @@ class BayesNet2():
       classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
       classes_for_attrib = np.sort(classes_for_attrib)
       class_list = ','.join(['c_' + str(x) for x in classes_for_attrib])
-      f_name = 'f_{}'.format(a_name)
+      f_name = 'f_a_{}'.format(a_name)
       cpt = self.CPT['p({}|{})'.format(a_name, classes_for_attrib)]
       
 #       print 'class_list: {}'.format(class_list)
