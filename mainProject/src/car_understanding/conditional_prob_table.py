@@ -80,7 +80,11 @@ class CPT(object):
     return self.cpt.ix[row_ind, column]
   
   def __str__(self):
-    return self.cpt.__str__()
+    s = self.cpt.__str__()
+    s += '\n'
+    s += 'unobserved rows: [{}, {}]'.format(self.default_true_value,
+                                            1-self.default_true_value)
+    return 
     
   def normalize_rows(self):
     '''
