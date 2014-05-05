@@ -213,6 +213,11 @@ class BayesNet2():
       class_list = ','.join([str(x) for x in classes_for_attrib])
       f_name = 'f_{}'.format(a_name)
       cpt = self.CPT['p({}|{})'.format(a_name, classes_for_attrib)]
+      
+      print 'class_list: {}'.format(class_list)
+      print 'f_name: {}'.format(f_name)
+      print 'cpt: {}'.format(cpt)
+      
       exec f_str.format(a_name=a_name, class_list=class_list) 
       functions.append(locals()[f_name])
       domains.update({a_name: ['True', 'false']})
