@@ -237,7 +237,7 @@ class BayesNet2():
     # Build functions for multiclass classifier layer
     # make template function using string
     f_str = '''def f_m_{class_id}(m_{class_id}, c_{class_id}):
-      return cpt.loc[c_{class_id}][m_{class_id]
+      return cpt.loc[c_{class_id}][m_{class_id}]
     '''
     for class_id in self.class_inds:
         cpt = self.CPT['p(m_clf_{0}|{0})'.format(class_id)]
