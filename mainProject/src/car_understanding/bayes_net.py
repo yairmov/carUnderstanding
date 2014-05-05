@@ -226,7 +226,7 @@ class BayesNet2():
       
   
     # Build functions for attribute classifier layer
-    for a_name in self.attrib_names:  
+#     for a_name in self.attrib_names:  
       
       
     print 'function: {}'.format(functions)
