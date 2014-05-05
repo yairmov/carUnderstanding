@@ -151,7 +151,7 @@ class BayesNet2():
       p_clf_given_not_attrib =  n_fp / n_negative
       
       cpt = pd.DataFrame(index=['True', 'False'], columns=['True', 'False'])
-      cpt.index.name = 'Hidden attrib value'
+      cpt.index.name = 'class_id'
       cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
       cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
     
