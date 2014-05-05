@@ -194,8 +194,7 @@ class BayesNet2():
     
     #build functions for class priors
     # Build functions for hidden attribute layer
-    f_str = '''
-    def f_c_{class_id}(c_{class_id}):
+    f_str = '''def f_c_{class_id}(c_{class_id}):
       return cpt.iloc[0][c_{class_id}]
     '''
     for class_id in self.class_inds:
