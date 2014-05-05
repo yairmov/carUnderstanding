@@ -21,12 +21,14 @@ import pymc as mc
 from sklearn.externals.joblib import Parallel, delayed
 from sklearn import cross_validation
 from bayesian.bbn import build_bbn
+import copy
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
 from conditional_prob_table import CPT
 import util
 
+CPT = None
 
 class BayesNet2():
   """A Bayes net model ("arrows going down")"""
@@ -191,6 +193,9 @@ class BayesNet2():
   def build_functions_for_nodes(self):
     functions = []
     domains = {}
+     
+    global CPT
+    CPT = copy.deepcopy(self.CPT)
     
     #build functions for class priors
     # Build functions for hidden attribute layer
@@ -198,7 +203,7 @@ class BayesNet2():
       return cpt.iloc[0][c_{class_id}]
     '''
     for class_id in self.class_inds:
-      cpt = self.CPT['p({})'.format(class_id)]
+      cpt = CPT['p({})'.format(class_id)]
       f_name = 'f_c_{}'.format(class_id)
       curr_f = function_builder(f_str.format(class_id=class_id), f_name, cpt)
 #       setattr(self, f_name, classmethod(curr_f))
@@ -220,7 +225,7 @@ class BayesNet2():
       classes_for_attrib = np.sort(classes_for_attrib)
       class_list = ','.join(['c_' + str(x) for x in classes_for_attrib])
       f_name = 'f_a_{}'.format(a_name)
-      cpt = self.CPT['p({}|{})'.format(a_name, classes_for_attrib)]
+      cpt = CPT['p({}|{})'.format(a_name, classes_for_attrib)]
       curr_f = function_builder(f_str.format(a_name=a_name, class_list=class_list),
                                 f_name, cpt)
 #       exec f_str.format(a_name=a_name, class_list=class_list) in globals()
@@ -234,7 +239,7 @@ class BayesNet2():
       return cpt.loc[a_{a_name}][clf_{a_name}]
     '''
     for a_name in self.attrib_names:
-      cpt = self.CPT['p({0}_clf|{0})'.format(a_name)]
+      cpt = CPT['p({0}_clf|{0})'.format(a_name)]
       f_name = 'f_clf_{}'.format(a_name)
       curr_f = function_builder(f_str.format(a_name=a_name), 
                                 f_name, cpt)
@@ -249,7 +254,7 @@ class BayesNet2():
       return cpt.loc[c_{class_id}][m_{class_id}]
     '''
     for class_id in self.class_inds:
-        cpt = self.CPT['p(m_clf_{0}|{0})'.format(class_id)]
+        cpt = CPT['p(m_clf_{0}|{0})'.format(class_id)]
         exec f_str.format(class_id=class_id)
         f_name = 'f_m_{}'.format(class_id)
         functions.append(locals()[f_name])
@@ -265,8 +270,6 @@ class BayesNet2():
     
     
 def function_builder(f_str, f_name, cpt):
-  import copy
-  cpt = copy.deepcopy(cpt)
   print f_str
   exec f_str in locals(), globals()
   return globals()[f_name]
