@@ -233,6 +233,18 @@ class BayesNet2():
       functions.append(locals()[f_name])
       domains.update({'clf_' + a_name: ['True', 'false']})
       
+    
+    # Build functions for multiclass classifier layer
+    # make template function using string
+    f_str = '''def f_m_{class_id}(m_{class_id}, c_{class_id}):
+      return cpt.loc[c_{class_id}][m_{class_id]
+    '''
+    for class_id in self.class_inds:
+        cpt = self.CPT['p(m_clf_{0}|{0})'.format(class_id)]
+        exec f_str.format(class_id=class_id)
+        f_name = 'f_m_{}'.format(class_id)
+        functions.append(locals()[f_name])
+        domains.update({'m_' + class_id: ['True', 'false']})
       
     print 'function: {}'.format(functions)
     print 'domains: {}'.format(domains)
