@@ -72,6 +72,10 @@ class BayesNet2():
     self.is_init = False
     
     
+  def init(self):
+    self.init_CPT()
+    self.build_bnet()
+    
   def init_CPT(self):
     self.is_init = True
     
@@ -119,7 +123,7 @@ class BayesNet2():
       l = classes_for_attrib.shape[0]
       cpt = CPT(default_true_value=has_attrib_prob, 
                 name='p({0}|{1})'.format(a_name, classes_for_attrib))
-      false_row_key = [False for x in range(l)]
+      false_row_key = ['False' for x in range(l)]
       cpt.create_row(false_row_key)
       cpt.set_value(false_row_key, cpt.TRUE, 0.01)
       cpt.set_value(false_row_key, cpt.FALSE, 0.99)
@@ -179,7 +183,44 @@ class BayesNet2():
       print cpt
       
       self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
-
+      
+      
+  
+  def build_functions_for_nodes(self):
+    functions = []
+    domains = {}
+    
+    #build functions for class priors
+    for class_id in range(len(self.class_inds)):
+      curr_f = lambda val: self.CPT['p({})'.format(self.class_id)].iloc[0][val]
+      curr_d = {str(self.class_id), ['True', 'False']} 
+      functions.append(curr_f)
+      domains.update(curr_d)
+      
+    
+    print functions
+    print domains
+    # Build functions for hidden attribute layer
+    # make template function using string
+    f_str = '''
+    def f_{a_name}({a_name}, {class_list}):
+       return cpt.get_value(({row_key}), {a_name})
+    '''
+    
+    for a_name in self.attrib_names:
+      classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
+      classes_for_attrib = np.sort(classes_for_attrib)
+      class_list = ','.join([str(x) for x in classes_for_attrib])
+      f_name = 'f_{}'.format(a_name)
+      cpt = self.CPT['p({}|{})'.format(a_name, classes_for_attrib)]
+      exec f_str.format(a_name=a_name, class_list=class_list) 
+      functions.append(locals()[f_name])
+      domains.update({a_name: ['True', 'false']})
+  
+      
+  def build_bnet(self):
+    self.build_functions_for_nodes()
+    return
 
 #------------------------------------------------------------------------------
 #----------------------------OLD-----------------------------------------------
