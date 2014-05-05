@@ -193,7 +193,7 @@ class BayesNet2():
     #build functions for class priors
     for class_id in range(len(self.class_inds)):
       curr_f = lambda val: self.CPT['p({})'.format(self.class_id)].iloc[0][val]
-      curr_d = {str(self.class_id), ['True', 'False']} 
+      curr_d = {str(class_id), ['True', 'False']} 
       functions.append(curr_f)
       domains.update(curr_d)
       
