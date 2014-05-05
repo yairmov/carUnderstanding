@@ -204,7 +204,7 @@ class BayesNet2():
     # make template function using string
     f_str = '''
     def f_{a_name}({a_name}, {class_list}):
-       return cpt.get_value(({row_key}), {a_name})
+       return cpt.get_value(({class_list}), {a_name})
     '''
     
     for a_name in self.attrib_names:
