@@ -191,17 +191,23 @@ class BayesNet2():
     domains = {}
     
     #build functions for class priors
+    f_str = '''def f_c_{class_id}(c_{class_id})
+      return cpt.iloc[0][c_{class_id})
+    '''
     for class_id in self.class_inds:
-      curr_f = lambda val: self.CPT['p({})'.format(class_id)].iloc[0][val]
-      curr_f.__name__ = 'f_c_{}'.format(class_id)
+      cpt = self.CPT['p({})'.format(class_id)]
+      exec f_str.format(class_id=class_id)
+#       curr_f = lambda val: .iloc[0][val]
+#       curr_f.__name__ = 'f_c_{}'.format(class_id)
       curr_d = {'c_' + str(class_id): ['True', 'False']} 
-      functions.append(curr_f)
+      f_name = 'f_c_{}'.format(class_id)
+      functions.append(locals()[f_name])
       domains.update(curr_d)
       
     
     # Build functions for hidden attribute layer
     # make template function using string
-    f_str = '''def f_a_{a_name}({a_name}, {class_list}):
+    f_str = '''def f_a_{a_name}(a_{a_name}, {class_list}):
       print ({class_list})
       return cpt.get_value(({class_list}), {a_name})
     '''
@@ -216,10 +222,11 @@ class BayesNet2():
       exec f_str.format(a_name=a_name, class_list=class_list) in locals()
       functions.append(locals()[f_name])
       
-      print '---------------------------'
-      print functions[-1]('True', *['False' for x in classes_for_attrib])
-      return
       domains.update({'a_' + a_name: ['True', 'false']})
+      
+  
+    # Build functions for attribute classifier layer
+    for a_name in self.attrib_names:  
       
       
     print 'function: {}'.format(functions)
