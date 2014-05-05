@@ -244,7 +244,7 @@ class BayesNet2():
         exec f_str.format(class_id=class_id)
         f_name = 'f_m_{}'.format(class_id)
         functions.append(locals()[f_name])
-        domains.update({'m_' + class_id: ['True', 'false']})
+        domains.update({'m_' + str(class_id): ['True', 'false']})
       
     print 'function: {}'.format(functions)
     print 'domains: {}'.format(domains)
