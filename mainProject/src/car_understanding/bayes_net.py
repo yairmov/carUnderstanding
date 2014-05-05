@@ -194,7 +194,9 @@ class BayesNet2():
     
     #build functions for class priors
     # Build functions for hidden attribute layer
-    f_str = '''def f_c_{class_id}(c_{class_id}):
+    f_str = '''
+    @staticmethod
+    def f_c_{class_id}(c_{class_id}):
       return cpt.iloc[0][c_{class_id}]
     '''
     for class_id in self.class_inds:
@@ -208,7 +210,9 @@ class BayesNet2():
     
     # Build functions for hidden attribute layer
     # make template function using string
-    f_str = '''def f_a_{a_name}(a_{a_name}, {class_list}):
+    f_str = '''
+    @staticmethod
+    def f_a_{a_name}(a_{a_name}, {class_list}):
       return cpt.get_value(({class_list}), {a_name})
     '''
     
@@ -225,7 +229,9 @@ class BayesNet2():
   
     # Build functions for attribute classifier layer
     # make template function using string
-    f_str = '''def f_clf_{a_name}(clf_{a_name}, a_{a_name}):
+    f_str = '''
+    @staticmethod
+    def f_clf_{a_name}(clf_{a_name}, a_{a_name}):
       return cpt.loc[a_{a_name}][clf_{a_name}]
     '''
     for a_name in self.attrib_names:
