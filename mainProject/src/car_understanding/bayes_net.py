@@ -269,6 +269,7 @@ class BayesNet2():
 def function_builder(f_str, f_name, cpt):
   import copy
   cpt = copy.deepcopy(cpt)
+  print f_str
   exec f_str in locals(), globals()
   return globals()[f_name]
   
