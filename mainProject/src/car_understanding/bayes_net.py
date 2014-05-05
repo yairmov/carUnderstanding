@@ -230,7 +230,7 @@ class BayesNet2():
     '''
     for a_name in self.attrib_names:
       cpt = self.CPT['p({0}_clf|{0})'.format(a_name)]
-      exec f_str.format(a_name)
+      exec f_str.format(a_name=a_name)
       
       
     print 'function: {}'.format(functions)
