@@ -648,8 +648,10 @@ def multiclass_clf():
   
   
   
-  m_clf = MultiClassClassifier(train_annos, classes, config)
-  m_clf.fit()
+#   m_clf = MultiClassClassifier(train_annos, classes, config)
+#   m_clf.fit()
+
+  m_clf = MultiClassClassifier.load(config.multiclass_classifier.path)
 
   features_test = Bow.load_bow(test_annos, config)
   y_pred = m_clf.predict(test_annos, features_test)
