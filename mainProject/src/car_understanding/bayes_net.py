@@ -433,8 +433,7 @@ class BayesNet2():
     for a_name in self.attrib_names:
       attrib_probs.loc[a_name] = marginals[('a_' + a_name, 'True')]
 
-    print attrib_probs
-    import sys;sys.exit(0)
+    return class_probs, attrib_probs
     
     
 def function_builder(f_str, f_name):
