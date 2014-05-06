@@ -134,7 +134,7 @@ class BayesNet2():
       cpt.set_value(false_row_key, cpt.FALSE, 0.99)
       cpt.is_normalized = True
       
-      self.CPT['p({}|{})'.format(a_name, classes_for_attrib)] = cpt
+      self.CPT['p({}|{})'.format(a_name, class_list)] = cpt
       print 'p({}|{})'.format(a_name, class_list)
       print cpt 
 
