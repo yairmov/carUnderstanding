@@ -454,6 +454,9 @@ def bayes_net_generic(use_gt=False):
   # Select only images from the args "world"
   test_annos = test_annos[np.array(
                              test_annos.class_index.isin(classes.class_index))]
+  
+  print test_annos.shape
+  return
 
 
 
