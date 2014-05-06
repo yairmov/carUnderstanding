@@ -415,11 +415,12 @@ class BayesNet2():
     q_params = {}
     for a_name in self.attrib_names:
       q_params.update({'clf_'+a_name: str(clf_res_discrete.loc[a_name])})
-    
     for c_id in class_inds:
       q_params.update({'m_'+str(c_id): str(m_discr_one.loc[c_id])})
     
-    print q_params
+    # Run inference with query parameters
+    marginals = self.g.query(**q_params)
+    print marginals 
     import sys;sys.exit(0)
     
     
