@@ -657,7 +657,7 @@ def multiclass_clf():
   labels_train = m_clf.labels_train
   
   
-  MultiClassClassifier.save(m_clf, config.multiclass_classifier.path)
+#   MultiClassClassifier.save(m_clf, config.multiclass_classifier.path)
   
   
   print(classification_report(labels_test, y_pred,
