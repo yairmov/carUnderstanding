@@ -125,7 +125,7 @@ class BayesNet2():
       classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
       classes_for_attrib = np.sort(classes_for_attrib)
       l = classes_for_attrib.shape[0]
-      class_list = ','.join(['c_' + str(x) for x in classes_for_attrib])
+      class_list = ','.join([str(x) for x in classes_for_attrib])
       cpt = CPT(default_true_value=has_attrib_prob, 
                 name='p({0}|{1})'.format(a_name, class_list))
       false_row_key = ['False' for x in range(l)]
