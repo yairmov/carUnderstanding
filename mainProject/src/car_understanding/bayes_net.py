@@ -381,12 +381,13 @@ class BayesNet2():
         
         
     # apply multi class classifier on test annos
-    m_discr = self.multi_class_clf.predict(features=features)
-    print 'features.shape: ', features.shape
-    print 'm_discr.shape: ', m_discr.shape 
-    m_discr = pd.DataFrame(data=m_discr, 
+    m = self.multi_class_clf.predict(features=features)
+    m_discr = pd.DataFrame(data=np.zeros([m.shape[0], len(class_inds)]), 
                            index=test_annos.index, 
                            columns=class_inds)
+    for ii in range(m.shape[0]):
+      m_discr.iloc[ii][m[ii]] = 1
+      
     
     for ii in range(n_imgs):
       print "=================={}/{}========================".format(ii+1, n_imgs)
