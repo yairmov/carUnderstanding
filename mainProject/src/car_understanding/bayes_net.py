@@ -423,7 +423,7 @@ class BayesNet2():
     
     class_probs = pd.Series(index=class_inds, dtype=np.float64)
     for c_id in class_inds:
-      class_probs.loc[c_id] = marginals[('c' + str(c_id), 'True')]
+      class_probs.loc[c_id] = marginals[('c_' + str(c_id), 'True')]
     
     print class_probs
 
