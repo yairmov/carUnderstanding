@@ -382,6 +382,7 @@ class BayesNet2():
         
     # apply multi class classifier on test annos
     m_discr = self.multi_class_clf.predict(features=features)
+    print 'features.shape: ', features.shape
     print 'm_discr.shape: ', m_discr.shape 
     m_discr = pd.DataFrame(data=m_discr, 
                            index=test_annos.index, 
