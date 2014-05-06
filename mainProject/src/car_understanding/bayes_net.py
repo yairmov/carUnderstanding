@@ -360,7 +360,7 @@ class BayesNet2():
                               index=test_annos.index, 
                               columns=class_inds)
     
-    attrib_names = self.clf_names
+    attrib_names = self.attrib_names
     attrib_prob = pd.DataFrame(np.zeros([n_imgs, 
                                          len(attrib_names)]),
                               index=test_annos.index, 
