@@ -355,17 +355,7 @@ class BayesNet2():
     n_imgs = test_annos.shape[0]
     use_gt = self.use_gt
     class_inds = self.class_inds
-    class_prob = pd.DataFrame(np.zeros([n_imgs, 
-                                        len(class_inds)]),
-                              index=test_annos.index, 
-                              columns=class_inds)
-    
     attrib_names = self.attrib_names
-    attrib_prob = pd.DataFrame(np.zeros([n_imgs, 
-                                         len(attrib_names)]),
-                              index=test_annos.index, 
-                              columns=attrib_names)
-    
     
     print "Load image Bow histograms from disk"
     features = Bow.load_bow(test_annos, self.config)
@@ -389,6 +379,15 @@ class BayesNet2():
       m_discr.iloc[ii][m[ii]] = True
       
     
+    class_prob = pd.DataFrame(np.zeros([n_imgs, 
+                                        len(class_inds)]),
+                              index=test_annos.index, 
+                              columns=class_inds)
+    
+    attrib_prob = pd.DataFrame(np.zeros([n_imgs, 
+                                         len(attrib_names)]),
+                              index=test_annos.index, 
+                              columns=attrib_names)
     for ii in range(n_imgs):
       print "=================={}/{}========================".format(ii+1, n_imgs)
       print "Image: {}, class_id: {}, class_name: {}".format(test_annos.iloc[ii]['basename'],
@@ -411,7 +410,8 @@ class BayesNet2():
     use_gt = self.use_gt
     class_inds = self.class_inds
     
-    # build dictionary with all query parameters
+    # build dictionary with all query parameters:
+    # parameters are the observed values for the classifiers
     q_params = {}
     for a_name in self.attrib_names:
       q_params.update({'clf_'+a_name: str(clf_res_discrete.loc[a_name])})
@@ -420,7 +420,13 @@ class BayesNet2():
     
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
-    print marginals 
+    
+    class_probs = pd.Series(data=np.zeros(1,len(class_inds)), index=class_inds)
+    for c_id in class_inds:
+      class_probs.loc[c_id] = marginals[(c_id, 'True')]
+    
+    print class_probs
+
     import sys;sys.exit(0)
     
     
