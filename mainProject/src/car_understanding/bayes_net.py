@@ -253,7 +253,7 @@ class BayesNet2():
       curr_f = function_builder(f_str.format(a_name=a_name), 
                                 f_name)
 #       exec f_str.format(a_name=a_name) in globals()
-      functions.append(globals()[f_name])
+      functions.append(curr_f)
       domains.update({'clf_' + a_name: ['True', 'False']})
       
     
@@ -266,9 +266,11 @@ class BayesNet2():
     '''
     for class_id in self.class_inds:
         cpt = global_CPT['p(m_clf_{0}|{0})'.format(class_id)]
-        exec f_str.format(class_id=class_id)
+#         exec f_str.format(class_id=class_id)
         f_name = 'f_m_{}'.format(class_id)
-        functions.append(locals()[f_name])
+        curr_f = function_builder(f_str.format(class_id=class_id), 
+                                f_name)
+        functions.append(curr_f)
         domains.update({'m_' + str(class_id): ['True', 'False']})
       
 
