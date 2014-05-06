@@ -199,25 +199,114 @@ class BayesNet2():
     global global_CPT
     global_CPT = copy.deepcopy(self.CPT)
     
-    #build functions for class priors
+    f,d = self.build_functions_for_class_nodes()
+    functions.extend(f)
+    domains.update(d)
+    
+    f,d = self.build_functions_for_attrib_nodes()
+    functions.extend(f)
+    domains.update(d)
+    
+    f,d = self.build_functions_for_attrib_clf_nodes()
+    functions.extend(f)
+    domains.update(d)
+    
+    f,d = self.build_functions_for_multiclass_clf_nodes
+    functions.extend(f)
+    domains.update(d)
+    
+#     #build functions for class priors
+#     # Build functions for hidden attribute layer
+#     f_str = '''def f_c_{class_id}(c_{class_id}):
+#       cpt = global_CPT['p({class_id})']
+#       return cpt.iloc[0][c_{class_id}]
+#     '''
+#     for class_id in self.class_inds:
+#       f_name = 'f_c_{}'.format(class_id)
+#       curr_f = function_builder(f_str.format(class_id=class_id), f_name)
+#       curr_d = {'c_' + str(class_id): ['True', 'False']} 
+#       
+#       functions.append(curr_f)
+#       domains.update(curr_d)
+      
+    
     # Build functions for hidden attribute layer
+    # make template function using string
+#     f_str = '''def f_a_{a_name}(a_{a_name}, {class_list1}):
+#       global global_CPT
+#       cpt = global_CPT['p({a_name}|{class_list2})']
+#       return cpt.get_value(({class_list1}), a_{a_name})
+#     '''
+#     
+#     for a_name in self.attrib_names:
+#       classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
+#       classes_for_attrib = np.sort(classes_for_attrib)
+#       class_list1 = ','.join(['c_' + str(x) for x in classes_for_attrib])
+#       class_list2 = ','.join([str(x) for x in classes_for_attrib])
+#       f_name = 'f_a_{}'.format(a_name)
+#       curr_f = function_builder(f_str.format(a_name=a_name, 
+#                                              class_list1=class_list1,
+#                                              class_list2=class_list2),
+#                                 f_name)
+#       functions.append(curr_f)
+#       domains.update({'a_' + a_name: ['True', 'False']})
+      
+  
+#     # Build functions for attribute classifier layer
+#     # make template function using string
+#     f_str = '''def f_clf_{a_name}(clf_{a_name}, a_{a_name}):
+#       global global_CPT
+#       cpt = global_CPT['p({a_name}_clf|{a_name})']
+#       return cpt.loc[a_{a_name}][clf_{a_name}]
+#     '''
+#     for a_name in self.attrib_names:
+#       f_name = 'f_clf_{}'.format(a_name)
+#       curr_f = function_builder(f_str.format(a_name=a_name), 
+#                                 f_name)
+#       functions.append(curr_f)
+#       domains.update({'clf_' + a_name: ['True', 'False']})
+      
+    
+    # Build functions for multiclass classifier layer
+    # make template function using string
+#     f_str = '''def f_m_{class_id}(m_{class_id}, c_{class_id}):
+#       global global_CPT
+#       cpt = global_CPT['p(m_clf_{class_id}|{class_id})']
+#       return cpt.loc[c_{class_id}][m_{class_id}]
+#     '''
+#     for class_id in self.class_inds:
+#         f_name = 'f_m_{}'.format(class_id)
+#         curr_f = function_builder(f_str.format(class_id=class_id), 
+#                                 f_name)
+#         functions.append(curr_f)
+#         domains.update({'m_' + str(class_id): ['True', 'False']})
+      
+
+    return functions, domains
+  
+  
+  def build_functions_for_class_nodes(self):
+    functions = []
+    domains = {}
+    
     f_str = '''def f_c_{class_id}(c_{class_id}):
       cpt = global_CPT['p({class_id})']
       return cpt.iloc[0][c_{class_id}]
     '''
     for class_id in self.class_inds:
-#       cpt = global_CPT['p({})'.format(class_id)]
       f_name = 'f_c_{}'.format(class_id)
       curr_f = function_builder(f_str.format(class_id=class_id), f_name)
-#       setattr(self, f_name, classmethod(curr_f))
-#       exec f_str.format(class_id=class_id) in globals()
       curr_d = {'c_' + str(class_id): ['True', 'False']} 
       
       functions.append(curr_f)
       domains.update(curr_d)
       
+    return functions, domains
+  
+  def build_functions_for_attrib_nodes(self):
+    functions = []
+    domains = {}
     
-    # Build functions for hidden attribute layer
     # make template function using string
     f_str = '''def f_a_{a_name}(a_{a_name}, {class_list1}):
       global global_CPT
@@ -231,17 +320,19 @@ class BayesNet2():
       class_list1 = ','.join(['c_' + str(x) for x in classes_for_attrib])
       class_list2 = ','.join([str(x) for x in classes_for_attrib])
       f_name = 'f_a_{}'.format(a_name)
-#       cpt = global_CPT['p({}|{})'.format(a_name, classes_for_attrib)]
       curr_f = function_builder(f_str.format(a_name=a_name, 
                                              class_list1=class_list1,
                                              class_list2=class_list2),
                                 f_name)
-#       exec f_str.format(a_name=a_name, class_list=class_list) in globals()
       functions.append(curr_f)
       domains.update({'a_' + a_name: ['True', 'False']})
       
+    return functions, domains
   
-    # Build functions for attribute classifier layer
+  def build_functions_for_attrib_clf_nodes(self):
+    functions = []
+    domains = {}
+    
     # make template function using string
     f_str = '''def f_clf_{a_name}(clf_{a_name}, a_{a_name}):
       global global_CPT
@@ -249,16 +340,18 @@ class BayesNet2():
       return cpt.loc[a_{a_name}][clf_{a_name}]
     '''
     for a_name in self.attrib_names:
-#       cpt = global_CPT['p({0}_clf|{0})'.format(a_name)]
       f_name = 'f_clf_{}'.format(a_name)
       curr_f = function_builder(f_str.format(a_name=a_name), 
                                 f_name)
-#       exec f_str.format(a_name=a_name) in globals()
       functions.append(curr_f)
       domains.update({'clf_' + a_name: ['True', 'False']})
-      
     
-    # Build functions for multiclass classifier layer
+    return functions, domains
+
+  def build_functions_for_multiclass_clf_nodes(self):
+    functions = []
+    domains = {}
+    
     # make template function using string
     f_str = '''def f_m_{class_id}(m_{class_id}, c_{class_id}):
       global global_CPT
@@ -266,16 +359,14 @@ class BayesNet2():
       return cpt.loc[c_{class_id}][m_{class_id}]
     '''
     for class_id in self.class_inds:
-        cpt = global_CPT['p(m_clf_{0}|{0})'.format(class_id)]
-#         exec f_str.format(class_id=class_id)
-        f_name = 'f_m_{}'.format(class_id)
-        curr_f = function_builder(f_str.format(class_id=class_id), 
-                                f_name)
-        functions.append(curr_f)
-        domains.update({'m_' + str(class_id): ['True', 'False']})
-      
-
+      f_name = 'f_m_{}'.format(class_id)
+      curr_f = function_builder(f_str.format(class_id=class_id), 
+                              f_name)
+      functions.append(curr_f)
+      domains.update({'m_' + str(class_id): ['True', 'False']})
+    
     return functions, domains
+      
       
   def build_bnet(self):
     functions, domains = self.build_functions_for_nodes()
