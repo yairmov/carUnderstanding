@@ -495,8 +495,7 @@ def bayes_net_generic(use_gt=False):
   dump({'class_probs': class_probs,
         'attrib_probs': attrib_probs,
         'test_annos': test_annos,
-        'classes': classes,
-        'bnet':bnet},
+        'classes': classes},
        'bnet_res.dat')
   show_confusion_matrix(test_annos, classes, class_probs)
 
