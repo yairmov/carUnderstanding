@@ -215,8 +215,6 @@ class BayesNet2():
       functions.append(curr_f)
       domains.update(curr_d)
       
-      return functions, domains
-      
     
     # Build functions for hidden attribute layer
     # make template function using string
