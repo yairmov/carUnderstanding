@@ -489,10 +489,7 @@ def bayes_net_generic(use_gt=False):
                   classes, attrib_classifiers, attrib_meta, 
                   multi_class_clf=m_clf, desc=str(args), use_gt=use_gt)
   dump({'bnet': bnet}, '../../../output/bnet.dat')
-  bnet.init()
-  bnet.q()  
-  return
-    
+  bnet.init()    
   
   print 'predicting!!!'
 

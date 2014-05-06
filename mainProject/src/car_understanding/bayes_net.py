@@ -213,74 +213,7 @@ class BayesNet2():
     
     f,d = self.build_functions_for_multiclass_clf_nodes()
     functions.extend(f)
-    domains.update(d)
-    
-#     #build functions for class priors
-#     # Build functions for hidden attribute layer
-#     f_str = '''def f_c_{class_id}(c_{class_id}):
-#       cpt = global_CPT['p({class_id})']
-#       return cpt.iloc[0][c_{class_id}]
-#     '''
-#     for class_id in self.class_inds:
-#       f_name = 'f_c_{}'.format(class_id)
-#       curr_f = function_builder(f_str.format(class_id=class_id), f_name)
-#       curr_d = {'c_' + str(class_id): ['True', 'False']} 
-#       
-#       functions.append(curr_f)
-#       domains.update(curr_d)
-      
-    
-    # Build functions for hidden attribute layer
-    # make template function using string
-#     f_str = '''def f_a_{a_name}(a_{a_name}, {class_list1}):
-#       global global_CPT
-#       cpt = global_CPT['p({a_name}|{class_list2})']
-#       return cpt.get_value(({class_list1}), a_{a_name})
-#     '''
-#     
-#     for a_name in self.attrib_names:
-#       classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
-#       classes_for_attrib = np.sort(classes_for_attrib)
-#       class_list1 = ','.join(['c_' + str(x) for x in classes_for_attrib])
-#       class_list2 = ','.join([str(x) for x in classes_for_attrib])
-#       f_name = 'f_a_{}'.format(a_name)
-#       curr_f = function_builder(f_str.format(a_name=a_name, 
-#                                              class_list1=class_list1,
-#                                              class_list2=class_list2),
-#                                 f_name)
-#       functions.append(curr_f)
-#       domains.update({'a_' + a_name: ['True', 'False']})
-      
-  
-#     # Build functions for attribute classifier layer
-#     # make template function using string
-#     f_str = '''def f_clf_{a_name}(clf_{a_name}, a_{a_name}):
-#       global global_CPT
-#       cpt = global_CPT['p({a_name}_clf|{a_name})']
-#       return cpt.loc[a_{a_name}][clf_{a_name}]
-#     '''
-#     for a_name in self.attrib_names:
-#       f_name = 'f_clf_{}'.format(a_name)
-#       curr_f = function_builder(f_str.format(a_name=a_name), 
-#                                 f_name)
-#       functions.append(curr_f)
-#       domains.update({'clf_' + a_name: ['True', 'False']})
-      
-    
-    # Build functions for multiclass classifier layer
-    # make template function using string
-#     f_str = '''def f_m_{class_id}(m_{class_id}, c_{class_id}):
-#       global global_CPT
-#       cpt = global_CPT['p(m_clf_{class_id}|{class_id})']
-#       return cpt.loc[c_{class_id}][m_{class_id}]
-#     '''
-#     for class_id in self.class_inds:
-#         f_name = 'f_m_{}'.format(class_id)
-#         curr_f = function_builder(f_str.format(class_id=class_id), 
-#                                 f_name)
-#         functions.append(curr_f)
-#         domains.update({'m_' + str(class_id): ['True', 'False']})
-      
+    domains.update(d)      
 
     return functions, domains
   
@@ -372,8 +305,112 @@ class BayesNet2():
     functions, domains = self.build_functions_for_nodes()
     self.g = build_bbn(*functions, domains=domains)
     
-  def q(self):
-    self.g.q()
+  def q(self, *args):
+    self.g.q(args)
+    
+    
+  def create_attrib_res_on_images(self, data_annos, features=None):
+    '''
+    Calculates the predicion of all attribute classifiers on training images.
+    This table can be used to caclulate all the Conditional Probability tables
+    for the Bayes Net.
+    '''
+    if self.use_gt:
+      return None, None
+    
+    # Define some conviniece pointers 
+    config = self.config
+    attrib_classifiers = self.attrib_clfs
+    
+    if features is None:
+      print "Load image Bow histograms from disk"
+      features = Bow.load_bow(data_annos, config)
+  
+    print "Apply attribute classifiers on images"
+    res = {}
+    res_descrete = {}
+    pbar = ProgressBar(len(attrib_classifiers))
+    for ii in range(len(attrib_classifiers)):
+      attrib_clf = attrib_classifiers[ii]
+      curr_res = attrib_clf.decision_function(features,
+                                              use_prob=config.attribute.use_prob)
+      curr_res_d = attrib_clf.predict(features)
+      
+      res[attrib_clf.name] = curr_res.reshape(len(curr_res))
+      res_descrete[attrib_clf.name] = curr_res_d.reshape(len(curr_res_d))
+      pbar.animate(ii)
+    print ''
+  
+    res = pd.DataFrame(data=res, index=data_annos.index)
+    res_descrete = pd.DataFrame(data=res_descrete, index=data_annos.index)
+  
+  
+    res = pd.concat([res, data_annos.ix[:, ['class_index']]], axis=1)
+    res_descrete = pd.concat([res_descrete, data_annos.ix[:, ['class_index']]], axis=1)
+    
+    
+    return res, res_descrete
+    
+  def predict(self, test_annos):
+    n_imgs = test_annos.shape[0]
+    use_gt = self.use_gt
+    class_inds = self.class_inds
+    class_prob = pd.DataFrame(np.zeros([n_imgs, 
+                                        len(class_inds)]),
+                              index=test_annos.index, 
+                              columns=class_inds)
+    
+    attrib_names = self.clf_names
+    attrib_prob = pd.DataFrame(np.zeros([n_imgs, 
+                                         len(attrib_names)]),
+                              index=test_annos.index, 
+                              columns=attrib_names)
+    
+    
+    print "Load image Bow histograms from disk"
+    features = Bow.load_bow(test_annos, self.config)
+    
+    if not use_gt:
+      clf_res, clf_res_discrete = self.create_attrib_res_on_images(test_annos,
+                                                                   features)
+        
+    # using ground truth    
+    if use_gt:
+      attrib_meta = self.attrib_selector.create_attrib_meta(attrib_names)
+        
+        
+    # apply multi class classifier on test annos
+    m_proba = self.multi_class_clf.predict_proba(features)
+    m_proba = pd.DataFrame(data=m_proba, 
+                           index=test_annos.index, 
+                           columns=class_inds)
+    
+    for ii in range(n_imgs):
+      print "=================={}/{}========================".format(ii+1, n_imgs)
+      print "Image: {}, class_id: {}, class_name: {}".format(test_annos.iloc[ii]['basename'],
+                                                            test_annos.iloc[ii]['class_index'], 
+                                                            test_annos.iloc[ii]['class_name'])
+      if use_gt:
+        discr = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
+      else:
+        discr = clf_res_discrete.iloc[ii]
+      
+      m_proba_one = m_proba.iloc[ii]
+      (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_proba_one)
+      class_prob.iloc[ii] = class_prob_ii
+      attrib_prob.iloc[ii] = attrib_prob_ii
+      
+    return (class_prob, attrib_prob)
+  
+  
+  def predict_one(self, clf_res_discrete, multi_clf_probs):
+    use_gt = self.use_gt
+    class_inds = self.class_inds
+    
+    print 'clf_res_discrete: {}'.format(clf_res_discrete)
+    print 'multi_clf_probs: {}'.format(multi_clf_probs)
+    
+    import sys; sys.exit(0)
     
     
 def function_builder(f_str, f_name):
