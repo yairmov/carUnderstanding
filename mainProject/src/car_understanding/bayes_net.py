@@ -408,25 +408,32 @@ class BayesNet2():
   
   def predict_one(self, clf_res_discrete, m_discr_one):
     use_gt = self.use_gt
-    class_inds = self.class_inds
+    
+    if use_gt:
+      raise NotImplementedError()
     
     # build dictionary with all query parameters:
     # parameters are the observed values for the classifiers
     q_params = {}
     for a_name in self.attrib_names:
       q_params.update({'clf_'+a_name: str(clf_res_discrete.loc[a_name])})
-    for c_id in class_inds:
+    for c_id in self.class_inds:
       q_params.update({'m_'+str(c_id): str(m_discr_one.loc[c_id])})
     
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
     
-    class_probs = pd.Series(index=class_inds, dtype=np.float64)
-    for c_id in class_inds:
+    # Build class probs
+    class_probs = pd.Series(index=self.class_inds, dtype=np.float64)
+    for c_id in self.class_inds:
       class_probs.loc[c_id] = marginals[('c_' + str(c_id), 'True')]
     
-    print class_probs
+    # Build attribute probs
+    attrib_probs = pd.Series(index=self.attrib_names, dtype=np.float64)
+    for a_name in self.attrib_names:
+      attrib_probs.loc[a_name] = marginals[('a_' + a_name, 'True')]
 
+    print attrib_probs
     import sys;sys.exit(0)
     
     
