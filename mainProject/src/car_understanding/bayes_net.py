@@ -114,8 +114,9 @@ class BayesNet2():
                             'False': [1-class_priors[ii]]},
                            columns=['True', 'False'])
       self.CPT['p({})'.format(self.class_inds[ii])] = prior
-      print 'p({})'.format(self.class_inds[ii])
-      print prior 
+      
+#       print 'p({})'.format(self.class_inds[ii])
+#       print prior 
     
   
   def init_attrib_nodes_CPT(self):
@@ -136,8 +137,9 @@ class BayesNet2():
       cpt.is_normalized = True
       
       self.CPT['p({}|{})'.format(a_name, class_list)] = cpt
-      print 'p({}|{})'.format(a_name, class_list)
-      print cpt 
+      
+#       print 'p({}|{})'.format(a_name, class_list)
+#       print cpt 
 
 
   def init_attrib_clf_nodes_CPT(self):
@@ -160,8 +162,8 @@ class BayesNet2():
       cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
       cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
       
-      print 'p({0}_clf|{0})'.format(clf.name)
-      print cpt
+#       print 'p({0}_clf|{0})'.format(clf.name)
+#       print cpt
       
       self.CPT['p({0}_clf|{0})'.format(clf.name)] = cpt
 
@@ -185,8 +187,8 @@ class BayesNet2():
       cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
       cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
     
-      print 'p(m_clf_{0}|{0})'.format(class_id)
-      print cpt
+#       print 'p(m_clf_{0}|{0})'.format(class_id)
+#       print cpt
       
       self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
       
@@ -388,11 +390,13 @@ class BayesNet2():
                                          len(attrib_names)]),
                               index=test_annos.index, 
                               columns=attrib_names)
+    
+    pbar = ProgressBar(n_imgs)
     for ii in range(n_imgs):
-      print "=================={}/{}========================".format(ii+1, n_imgs)
-      print "Image: {}, class_id: {}, class_name: {}".format(test_annos.iloc[ii]['basename'],
-                                                            test_annos.iloc[ii]['class_index'], 
-                                                            test_annos.iloc[ii]['class_name'])
+#       print "=================={}/{}========================".format(ii+1, n_imgs)
+#       print "Image: {}, class_id: {}, class_name: {}".format(test_annos.iloc[ii]['basename'],
+#                                                             test_annos.iloc[ii]['class_index'], 
+#                                                             test_annos.iloc[ii]['class_name'])
       if use_gt:
         discr = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
       else:
@@ -402,7 +406,9 @@ class BayesNet2():
       (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_discr_one)
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
+      pbar.animate(ii)
       
+    print ' '
     return (class_prob, attrib_prob)
   
   
