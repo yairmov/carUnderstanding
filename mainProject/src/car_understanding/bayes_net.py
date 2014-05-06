@@ -318,6 +318,8 @@ class BayesNet2():
     if self.use_gt:
       return None, None
     
+    print 'create_attrib_res_on_images: Im here' 
+    
     # Define some conviniece pointers 
     config = self.config
     attrib_classifiers = self.attrib_clfs
