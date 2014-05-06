@@ -68,6 +68,7 @@ class AttributeClassifier():
     # Used to gather "out-of-bag" stats about the classifier's performance
     self.train_pred_labels = None
     self.labels_train = None
+    self.train_pred_scores = None
       
   
   def create_feature_matrix(self, features=None):
@@ -118,6 +119,7 @@ class AttributeClassifier():
     stats = pd.DataFrame(index = ['True', 'False'], columns=['True', 'False'], dtype=np.float32)
     stats[:] = 0
     train_pred_labels = np.zeros_like(labels)
+    train_pred_scores = np.zeros_like(labels)
     for train_index, test_index in skf:
       self.clf.fit(features[train_index,:], labels[train_index])
       clfs.append(np.copy(self.clf))
@@ -126,6 +128,7 @@ class AttributeClassifier():
       eer.append(curr_eer)
       pred = responses > curr_eer
       train_pred_labels[test_index] = pred
+      train_pred_scores[test_index] = responses
       
       
 #       l = labels[test_index]
@@ -144,6 +147,7 @@ class AttributeClassifier():
     
     # save "out of bag" predictions
     self.train_pred_labels = train_pred_labels
+    self.train_pred_scores = train_pred_scores
     self.labels_train = labels
     
     
