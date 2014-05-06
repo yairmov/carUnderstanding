@@ -318,8 +318,6 @@ class BayesNet2():
     if self.use_gt:
       return None, None
     
-    print 'create_attrib_res_on_images: Im here' 
-    
     # Define some conviniece pointers 
     config = self.config
     attrib_classifiers = self.attrib_clfs
@@ -382,6 +380,8 @@ class BayesNet2():
       attrib_meta = self.attrib_selector.create_attrib_meta(attrib_names)
         
         
+        
+    print "HHAHAHAHHAHAHAHAHA"
     # apply multi class classifier on test annos
     m_discr = self.multi_class_clf.predict(features)
     m_discr = pd.DataFrame(data=m_discr, 
