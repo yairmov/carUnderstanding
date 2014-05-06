@@ -384,9 +384,9 @@ class BayesNet2():
     m = self.multi_class_clf.predict(features=features)
     m_discr = pd.DataFrame(data=np.zeros([m.shape[0], len(class_inds)]), 
                            index=test_annos.index, 
-                           columns=class_inds)
+                           columns=class_inds, dtype=bool)
     for ii in range(m.shape[0]):
-      m_discr.iloc[ii][m[ii]] = 1
+      m_discr.iloc[ii][m[ii]] = True
       
     
     for ii in range(n_imgs):
@@ -411,10 +411,12 @@ class BayesNet2():
     use_gt = self.use_gt
     class_inds = self.class_inds
     
-    print 'clf_res_discrete: {}'.format(clf_res_discrete)
-    print 'm_discr_one: {}'.format(m_discr_one)
-    
-    import sys; sys.exit(0)
+    # build dictionary with all query parameters
+    q_params = {}
+    for a_name in self.attrib_names:
+      q_params.update({'clf_'+a_name: clf_res_discrete.loc[a_name]})
+    print q_params
+    import sys;sys.exit(0)
     
     
 def function_builder(f_str, f_name):
