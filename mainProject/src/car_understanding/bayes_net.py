@@ -323,7 +323,7 @@ class BayesNet2():
     attrib_classifiers = self.attrib_clfs
     
     if features is None:
-      print "Load image Bow histograms from disk"
+      print "create_attrib_res_on_images: Load image Bow histograms from disk"
       features = Bow.load_bow(data_annos, config)
   
     print "Apply attribute classifiers on images"
@@ -369,9 +369,6 @@ class BayesNet2():
     
     print "Load image Bow histograms from disk"
     features = Bow.load_bow(test_annos, self.config)
-    print 'type:' + str(type(features))
-    print features.shape
-    return
     
     
     if not use_gt:
