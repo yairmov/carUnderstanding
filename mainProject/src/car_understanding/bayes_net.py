@@ -279,6 +279,8 @@ class BayesNet2():
     functions, domains = self.build_functions_for_nodes()
     self.g = build_bbn(*functions, domains=domains)
     
+  def q(self):
+    self.g.q()
     
     
 def function_builder(f_str, f_name):
