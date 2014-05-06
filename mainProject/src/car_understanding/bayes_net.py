@@ -125,8 +125,9 @@ class BayesNet2():
       classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
       classes_for_attrib = np.sort(classes_for_attrib)
       l = classes_for_attrib.shape[0]
+      class_list = ','.join(['c_' + str(x) for x in classes_for_attrib])
       cpt = CPT(default_true_value=has_attrib_prob, 
-                name='p({0}|{1})'.format(a_name, classes_for_attrib))
+                name='p({0}|{1})'.format(a_name, class_list))
       false_row_key = ['False' for x in range(l)]
       cpt.create_row(false_row_key)
       cpt.set_value(false_row_key, cpt.TRUE, 0.01)
@@ -200,12 +201,14 @@ class BayesNet2():
     #build functions for class priors
     # Build functions for hidden attribute layer
     f_str = '''def f_c_{class_id}(c_{class_id}):
+      global global_CPT
+      cpt = global_CPT['p({class_id})']
       return cpt.iloc[0][c_{class_id}]
     '''
     for class_id in self.class_inds:
-      cpt = global_CPT['p({})'.format(class_id)]
+#       cpt = global_CPT['p({})'.format(class_id)]
       f_name = 'f_c_{}'.format(class_id)
-      curr_f = function_builder(f_str.format(class_id=class_id), f_name, cpt)
+      curr_f = function_builder(f_str.format(class_id=class_id), f_name)
 #       setattr(self, f_name, classmethod(curr_f))
 #       exec f_str.format(class_id=class_id) in globals()
       curr_d = {'c_' + str(class_id): ['True', 'False']} 
@@ -217,6 +220,8 @@ class BayesNet2():
     # Build functions for hidden attribute layer
     # make template function using string
     f_str = '''def f_a_{a_name}(a_{a_name}, {class_list}):
+      global global_CPT
+      cpt = global_CPT['p({a_name}|{class_list})']
       return cpt.get_value(({class_list}), a_{a_name})
     '''
     
@@ -225,9 +230,9 @@ class BayesNet2():
       classes_for_attrib = np.sort(classes_for_attrib)
       class_list = ','.join(['c_' + str(x) for x in classes_for_attrib])
       f_name = 'f_a_{}'.format(a_name)
-      cpt = global_CPT['p({}|{})'.format(a_name, classes_for_attrib)]
+#       cpt = global_CPT['p({}|{})'.format(a_name, classes_for_attrib)]
       curr_f = function_builder(f_str.format(a_name=a_name, class_list=class_list),
-                                f_name, cpt)
+                                f_name)
 #       exec f_str.format(a_name=a_name, class_list=class_list) in globals()
       functions.append(curr_f)
       domains.update({'a_' + a_name: ['True', 'False']})
@@ -236,13 +241,15 @@ class BayesNet2():
     # Build functions for attribute classifier layer
     # make template function using string
     f_str = '''def f_clf_{a_name}(clf_{a_name}, a_{a_name}):
+      global global_CPT
+      cpt = global_CPT['p({a_name}_clf|{a_name})']
       return cpt.loc[a_{a_name}][clf_{a_name}]
     '''
     for a_name in self.attrib_names:
-      cpt = global_CPT['p({0}_clf|{0})'.format(a_name)]
+#       cpt = global_CPT['p({0}_clf|{0})'.format(a_name)]
       f_name = 'f_clf_{}'.format(a_name)
       curr_f = function_builder(f_str.format(a_name=a_name), 
-                                f_name, cpt)
+                                f_name)
 #       exec f_str.format(a_name=a_name) in globals()
       functions.append(globals()[f_name])
       domains.update({'clf_' + a_name: ['True', 'False']})
@@ -251,6 +258,8 @@ class BayesNet2():
     # Build functions for multiclass classifier layer
     # make template function using string
     f_str = '''def f_m_{class_id}(m_{class_id}, c_{class_id}):
+      global global_CPT
+      cpt = global_CPT['p(m_clf_{class_id}|{class_id})']
       return cpt.loc[c_{class_id}][m_{class_id}]
     '''
     for class_id in self.class_inds:
