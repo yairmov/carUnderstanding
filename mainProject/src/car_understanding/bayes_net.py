@@ -291,7 +291,7 @@ class BayesNet2():
     f_str = '''def f_m_{class_id}(m_{class_id}, c_{class_id}):
       global global_CPT
       cpt = global_CPT['p(m_clf_{class_id}|{class_id})']
-      return 0.8 * cpt.loc[c_{class_id}][m_{class_id}]
+      return cpt.loc[c_{class_id}][m_{class_id}]
     '''
     for class_id in self.class_inds:
       f_name = 'f_m_{}'.format(class_id)

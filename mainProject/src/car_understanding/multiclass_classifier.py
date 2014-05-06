@@ -43,6 +43,9 @@ class MultiClassClassifier(object):
     # predicted labels for training data. each instance is predicted when its
     # fold was used as a validation set
     self.train_pred_labels = np.zeros_like(self.labels_train)
+    self.train_pred_scores = np.zeros(shape=[self.train_pred_labels.shape[0], 
+                                             len(self.class_inds)],
+                                       dtype=np.float64)
     
   
   def fit(self):
@@ -62,6 +65,8 @@ class MultiClassClassifier(object):
       self.clf.fit(features[train_index,:], labels[train_index])
       self.train_pred_labels[test_index] = \
         self.clf.predict(features[test_index,:])
+      self.train_pred_scores[test_index,:] = \
+        self.clf.decision_function(features[test_index,:])
         
     # after all stats are gathered, retrain with all data for best perfromance.
     print('Training with all data')
