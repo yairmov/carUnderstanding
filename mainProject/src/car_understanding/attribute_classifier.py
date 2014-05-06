@@ -119,7 +119,7 @@ class AttributeClassifier():
     stats = pd.DataFrame(index = ['True', 'False'], columns=['True', 'False'], dtype=np.float32)
     stats[:] = 0
     train_pred_labels = np.zeros_like(labels)
-    train_pred_scores = np.zeros_like(labels)
+    train_pred_scores = np.zeros_like(labels, dtype=np.float32)
     for train_index, test_index in skf:
       self.clf.fit(features[train_index,:], labels[train_index])
       clfs.append(np.copy(self.clf))
