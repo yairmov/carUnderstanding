@@ -380,10 +380,8 @@ class BayesNet2():
       attrib_meta = self.attrib_selector.create_attrib_meta(attrib_names)
         
         
-        
-    print "HHAHAHAHHAHAHAHAHA"
     # apply multi class classifier on test annos
-    m_discr = self.multi_class_clf.predict(features)
+    m_discr = self.multi_class_clf.predict(features=features)
     m_discr = pd.DataFrame(data=m_discr, 
                            index=test_annos.index, 
                            columns=class_inds)

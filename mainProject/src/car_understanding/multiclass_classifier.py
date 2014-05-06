@@ -67,7 +67,9 @@ class MultiClassClassifier(object):
     print('Training with all data')
     self.clf.fit(features, labels)
     
-  def predict(self, test_annos, features=None):
+  def predict(self, test_annos=None, features=None):
+    assert (not (test_annos is None)) or (not (features is None)), 'test_annos or features need to be not None' 
+    
     if features is None:
       features = Bow.load_bow(test_annos, self.config)
       
