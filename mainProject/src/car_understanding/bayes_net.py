@@ -219,19 +219,22 @@ class BayesNet2():
     
     # Build functions for hidden attribute layer
     # make template function using string
-    f_str = '''def f_a_{a_name}(a_{a_name}, {class_list}):
+    f_str = '''def f_a_{a_name}(a_{a_name}, {class_list1}):
       global global_CPT
-      cpt = global_CPT['p({a_name}|{class_list})']
+      cpt = global_CPT['p({a_name}|{class_list2})']
       return cpt.get_value(({class_list}), a_{a_name})
     '''
     
     for a_name in self.attrib_names:
       classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
       classes_for_attrib = np.sort(classes_for_attrib)
-      class_list = ','.join(['c_' + str(x) for x in classes_for_attrib])
+      class_list1 = ','.join(['c_' + str(x) for x in classes_for_attrib])
+      class_list2 = ','.join([str(x) for x in classes_for_attrib])
       f_name = 'f_a_{}'.format(a_name)
 #       cpt = global_CPT['p({}|{})'.format(a_name, classes_for_attrib)]
-      curr_f = function_builder(f_str.format(a_name=a_name, class_list=class_list),
+      curr_f = function_builder(f_str.format(a_name=a_name, 
+                                             class_list1=class_list1,
+                                             class_list2=class_list2),
                                 f_name)
 #       exec f_str.format(a_name=a_name, class_list=class_list) in globals()
       functions.append(curr_f)
