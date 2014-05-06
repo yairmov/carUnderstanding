@@ -201,7 +201,6 @@ class BayesNet2():
     #build functions for class priors
     # Build functions for hidden attribute layer
     f_str = '''def f_c_{class_id}(c_{class_id}):
-      global global_CPT
       cpt = global_CPT['p({class_id})']
       return cpt.iloc[0][c_{class_id}]
     '''
@@ -215,6 +214,8 @@ class BayesNet2():
       
       functions.append(curr_f)
       domains.update(curr_d)
+      
+      return functions, domains
       
     
     # Build functions for hidden attribute layer
