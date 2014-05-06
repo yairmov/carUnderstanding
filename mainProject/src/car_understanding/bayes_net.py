@@ -392,6 +392,7 @@ class BayesNet2():
                               columns=attrib_names)
     
     pbar = ProgressBar(n_imgs)
+    print 'Prdicting class probabilities on images'
     for ii in range(n_imgs):
 #       print "=================={}/{}========================".format(ii+1, n_imgs)
 #       print "Image: {}, class_id: {}, class_name: {}".format(test_annos.iloc[ii]['basename'],
