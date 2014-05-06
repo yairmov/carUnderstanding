@@ -222,7 +222,7 @@ class BayesNet2():
     f_str = '''def f_a_{a_name}(a_{a_name}, {class_list1}):
       global global_CPT
       cpt = global_CPT['p({a_name}|{class_list2})']
-      return cpt.get_value(({class_list}), a_{a_name})
+      return cpt.get_value(({class_list1}), a_{a_name})
     '''
     
     for a_name in self.attrib_names:
