@@ -211,7 +211,7 @@ class BayesNet2():
     functions.extend(f)
     domains.update(d)
     
-    f,d = self.build_functions_for_multiclass_clf_nodes
+    f,d = self.build_functions_for_multiclass_clf_nodes()
     functions.extend(f)
     domains.update(d)
     
