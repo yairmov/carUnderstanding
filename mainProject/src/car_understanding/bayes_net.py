@@ -120,6 +120,7 @@ class BayesNet2():
   
   def init_attrib_nodes_CPT(self):
     has_attrib_prob = 0.9
+    no_attrib_prob = 0.01
     
     for a_name in self.attrib_names:
       classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
@@ -130,8 +131,8 @@ class BayesNet2():
                 name='p({0}|{1})'.format(a_name, class_list))
       false_row_key = ['False' for x in range(l)]
       cpt.create_row(false_row_key)
-      cpt.set_value(false_row_key, cpt.TRUE, 0.01)
-      cpt.set_value(false_row_key, cpt.FALSE, 0.99)
+      cpt.set_value(false_row_key, cpt.TRUE, no_attrib_prob)
+      cpt.set_value(false_row_key, cpt.FALSE, 1-no_attrib_prob)
       cpt.is_normalized = True
       
       self.CPT['p({}|{})'.format(a_name, class_list)] = cpt
