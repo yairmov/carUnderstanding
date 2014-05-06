@@ -380,8 +380,8 @@ class BayesNet2():
         
         
     # apply multi class classifier on test annos
-    m_proba = self.multi_class_clf.predict_proba(features)
-    m_proba = pd.DataFrame(data=m_proba, 
+    m_discr = self.multi_class_clf.predict(features)
+    m_discr = pd.DataFrame(data=m_discr, 
                            index=test_annos.index, 
                            columns=class_inds)
     
@@ -395,20 +395,20 @@ class BayesNet2():
       else:
         discr = clf_res_discrete.iloc[ii]
       
-      m_proba_one = m_proba.iloc[ii]
-      (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_proba_one)
+      m_discr_one = m_discr.iloc[ii]
+      (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_discr_one)
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
       
     return (class_prob, attrib_prob)
   
   
-  def predict_one(self, clf_res_discrete, multi_clf_probs):
+  def predict_one(self, clf_res_discrete, m_discr_one):
     use_gt = self.use_gt
     class_inds = self.class_inds
     
     print 'clf_res_discrete: {}'.format(clf_res_discrete)
-    print 'multi_clf_probs: {}'.format(multi_clf_probs)
+    print 'm_discr_one: {}'.format(m_discr_one)
     
     import sys; sys.exit(0)
     
