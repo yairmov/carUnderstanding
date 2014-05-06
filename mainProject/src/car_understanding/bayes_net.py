@@ -421,7 +421,7 @@ class BayesNet2():
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
     
-    class_probs = pd.Series(data=np.zeros([1,len(class_inds)]), index=class_inds)
+    class_probs = pd.Series(data=np.zeros([len(class_inds)]), index=class_inds)
     for c_id in class_inds:
       class_probs.loc[c_id] = marginals[(c_id, 'True')]
     
