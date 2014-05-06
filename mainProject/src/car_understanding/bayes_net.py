@@ -119,8 +119,8 @@ class BayesNet2():
     
   
   def init_attrib_nodes_CPT(self):
-    has_attrib_prob = 0.9
-    no_attrib_prob = 0.01
+    has_attrib_prob = 0.8
+    no_attrib_prob = 0.001
     
     for a_name in self.attrib_names:
       classes_for_attrib = self.attrib_selector.class_ids_for_attribute(a_name)
