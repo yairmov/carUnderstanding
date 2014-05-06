@@ -369,6 +369,10 @@ class BayesNet2():
     
     print "Load image Bow histograms from disk"
     features = Bow.load_bow(test_annos, self.config)
+    print type(features)
+    print features.shape
+    return
+    
     
     if not use_gt:
       clf_res, clf_res_discrete = self.create_attrib_res_on_images(test_annos,

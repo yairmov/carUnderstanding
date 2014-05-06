@@ -455,11 +455,6 @@ def bayes_net_generic(use_gt=False):
   test_annos = test_annos[np.array(
                              test_annos.class_index.isin(classes.class_index))]
   
-  print test_annos.shape
-  return
-
-
-
 #   print "training attrib classifiers"
 #   run_attrib_training(args, cross_validation=False)
 #   print "Returning after training attrib classifiers"
