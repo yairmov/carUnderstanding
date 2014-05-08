@@ -181,20 +181,16 @@ class BayesNet2():
       
       c[0,:], b = np.histogram(p_scores, bins)
       c[1,:], b = np.histogram(n_scores, bins)
-#       c[:] += 1
+      c[:] += 1
       normalize(c, axis=1, norm='l1', copy=False)
-      
-#       print '[{}, {}]'.format(p_scores.min(), p_scores.max())
-#       print c
-#       import sys;sys.exit(0)
       
       cpt = pd.DataFrame(data=c,
                          index=['True', 'False'], 
                          columns=['nn', 'n', 'u', 'p', 'pp'],
                          dtype=np.float32)
       
-      print 'p(m_clf_{0}|{0})'.format(class_id)
-      print cpt
+#       print 'p(m_clf_{0}|{0})'.format(class_id)
+#       print cpt
       self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
 
 #   def init_multi_class_clf_nodes_CPT(self):
@@ -327,7 +323,7 @@ class BayesNet2():
       curr_f = function_builder(f_str.format(class_id=class_id), 
                               f_name)
       functions.append(curr_f)
-      domains.update({'m_' + str(class_id): ['True', 'False']})
+      domains.update({'m_' + str(class_id): ['nn','n','u','p','pp']})
     
     return functions, domains
       
