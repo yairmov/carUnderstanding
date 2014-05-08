@@ -182,6 +182,7 @@ class BayesNet2():
       c[1,:], b = np.histogram(n_scores, bins)
       normalize(c, axis=1, copy=False)
       
+      print '[{}, {}]'.format(p_scores.min(), p_scores.max())
       print c
       import sys;sys.exit(0)
       
