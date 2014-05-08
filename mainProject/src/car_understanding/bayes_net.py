@@ -168,25 +168,25 @@ class BayesNet2():
       self.CPT['p({0}_clf|{0})'.format(clf.name)] = cpt
 
 
-    def init_multi_class_clf_nodes_CPT(self):
-      scores = self.multi_class_clf.train_pred_scores
-      bins = [-np.Inf, -1, 0, 1, np.Inf]
-      c = np.zeros(shape=[2, 4], dtype=np.float32)
-      for ii, class_id in enumerate(self.class_inds):
-        y_true = self.multi_class_clf.labels_train == class_id
-        p_scores = scores[y_true,ii]
-        n_scores = scores[np.logical_not(y_true),ii]
-        
-        c[0,:], b = np.histogram(p_scores, bins, density=True)
-        c[1,:], b = np.histogram(n_scores, bins, density=True)
-        
-        cpt = pd.DataFrame(data=c,
-                           index=['True', 'False'], 
-                           columns=['nn', 'n', 'p', 'pp'])
-        
-        print 'p(m_clf_{0}|{0})'.format(class_id)
-        print cpt
-        self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
+  def init_multi_class_clf_nodes_CPT(self):
+    scores = self.multi_class_clf.train_pred_scores
+    bins = [-np.Inf, -1, 0, 1, np.Inf]
+    c = np.zeros(shape=[2, 4], dtype=np.float32)
+    for ii, class_id in enumerate(self.class_inds):
+      y_true = self.multi_class_clf.labels_train == class_id
+      p_scores = scores[y_true,ii]
+      n_scores = scores[np.logical_not(y_true),ii]
+      
+      c[0,:], b = np.histogram(p_scores, bins, density=True)
+      c[1,:], b = np.histogram(n_scores, bins, density=True)
+      
+      cpt = pd.DataFrame(data=c,
+                         index=['True', 'False'], 
+                         columns=['nn', 'n', 'p', 'pp'])
+      
+      print 'p(m_clf_{0}|{0})'.format(class_id)
+      print cpt
+      self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
 
 #   def init_multi_class_clf_nodes_CPT(self):
 #     
