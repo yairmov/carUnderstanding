@@ -189,8 +189,8 @@ class BayesNet2():
                          columns=['nn', 'n', 'u', 'p', 'pp'],
                          dtype=np.float32)
       
-#       print 'p(m_clf_{0}|{0})'.format(class_id)
-#       print cpt
+      print 'p(m_clf_{0}|{0})'.format(class_id)
+      print cpt
       self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
 
 #   def init_multi_class_clf_nodes_CPT(self):
@@ -323,7 +323,7 @@ class BayesNet2():
       curr_f = function_builder(f_str.format(class_id=class_id), 
                               f_name)
       functions.append(curr_f)
-      domains.update({'m_' + str(class_id): ['nn','n','u','p','pp']})
+      domains.update({'m_' + str(class_id): ['nn', 'n', 'u', 'p', 'pp']})
     
     return functions, domains
       
