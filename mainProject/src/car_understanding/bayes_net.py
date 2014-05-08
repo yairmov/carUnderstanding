@@ -413,7 +413,7 @@ class BayesNet2():
                             index=test_annos.index, 
                             columns=class_inds, dtype=np.float32)
     
-    m_clf_values.describe()
+    print m_clf_values.describe()
     import sys;sys.exit(0)
       
     
