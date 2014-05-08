@@ -181,7 +181,7 @@ class BayesNet2():
       
       c[0,:], b = np.histogram(p_scores, bins)
       c[1,:], b = np.histogram(n_scores, bins)
-      c[:] += 1
+#       c[:] += 1
       normalize(c, axis=1, norm='l1', copy=False)
       
 #       print '[{}, {}]'.format(p_scores.min(), p_scores.max())
