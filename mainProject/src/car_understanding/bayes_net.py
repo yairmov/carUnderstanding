@@ -420,7 +420,7 @@ class BayesNet2():
     m_clf_values = pd.DataFrame(data=mm, index=test_annos.index, 
                                 columns=class_inds, dtype=str)
 
-    print np.logical_and(m > -1, m  <= -0.2)
+    print mm[0,:]
     print m_clf_values.iloc[0]
     import sys;sys.exit(0)
 
