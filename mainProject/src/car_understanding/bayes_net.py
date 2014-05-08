@@ -175,11 +175,13 @@ class BayesNet2():
     for ii, class_id in enumerate(self.class_inds):
       y_true = self.multi_class_clf.labels_train == class_id
       p_scores = scores[y_true,ii]
-      print 'p_scores.max ', p_scores.max()
       n_scores = scores[np.logical_not(y_true),ii]
       
       c[0,:], b = np.histogram(p_scores, bins, density=True)
       c[1,:], b = np.histogram(n_scores, bins, density=True)
+      
+      print c
+      import sys;sys.exit(0)
       
       cpt = pd.DataFrame(data=c,
                          index=['True', 'False'], 
