@@ -22,6 +22,7 @@ from sklearn.externals.joblib import Parallel, delayed
 from sklearn import cross_validation
 from bayesian.bbn import build_bbn
 import copy
+from sklearn.preprocessing import normalize
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
@@ -170,15 +171,16 @@ class BayesNet2():
 
   def init_multi_class_clf_nodes_CPT(self):
     scores = self.multi_class_clf.train_pred_scores
-    bins = [-np.inf, -1.0, 0.0, 1.0, np.inf]
+    bins = [-np.inf, -1, 0, 1, np.inf]
     c = np.zeros(shape=[2, 4], dtype=np.float32)
     for ii, class_id in enumerate(self.class_inds):
       y_true = self.multi_class_clf.labels_train == class_id
       p_scores = scores[y_true,ii]
       n_scores = scores[np.logical_not(y_true),ii]
       
-      c[0,:], b = np.histogram(p_scores, bins, density=True)
-      c[1,:], b = np.histogram(n_scores, bins, density=True)
+      c[0,:], b = np.histogram(p_scores, bins)
+      c[1,:], b = np.histogram(n_scores, bins)
+      normalize(c, axis=1, copy=False)
       
       print c
       import sys;sys.exit(0)
