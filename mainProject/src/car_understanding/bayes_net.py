@@ -444,8 +444,6 @@ class BayesNet2():
       
       m_clf_values_one = m_clf_values.iloc[ii]
       (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_clf_values_one)
-      print 'AHAHA'
-      import sys; sys.exit(0)
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
       pbar.animate(ii)
@@ -469,6 +467,9 @@ class BayesNet2():
     # multi class clf
     for c_id in self.class_inds:
       q_params.update({'m_'+str(c_id): str(m_clf_values.loc[c_id])})
+      
+    print 'AHAHA'
+    import sys; sys.exit(0)
     
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
