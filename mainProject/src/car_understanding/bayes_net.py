@@ -189,8 +189,8 @@ class BayesNet2():
                          columns=['nn', 'n', 'u', 'p', 'pp'],
                          dtype=np.float32)
       
-      print 'p(m_clf_{0}|{0})'.format(class_id)
-      print cpt
+#       print 'p(m_clf_{0}|{0})'.format(class_id)
+#       print cpt
       self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
 
 #   def init_multi_class_clf_nodes_CPT(self):
@@ -399,11 +399,13 @@ class BayesNet2():
         
     # apply multi class classifier on test annos
     m = self.multi_class_clf.predict(features=features)
-    m_discr = pd.DataFrame(data=np.zeros([m.shape[0], len(class_inds)]), 
+    print m.shape
+    import sys;sys.exit(0)
+    m_clf_values = pd.DataFrame(data=np.zeros([m.shape[0], len(class_inds)]), 
                            index=test_annos.index, 
                            columns=class_inds, dtype=bool)
     for ii in range(m.shape[0]):
-      m_discr.iloc[ii][m[ii]] = True
+      m_clf_values.iloc[ii][m[ii]] = True
       
     
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
@@ -428,8 +430,8 @@ class BayesNet2():
       else:
         discr = clf_res_discrete.iloc[ii]
       
-      m_discr_one = m_discr.iloc[ii]
-      (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_discr_one)
+      m_clf_values_one = m_clf_values.iloc[ii]
+      (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_clf_values_one)
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
       pbar.animate(ii)
@@ -438,7 +440,7 @@ class BayesNet2():
     return (class_prob, attrib_prob)
   
   
-  def predict_one(self, clf_res_discrete, m_discr_one):
+  def predict_one(self, clf_res_discrete, m_clf_values):
     use_gt = self.use_gt
     
     if use_gt:
@@ -450,7 +452,7 @@ class BayesNet2():
     for a_name in self.attrib_names:
       q_params.update({'clf_'+a_name: str(clf_res_discrete.loc[a_name])})
     for c_id in self.class_inds:
-      q_params.update({'m_'+str(c_id): str(m_discr_one.loc[c_id])})
+      q_params.update({'m_'+str(c_id): str(m_clf_values.loc[c_id])})
     
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
