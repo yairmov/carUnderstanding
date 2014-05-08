@@ -398,14 +398,20 @@ class BayesNet2():
         
         
     # apply multi class classifier on test annos
-    m = self.multi_class_clf.predict(features=features)
-    print m.shape
-    import sys;sys.exit(0)
-    m_clf_values = pd.DataFrame(data=np.zeros([m.shape[0], len(class_inds)]), 
-                           index=test_annos.index, 
-                           columns=class_inds, dtype=bool)
-    for ii in range(m.shape[0]):
-      m_clf_values.iloc[ii][m[ii]] = True
+    
+    # (if boolean)
+#     m = self.multi_class_clf.predict(features=features)
+#     m_clf_values = pd.DataFrame(data=np.zeros([m.shape[0], len(class_inds)]), 
+#                            index=test_annos.index, 
+#                            columns=class_inds, dtype=bool)
+#     for ii in range(m.shape[0]):
+#           m_clf_values.iloc[ii][m[ii]] = True
+
+    # (if using score values)
+    m_clf_values = self.multi_class_clf.decision_function(features=features)
+    m_clf_values = pd.DataFrame(data=m_clf_values, 
+                            index=test_annos.index, 
+                            columns=class_inds, dtype=np.float32)
       
     
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
@@ -449,8 +455,10 @@ class BayesNet2():
     # build dictionary with all query parameters:
     # parameters are the observed values for the classifiers
     q_params = {}
+    # attrib clfs
     for a_name in self.attrib_names:
       q_params.update({'clf_'+a_name: str(clf_res_discrete.loc[a_name])})
+    # multi class clf
     for c_id in self.class_inds:
       q_params.update({'m_'+str(c_id): str(m_clf_values.loc[c_id])})
     

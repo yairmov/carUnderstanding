@@ -82,6 +82,16 @@ class MultiClassClassifier(object):
     
     return self.clf.predict(features)
   
+  def decision_function(self, test_annos=None, features=None):
+    assert (not (test_annos is None)) or (not (features is None)), 'test_annos or features need to be not None' 
+    
+    if features is None:
+      features = Bow.load_bow(test_annos, self.config)
+      
+#     features = self.scaler.transform(features)
+    
+    return self.clf.decision_function(features)
+  
   
   # Static" functions
   # -----------------
