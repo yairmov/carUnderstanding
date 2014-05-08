@@ -172,6 +172,7 @@ class BayesNet2():
   def init_multi_class_clf_nodes_CPT(self):
     scores = self.multi_class_clf.train_pred_scores
     bins = [-np.inf, -1, -0.2, 0.2, 1, np.inf]
+    eps = 0.001
     c = np.zeros(shape=[2, 5], dtype=np.float32)
     for ii, class_id in enumerate(self.class_inds):
       y_true = self.multi_class_clf.labels_train == class_id
@@ -186,7 +187,7 @@ class BayesNet2():
 #       print c
 #       import sys;sys.exit(0)
       
-      cpt = pd.DataFrame(data=c,
+      cpt = pd.DataFrame(data=c+eps,
                          index=['True', 'False'], 
                          columns=['nn', 'n', 'u', 'p', 'pp'],
                          dtype=np.float32)
