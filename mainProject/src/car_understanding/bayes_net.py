@@ -225,7 +225,7 @@ class BayesNet2():
     domains = {}
      
     global global_CPT
-    global_CPT = copy.deepcopy(self.CPT)
+    global_CPT = self.CPT
     
     f,d = self.build_functions_for_class_nodes()
     functions.extend(f)
