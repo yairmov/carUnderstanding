@@ -626,11 +626,11 @@ def feature_test():
 
 
 def multiclass_clf():
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'SUV']
-  args = makes + types
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'SUV']
+#   args = makes + types
   
-#   args = get_args_from_file('sorted_attrib_list.txt')
+  args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
@@ -640,12 +640,12 @@ def multiclass_clf():
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
   
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
-  test_annos = test_annos[np.array(
-                              test_annos.class_index.isin(classes.class_index))]
-  
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
+#   test_annos = test_annos[np.array(
+#                               test_annos.class_index.isin(classes.class_index))]
+#   
   
   
   m_clf = MultiClassClassifier(train_annos, classes, config)
