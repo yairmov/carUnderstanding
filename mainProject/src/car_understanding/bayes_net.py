@@ -468,11 +468,11 @@ class BayesNet2():
     for c_id in self.class_inds:
       q_params.update({'m_'+str(c_id): str(m_clf_values.loc[c_id])})
       
-    print 'AHAHA'
-    import sys; sys.exit(0)
     
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
+    print 'AHAHA'
+    import sys; sys.exit(0)
     
     # Build class probs
     class_probs = pd.Series(index=self.class_inds, dtype=np.float64)
