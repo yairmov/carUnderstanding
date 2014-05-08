@@ -420,11 +420,6 @@ class BayesNet2():
     m_clf_values = pd.DataFrame(data=mm, index=test_annos.index, 
                                 columns=class_inds, dtype=str)
 
-    print mm[0,:]
-    print m_clf_values.iloc[0]
-    import sys;sys.exit(0)
-
-    
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
                                         len(class_inds)]),
                               index=test_annos.index, 
