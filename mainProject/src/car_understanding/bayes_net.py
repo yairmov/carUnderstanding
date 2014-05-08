@@ -181,13 +181,14 @@ class BayesNet2():
       
       c[0,:], b = np.histogram(p_scores, bins)
       c[1,:], b = np.histogram(n_scores, bins)
+      c[:] += 1
       normalize(c, axis=1, norm='l1', copy=False)
       
 #       print '[{}, {}]'.format(p_scores.min(), p_scores.max())
 #       print c
 #       import sys;sys.exit(0)
       
-      cpt = pd.DataFrame(data=c+eps,
+      cpt = pd.DataFrame(data=c,
                          index=['True', 'False'], 
                          columns=['nn', 'n', 'u', 'p', 'pp'],
                          dtype=np.float32)
