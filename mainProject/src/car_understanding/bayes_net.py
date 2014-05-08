@@ -418,7 +418,7 @@ class BayesNet2():
     m_clf_values[np.logical_and(m > 0.2, m  <= 1)] = 'p'
     m_clf_values[m > 1] = 'pp'
 
-    print m[0,:]
+    print m <= -1
     print m_clf_values.iloc[0]
     import sys;sys.exit(0)
 
