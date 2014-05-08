@@ -413,10 +413,6 @@ class BayesNet2():
                             index=test_annos.index, 
                             columns=class_inds, dtype=np.float32)
     
-    print m_clf_values.describe()
-    import sys;sys.exit(0)
-      
-    
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
                                         len(class_inds)]),
                               index=test_annos.index, 
@@ -440,6 +436,8 @@ class BayesNet2():
         discr = clf_res_discrete.iloc[ii]
       
       m_clf_values_one = m_clf_values.iloc[ii]
+      print m_clf_values_one
+      import sys;sys.exit(0) 
       (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_clf_values_one)
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
