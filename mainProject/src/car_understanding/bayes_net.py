@@ -408,10 +408,16 @@ class BayesNet2():
 #           m_clf_values.iloc[ii][m[ii]] = True
 
     # (if using score values)
-    m_clf_values = self.multi_class_clf.decision_function(features=features)
-    m_clf_values = pd.DataFrame(data=m_clf_values, 
-                            index=test_annos.index, 
-                            columns=class_inds, dtype=np.float32)
+    m = self.multi_class_clf.decision_function(features=features)
+    m_clf_values = pd.DataFrame(index=test_annos.index, 
+                                columns=class_inds, dtype=str)
+
+    m_clf_values[m <= -1] = 'nn'
+    m_clf_values[np.logical_and(m > -1, m  <= -0.2)] = 'n'
+    m_clf_values[np.logical_and(m > -0.2, m  <= 0.2)] = 'u'
+    m_clf_values[np.logical_and(m > 0.2, m  <= 1)] = 'p'
+    m_clf_values[m > 1] = 'pp'
+
     
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
                                         len(class_inds)]),
@@ -437,7 +443,7 @@ class BayesNet2():
       
       m_clf_values_one = m_clf_values.iloc[ii]
       print m_clf_values_one
-      import sys;sys.exit(0) 
+      import sys;sys.exit(0)
       (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_clf_values_one)
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
