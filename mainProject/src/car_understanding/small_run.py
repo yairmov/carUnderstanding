@@ -442,6 +442,7 @@ def bayes_net_generic(use_gt=False):
   config.attribute.names = args
 
   train_annos = dataset['train_annos']
+  test_annos = dataset['test_annos']
   classes = dataset['class_meta']
   attrib_meta = dataset['attrib_meta']
 
@@ -450,7 +451,6 @@ def bayes_net_generic(use_gt=False):
 #   attrib_meta = attrib_meta.loc[classes.index]
 #   train_annos = train_annos[np.array(
 #                              train_annos.class_index.isin(classes.class_index))]
-#   test_annos = dataset['test_annos']
 #   # Select only images from the args "world"
 #   test_annos = test_annos[np.array(
 #                              test_annos.class_index.isin(classes.class_index))]
