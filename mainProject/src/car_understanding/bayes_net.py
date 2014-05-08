@@ -28,6 +28,7 @@ import Bow as Bow
 from attribute_selector import AttributeSelector
 from conditional_prob_table import CPT
 import util
+from numpy import zeros_like
 
 global_CPT = None
 
@@ -409,14 +410,15 @@ class BayesNet2():
 
     # (if using score values)
     m = self.multi_class_clf.decision_function(features=features)
-    m_clf_values = pd.DataFrame(index=test_annos.index, 
-                                columns=class_inds, dtype=str)
+    mm = np.zeros_like(m, dtype=str)
 
-    m_clf_values[m <= -1] = 'nn'
-    m_clf_values[np.logical_and(m > -1, m  <= -0.2)] = 'n'
-    m_clf_values[np.logical_and(m > -0.2, m  <= 0.2)] = 'u'
-    m_clf_values[np.logical_and(m > 0.2, m  <= 1)] = 'p'
-    m_clf_values[m > 1] = 'pp'
+    mm[m <= -1] = 'nn'
+    mm[np.logical_and(m > -1, m  <= -0.2)] = 'n'
+    mm[np.logical_and(m > -0.2, m  <= 0.2)] = 'u'
+    mm[np.logical_and(m > 0.2, m  <= 1)] = 'p'
+    mm[m > 1] = 'pp'
+    m_clf_values = pd.DataFrame(data=mm, index=test_annos.index, 
+                                columns=class_inds, dtype=str)
 
     print np.logical_and(m > -1, m  <= -0.2)
     print m_clf_values.iloc[0]
