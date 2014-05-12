@@ -443,8 +443,6 @@ class BayesNet2():
     m_clf_values = pd.DataFrame(data=mm, index=test_annos.index, 
                                 columns=class_inds, dtype=str)
     
-    print clf_res.head()
-    print attrib_names
     c = np.array(clf_res[attrib_names])
     tmp = clf_res['class_index']
     cc = np.zeros_like(c, dtype=str)
@@ -458,8 +456,6 @@ class BayesNet2():
                                 columns=attrib_names, dtype=str)
     clf_res['class_index'] = tmp
     
-    print clf_res.head()
-    import sys;sys.exit(0)
     
 
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
