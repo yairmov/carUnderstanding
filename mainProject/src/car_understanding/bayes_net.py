@@ -445,7 +445,7 @@ class BayesNet2():
     
     print clf_res.head()
     print attrib_names
-    c = np.array(clf_res.loc[attrib_names])
+    c = np.array(clf_res[attrib_names])
     tmp = clf_res['class_index']
     cc = np.zeros_like(c, dtype=str)
     print c[:2,:]
