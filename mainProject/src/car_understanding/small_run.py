@@ -447,13 +447,13 @@ def bayes_net_generic(use_gt=False):
   attrib_meta = dataset['attrib_meta']
 
   # reduce the training set to be only classes with these attributes.
-#   classes = select_small_set_for_bayes_net(dataset, makes, types)
-#   attrib_meta = attrib_meta.loc[classes.index]
-#   train_annos = train_annos[np.array(
-#                              train_annos.class_index.isin(classes.class_index))]
-#   # Select only images from the args "world"
-#   test_annos = test_annos[np.array(
-#                              test_annos.class_index.isin(classes.class_index))]
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
+  attrib_meta = attrib_meta.loc[classes.index]
+  train_annos = train_annos[np.array(
+                             train_annos.class_index.isin(classes.class_index))]
+  # Select only images from the args "world"
+  test_annos = test_annos[np.array(
+                             test_annos.class_index.isin(classes.class_index))]
   
 #   print "training attrib classifiers"
 #   run_attrib_training(args, cross_validation=False)
