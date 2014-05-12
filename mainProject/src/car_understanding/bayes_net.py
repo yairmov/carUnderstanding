@@ -442,6 +442,19 @@ class BayesNet2():
     mm[m > 1] = 'pp'
     m_clf_values = pd.DataFrame(data=mm, index=test_annos.index, 
                                 columns=class_inds, dtype=str)
+    
+    c = np.array(clf_res)
+    cc = np.zeros_like(c, dtype=str)
+    cc[c <= -1] = 'nn'
+    cc[np.logical_and(c > -1, c  <= -0.2)] = 'n'
+    cc[np.logical_and(c > -0.2, c  <= 0.2)] = 'u'
+    cc[np.logical_and(c > 0.2, c  <= 1)] = 'p'
+    cc[c > 1] = 'pp'
+    clf_res = pd.DataFrame(data=cc, index=test_annos.index, 
+                                columns=attrib_names, dtype=str)
+    print clf_res.head()
+    import sys;sys.exit(0)
+    
 
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
                                         len(class_inds)]),
@@ -461,12 +474,13 @@ class BayesNet2():
 #                                                             test_annos.iloc[ii]['class_index'], 
 #                                                             test_annos.iloc[ii]['class_name'])
       if use_gt:
-        discr = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
+        attrib_res = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
       else:
-        discr = clf_res_discrete.iloc[ii]
+#         attrib_res = clf_res_discrete.iloc[ii]
+        attrib_res = clf_res.iloc[ii]
       
       m_clf_values_one = m_clf_values.iloc[ii]
-      (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_clf_values_one)
+      (class_prob_ii, attrib_prob_ii) = self.predict_one(attrib_res, m_clf_values_one)
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
       pbar.animate(ii)
