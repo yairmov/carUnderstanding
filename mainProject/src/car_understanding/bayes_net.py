@@ -443,6 +443,7 @@ class BayesNet2():
     m_clf_values = pd.DataFrame(data=mm, index=test_annos.index, 
                                 columns=class_inds, dtype=str)
     
+    print clf_res.head()
     c = np.array(clf_res)
     cc = np.zeros_like(c, dtype=str)
     cc[c <= -1] = 'nn'
