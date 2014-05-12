@@ -444,7 +444,8 @@ class BayesNet2():
                                 columns=class_inds, dtype=str)
     
     print clf_res.head()
-    c = np.array(clf_res)
+    c = np.array(clf_res.loc[attrib_names])
+    tmp = clf_res['class_index']
     cc = np.zeros_like(c, dtype=str)
     cc[c <= -1] = 'nn'
     cc[np.logical_and(c > -1, c  <= -0.2)] = 'n'
@@ -453,6 +454,8 @@ class BayesNet2():
     cc[c > 1] = 'pp'
     clf_res = pd.DataFrame(data=cc, index=test_annos.index, 
                                 columns=attrib_names, dtype=str)
+    clf_res['class_index'] = tmp
+    
     print clf_res.head()
     import sys;sys.exit(0)
     
