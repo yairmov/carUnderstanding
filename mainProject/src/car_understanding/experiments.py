@@ -626,9 +626,9 @@ def feature_test():
 
 
 def multiclass_clf():
-#   makes = ['bmw', 'ford']
-#   types = ['sedan', 'SUV']
-#   args = makes + types
+  makes = ['bmw', 'ford']
+  types = ['sedan', 'SUV']
+  args = makes + types
   
   args = get_args_from_file('sorted_attrib_list.txt')
   
