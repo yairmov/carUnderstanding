@@ -96,7 +96,6 @@ class BayesNet2():
     print '\n\ninit attrib clf nodes'
     print '----------------'
     self.init_attrib_clf_nodes_CPT()
-    import sys;sys.exit(0)
     
     print '\n\ninit multiclass clf nodes'
     print '----------------'
