@@ -447,6 +447,7 @@ class BayesNet2():
     c = np.array(clf_res.loc[attrib_names])
     tmp = clf_res['class_index']
     cc = np.zeros_like(c, dtype=str)
+    print cc[:2,:]
     cc[c <= -1] = 'nn'
     cc[np.logical_and(c > -1, c  <= -0.2)] = 'n'
     cc[np.logical_and(c > -0.2, c  <= 0.2)] = 'u'
