@@ -163,8 +163,8 @@ class BayesNet2():
                          columns=['nn', 'n', 'u', 'p', 'pp'],
                          dtype=np.float32)
 
-      print 'p({0}_clf|{0})'.format(clf.name)
-      print cpt
+#       print 'p({0}_clf|{0})'.format(clf.name)
+#       print cpt
 
       self.CPT['p({0}_clf|{0})'.format(clf.name)] = cpt
 
@@ -444,7 +444,7 @@ class BayesNet2():
                                 columns=class_inds, dtype=str)
     
     print clf_res.head()
-    print clf_res.loc[attrib_names].head()
+    print attrib_names
     c = np.array(clf_res.loc[attrib_names])
     tmp = clf_res['class_index']
     cc = np.zeros_like(c, dtype=str)
