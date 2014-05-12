@@ -163,8 +163,8 @@ class BayesNet2():
                          columns=['nn', 'n', 'u', 'p', 'pp'],
                          dtype=np.float32)
 
-#       print 'p({0}_clf|{0})'.format(clf.name)
-#       print cpt
+      print 'p({0}_clf|{0})'.format(clf.name)
+      print cpt
 
       self.CPT['p({0}_clf|{0})'.format(clf.name)] = cpt
 
@@ -213,8 +213,8 @@ class BayesNet2():
                          columns=['nn', 'n', 'u', 'p', 'pp'],
                          dtype=np.float32)
       
-#       print 'p(m_clf_{0}|{0})'.format(class_id)
-#       print cpt
+      print 'p(m_clf_{0}|{0})'.format(class_id)
+      print cpt
       self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
 
 #   def init_multi_class_clf_nodes_CPT(self):
