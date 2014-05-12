@@ -640,12 +640,12 @@ def multiclass_clf():
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
   
-#   classes = select_small_set_for_bayes_net(dataset, makes, types)
-#   train_annos = train_annos[np.array(
-#                              train_annos.class_index.isin(classes.class_index))]
-#   test_annos = test_annos[np.array(
-#                               test_annos.class_index.isin(classes.class_index))]
-#   
+  classes = select_small_set_for_bayes_net(dataset, makes, types)
+  train_annos = train_annos[np.array(
+                             train_annos.class_index.isin(classes.class_index))]
+  test_annos = test_annos[np.array(
+                              test_annos.class_index.isin(classes.class_index))]
+   
   
   
   m_clf = MultiClassClassifier(train_annos, classes, config)

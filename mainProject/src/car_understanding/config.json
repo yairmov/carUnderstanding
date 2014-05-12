@@ -21,7 +21,7 @@
     "use_prob": false
   }, 
   "multiclass_classifier": {
-  	"path": "../../../cache/multi_clf.dat"
+  	"path": "../../../cache/multi_clf_10.dat"
   },
   "hostname": "palfrey.vasc.ri.cmu.edu", 
   "config_file": "config.json", 

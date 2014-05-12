@@ -471,8 +471,6 @@ class BayesNet2():
     
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
-    print 'AHAHA'
-    import sys; sys.exit(0)
     
     # Build class probs
     class_probs = pd.Series(index=self.class_inds, dtype=np.float64)
