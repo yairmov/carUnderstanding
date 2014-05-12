@@ -630,7 +630,7 @@ def multiclass_clf():
   types = ['sedan', 'SUV']
   args = makes + types
   
-  args = get_args_from_file('sorted_attrib_list.txt')
+#   args = get_args_from_file('sorted_attrib_list.txt')
   
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
