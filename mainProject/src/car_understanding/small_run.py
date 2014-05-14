@@ -439,7 +439,7 @@ def randomly_select_classes_and_attribs(train_annos, test_annos, class_meta,
   c_inds = c_inds[:n_classes]
   class_meta = class_meta[class_meta.index.isin(c_inds)]
   attrib_meta = attrib_meta[attrib_meta.index.isin(c_inds)]
-  train_annos = class_meta[class_meta.class_index.isin(c_inds)]
+  train_annos = train_annos[train_annos.class_index.isin(c_inds)]
   test_annos = test_annos[test_annos.class_index.isin(c_inds)]
   
   return  (train_annos, test_annos, class_meta, 
