@@ -528,6 +528,66 @@ def function_builder(f_str, f_name):
 #   print f_str
   exec f_str in globals(), locals()
   return locals()[f_name]
+
+
+def export_to_BIF(self, filename):
+    from lxml import etree
+    # Define preamble
+    preamble = '''\
+    <?xml version="1.0"?>
+    <!-- DTD for the XMLBIF 0.3 format -->
+    <!DOCTYPE BIF [
+      <!ELEMENT BIF ( NETWORK )*>
+            <!ATTLIST BIF VERSION CDATA #REQUIRED>
+      <!ELEMENT NETWORK ( NAME, ( PROPERTY | VARIABLE | DEFINITION )* )>
+      <!ELEMENT NAME (#PCDATA)>
+      <!ELEMENT VARIABLE ( NAME, ( OUTCOME |  PROPERTY )* ) >
+            <!ATTLIST VARIABLE TYPE (nature|decision|utility) "nature">
+      <!ELEMENT OUTCOME (#PCDATA)>
+      <!ELEMENT DEFINITION ( FOR | GIVEN | TABLE | PROPERTY )* >
+      <!ELEMENT FOR (#PCDATA)>
+      <!ELEMENT GIVEN (#PCDATA)>
+      <!ELEMENT TABLE (#PCDATA)>
+      <!ELEMENT PROPERTY (#PCDATA)>
+    ]>
+    
+    
+    <BIF VERSION="0.3">
+    </BIF>'''
+    root = etree.XML(preamble)
+    tree = etree.ElementTree(root)
+    etree.SubElement(root, 'NETWORK')
+    network = root[0]
+    etree.SubElement(network, 'NAME')
+    network[0].text = self.desc
+    
+    node_str = '''
+    <VARIABLE TYPE="nature">
+    <NAME>{name}</NAME>
+    <OUTCOME>{Value1}</OUTCOME>
+    <OUTCOME>{Value2}</OUTCOME>
+    <PROPERTY>position = (0,0)</PROPERTY>
+    </VARIABLE>'''
+    
+    def c_node_maker(name, values):
+      node = etree.Element('VARIABLE', TYPE="nature")
+      NAME = etree.Element('NAME')
+      NAME.text = name
+      node.append(NAME)
+      for v in values:
+        outcome = etree.Element('OUTCOME')
+        outcome.text = v
+        node.append(outcome)
+      p = etree.Element('PROPERTY')
+      p.text = 'position = (0,0)'
+      node.append(p)
+    
+    # make XML object for class nodes
+    for c_ind in self.class_inds:
+      n = c_node_maker('c_'+str(c_ind), ['True', 'False'])
+      network.append(n)
+      
+    print etree.tostring(tree)
   
 
 #------------------------------------------------------------------------------
@@ -1021,66 +1081,6 @@ class BayesNet:
 #     return lambda theta=theta: np.float(cpt.get_value([bool(v) for v in tuple(theta)],'True'))
     return lambda theta=theta: np.float(cpt.get_value([theta[ii]],'True'))
 
-       
-  
-  def export_to_BIF(self, filename):
-    from lxml import etree
-    # Define preamble
-    preamble = '''\
-    <?xml version="1.0"?>
-    <!-- DTD for the XMLBIF 0.3 format -->
-    <!DOCTYPE BIF [
-      <!ELEMENT BIF ( NETWORK )*>
-            <!ATTLIST BIF VERSION CDATA #REQUIRED>
-      <!ELEMENT NETWORK ( NAME, ( PROPERTY | VARIABLE | DEFINITION )* )>
-      <!ELEMENT NAME (#PCDATA)>
-      <!ELEMENT VARIABLE ( NAME, ( OUTCOME |  PROPERTY )* ) >
-            <!ATTLIST VARIABLE TYPE (nature|decision|utility) "nature">
-      <!ELEMENT OUTCOME (#PCDATA)>
-      <!ELEMENT DEFINITION ( FOR | GIVEN | TABLE | PROPERTY )* >
-      <!ELEMENT FOR (#PCDATA)>
-      <!ELEMENT GIVEN (#PCDATA)>
-      <!ELEMENT TABLE (#PCDATA)>
-      <!ELEMENT PROPERTY (#PCDATA)>
-    ]>
-    
-    
-    <BIF VERSION="0.3">
-    </BIF>'''
-    root = etree.XML(preamble)
-    tree = etree.ElementTree(root)
-    etree.SubElement(root, 'NETWORK')
-    network = root[0]
-    etree.SubElement(network, 'NAME')
-    network[0].text = self.desc
-    
-    node_str = '''
-    <VARIABLE TYPE="nature">
-    <NAME>{name}</NAME>
-    <OUTCOME>{Value1}</OUTCOME>
-    <OUTCOME>{Value2}</OUTCOME>
-    <PROPERTY>position = (0,0)</PROPERTY>
-    </VARIABLE>'''
-    
-    def c_node_maker(name, values):
-      node = etree.Element('VARIABLE', TYPE="nature")
-      NAME = etree.Element('NAME')
-      NAME.text = name
-      node.append(NAME)
-      for v in values:
-        outcome = etree.Element('OUTCOME')
-        outcome.text = v
-        node.append(outcome)
-      p = etree.Element('PROPERTY')
-      p.text = 'position = (0,0)'
-      node.append(p)
-    
-    # make XML object for class nodes
-    for c_ind in self.class_inds:
-      n = c_node_maker('c_'+str(c_ind), ['True', 'False'])
-      network.append(n)
-      
-    print etree.tostring(tree)
     
   
   @staticmethod      
