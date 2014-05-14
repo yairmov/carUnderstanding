@@ -511,7 +511,6 @@ def bayes_net_generic(use_gt=False):
   # load multi class classifier
 #   m_clf = MultiClassClassifier.load(config.multiclass_classifier.path)
   m_clf = train_m_clf_ptr(train_annos, classes, config)
-  print m_clf.class_meta
   
   
 #   bnet = bayes_net.BayesNet(config, train_annos, 

@@ -508,9 +508,9 @@ class BayesNet2():
       
     
     
-    print 'here'
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
+    print 'here'
     
     # Build class probs
     class_probs = pd.Series(index=self.class_inds, dtype=np.float64)
