@@ -548,6 +548,7 @@ class BayesNet2():
     <BIF VERSION="0.3">
     </BIF>'''
     root = etree.XML(preamble)
+    print 'here'
     tree = etree.ElementTree(root)
     etree.SubElement(root, 'NETWORK')
     network = root[0]
