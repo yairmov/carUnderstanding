@@ -581,6 +581,21 @@ class BayesNet2():
       n = c_node_maker('c_'+str(c_ind), ['True', 'False'])
       network.append(n)
       
+      
+    # make XML object for attribute nodes
+    
+    # make XML object for attribute clf nodes
+    
+    # make XML object for multi class nodes
+    
+    # make XML object for cpts for class nodes
+    
+    # make XML object for cpts for attrib nodes
+    
+    # make XML object for cpts for attrib clf nodes
+    
+    # make XML object for cpts for multiclass clf nodes
+      
     tree.write(filename, pretty_print=False)
     
     
