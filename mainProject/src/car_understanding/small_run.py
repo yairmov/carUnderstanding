@@ -522,6 +522,9 @@ def bayes_net_generic(use_gt=False):
                   multi_class_clf=m_clf, desc=str(args), use_gt=use_gt)
   dump({'bnet': bnet}, '../../../output/bnet.dat')
   bnet.init()   
+  
+  bnet.export_to_BIF('../../../output/bnet.BIF')
+  return
 
   print 'predicting!!!'
 
