@@ -581,7 +581,7 @@ class BayesNet2():
       n = c_node_maker('c_'+str(c_ind), ['True', 'False'])
       network.append(n)
       
-    print etree.tostring(tree)
+    print etree.tostring(tree, pretty_print=True)
     
     
 def function_builder(f_str, f_name):
