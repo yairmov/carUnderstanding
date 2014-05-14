@@ -527,26 +527,26 @@ class BayesNet2():
     from lxml import etree
     # Define preamble
     preamble = '''\
-    <?xml version="1.0"?>
-    <!-- DTD for the XMLBIF 0.3 format -->
-    <!DOCTYPE BIF [
-      <!ELEMENT BIF ( NETWORK )*>
-            <!ATTLIST BIF VERSION CDATA #REQUIRED>
-      <!ELEMENT NETWORK ( NAME, ( PROPERTY | VARIABLE | DEFINITION )* )>
-      <!ELEMENT NAME (#PCDATA)>
-      <!ELEMENT VARIABLE ( NAME, ( OUTCOME |  PROPERTY )* ) >
-            <!ATTLIST VARIABLE TYPE (nature|decision|utility) "nature">
-      <!ELEMENT OUTCOME (#PCDATA)>
-      <!ELEMENT DEFINITION ( FOR | GIVEN | TABLE | PROPERTY )* >
-      <!ELEMENT FOR (#PCDATA)>
-      <!ELEMENT GIVEN (#PCDATA)>
-      <!ELEMENT TABLE (#PCDATA)>
-      <!ELEMENT PROPERTY (#PCDATA)>
-    ]>
-    
-    
-    <BIF VERSION="0.3">
-    </BIF>'''
+<?xml version="1.0"?>
+<!-- DTD for the XMLBIF 0.3 format -->
+<!DOCTYPE BIF [
+        <!ELEMENT BIF ( NETWORK )*>
+              <!ATTLIST BIF VERSION CDATA #REQUIRED>
+        <!ELEMENT NETWORK ( NAME, ( PROPERTY | VARIABLE | DEFINITION )* )>
+        <!ELEMENT NAME (#PCDATA)>
+        <!ELEMENT VARIABLE ( NAME, ( OUTCOME |  PROPERTY )* ) >
+              <!ATTLIST VARIABLE TYPE (nature|decision|utility) "nature">
+        <!ELEMENT OUTCOME (#PCDATA)>
+        <!ELEMENT DEFINITION ( FOR | GIVEN | TABLE | PROPERTY )* >
+        <!ELEMENT FOR (#PCDATA)>
+        <!ELEMENT GIVEN (#PCDATA)>
+        <!ELEMENT TABLE (#PCDATA)>
+        <!ELEMENT PROPERTY (#PCDATA)>
+]>
+
+
+<BIF VERSION="0.3">
+</BIF>'''
     root = etree.XML(preamble)
     print 'here'
     tree = etree.ElementTree(root)
