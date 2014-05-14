@@ -491,7 +491,6 @@ class BayesNet2():
   
   
   def predict_one(self, clf_res_discrete, m_clf_values):
-    print 'here'
     use_gt = self.use_gt
     
     if use_gt:
@@ -508,6 +507,8 @@ class BayesNet2():
       q_params.update({'m_'+str(c_id): str(m_clf_values.loc[c_id])})
       
     
+    
+    print 'here'
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
     
