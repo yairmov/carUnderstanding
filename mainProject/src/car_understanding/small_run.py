@@ -454,14 +454,15 @@ def bayes_net_generic(use_gt=False):
   classes = dataset['class_meta']
   attrib_meta = dataset['attrib_meta']
   
+  n_classes = 10
   (train_annos, test_annos, classes, attrib_meta, config) = \
   randomly_select_classes_and_attribs(train_annos, test_annos, classes,
-                                      attrib_meta, 10, config)
+                                      attrib_meta, n_classes, config)
   
-  print attrib_meta
-  print classes
-  print train_annos.shape
-  print test_annos.shape
+  args = np.concatenate([attrib_meta.type.unique(), attrib_meta.make.unique(),
+                         attrib_meta.country.unique()])
+  args = list(args)
+  print args
   return
   
   
