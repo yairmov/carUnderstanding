@@ -548,7 +548,6 @@ class BayesNet2():
 <BIF VERSION="0.3">
 </BIF>'''
     root = etree.XML(preamble)
-    print 'here'
     tree = etree.ElementTree(root)
     etree.SubElement(root, 'NETWORK')
     network = root[0]
@@ -575,6 +574,7 @@ class BayesNet2():
       p = etree.Element('PROPERTY')
       p.text = 'position = (0,0)'
       node.append(p)
+      return node
     
     # make XML object for class nodes
     for c_ind in self.class_inds:
