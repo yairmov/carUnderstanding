@@ -522,15 +522,8 @@ class BayesNet2():
       attrib_probs.loc[a_name] = marginals[('a_' + a_name, 'True')]
 
     return class_probs, attrib_probs
-    
-    
-def function_builder(f_str, f_name):
-#   print f_str
-  exec f_str in globals(), locals()
-  return locals()[f_name]
-
-
-def export_to_BIF(self, filename):
+  
+  def export_to_BIF(self, filename):
     from lxml import etree
     # Define preamble
     preamble = '''\
@@ -588,6 +581,15 @@ def export_to_BIF(self, filename):
       network.append(n)
       
     print etree.tostring(tree)
+    
+    
+def function_builder(f_str, f_name):
+#   print f_str
+  exec f_str in globals(), locals()
+  return locals()[f_name]
+
+
+
   
 
 #------------------------------------------------------------------------------
