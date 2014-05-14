@@ -459,6 +459,9 @@ def bayes_net_generic(use_gt=False):
                                       attrib_meta, 10, config)
   
   print attrib_meta
+  print classes
+  print train_annos.shape
+  print test_annos.shape
   return
   
   
