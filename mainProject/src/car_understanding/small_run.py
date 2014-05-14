@@ -10,7 +10,7 @@ import numpy as np
 from sklearn import cross_validation
 # from sklearn import svm
 from sklearn import preprocessing
-from sklearn.externals.joblib import Parallel, delayed, dump, load
+from sklearn.externals.joblib import Parallel, delayed, dump, load, Memory
 import cv2 as cv
 import pandas as pd
 import collections
@@ -445,10 +445,17 @@ def randomly_select_classes_and_attribs(train_annos, test_annos, class_meta,
   return  (train_annos, test_annos, class_meta, 
                                         attrib_meta, config)
 
+# @memory.cache
+def train_m_clf(train_annos, classes, config):
+  m_clf = MultiClassClassifier(train_annos, classes, config)
+  m_clf.fit()
+  return m_clf
 
 def bayes_net_generic(use_gt=False):
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
+  memory = Memory(cachedir=config.cache_dir, verbose=config.logging.verbose)
+  
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
   classes = dataset['class_meta']
@@ -459,11 +466,8 @@ def bayes_net_generic(use_gt=False):
   randomly_select_classes_and_attribs(train_annos, test_annos, classes,
                                       attrib_meta, n_classes, config)
   
-  args = np.concatenate([attrib_meta.type.unique(), attrib_meta.make.unique(),
-                         attrib_meta.country.unique()])
-  args = list(args)
-  print args
-  return
+  args = list(np.concatenate([attrib_meta.type.unique(), attrib_meta.make.unique(),
+                         attrib_meta.country.unique()]))
   
   
   # selecting attributes to experiment with
@@ -503,7 +507,9 @@ def bayes_net_generic(use_gt=False):
 
 
   # load multi class classifier
-  m_clf = MultiClassClassifier.load(config.multiclass_classifier.path)
+#   m_clf = MultiClassClassifier.load(config.multiclass_classifier.path)
+  m_clf = train_m_clf(train_annos, classes, config)
+  print m_clf.class_meta 
   
   
 #   bnet = bayes_net.BayesNet(config, train_annos, 
