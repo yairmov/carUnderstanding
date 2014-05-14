@@ -581,7 +581,7 @@ class BayesNet2():
       n = c_node_maker('c_'+str(c_ind), ['True', 'False'])
       network.append(n)
       
-    tree.write(filename, pretty_print=True)
+    tree.write(filename, pretty_print=False)
     
     
 def function_builder(f_str, f_name):
