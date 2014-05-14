@@ -446,7 +446,6 @@ class BayesNet2():
     c = np.array(clf_res[attrib_names])
     tmp = clf_res['class_index']
     cc = np.zeros_like(c, dtype=str)
-    print c[:2,:]
     cc[c <= -1] = 'nn'
     cc[np.logical_and(c > -1, c  <= -0.2)] = 'n'
     cc[np.logical_and(c > -0.2, c  <= 0.2)] = 'u'
@@ -492,6 +491,7 @@ class BayesNet2():
   
   
   def predict_one(self, clf_res_discrete, m_clf_values):
+    print 'here'
     use_gt = self.use_gt
     
     if use_gt:
