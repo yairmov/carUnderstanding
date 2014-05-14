@@ -455,6 +455,8 @@ def bayes_net_generic(use_gt=False):
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
   memory = Memory(cachedir=config.cache_dir, verbose=config.logging.verbose)
+  train_m_clf_ptr = memory.cache(train_m_clf)
+  
   
   train_annos = dataset['train_annos']
   test_annos = dataset['test_annos']
@@ -508,7 +510,7 @@ def bayes_net_generic(use_gt=False):
 
   # load multi class classifier
 #   m_clf = MultiClassClassifier.load(config.multiclass_classifier.path)
-  m_clf = train_m_clf(train_annos, classes, config)
+  m_clf = train_m_clf_ptr(train_annos, classes, config)
   print m_clf.class_meta
   
   

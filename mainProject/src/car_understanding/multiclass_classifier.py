@@ -57,7 +57,7 @@ class MultiClassClassifier(object):
     labels = self.labels_train
     
     print('Training with these {} classes:'.format(len(np.unique(labels))))
-    print(labels)
+    print(np.unique(labels))
     
     skf = cross_validation.StratifiedKFold(self.labels_train, n_folds=self.n_folds)
     
