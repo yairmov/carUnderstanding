@@ -143,7 +143,7 @@ def main(argv=None):  # IGNORE:C0111
 
 
 
-RunCrawl(args)
+  RunCrawl(args)
 
 if __name__ == '__main__':
     main()
