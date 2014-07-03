@@ -13,6 +13,7 @@ from argparse import RawDescriptionHelpFormatter
 import sys
 import os
 import logging
+from path import path
 
 
 #: Glogbal logger instance
@@ -87,15 +88,36 @@ def GetImageAndData(img_id):
     return img, meta_data
 
 
+def MakeDirIfNeeded(dirname):
+  p = path(dirname)
+  if not p.isdir():
+    p.makedirs()
+
 def RunCrawl(args):
 
-  IMG_NAME_FMT   = os.path.normpath(os.path.join(args.output_path , 'img_{:07}'))
-  DATA_NAME_FMT = os.path.normpath(os.path.join(args.output_path , 'meta_{:07}.json'))
+  IMG_NAME_FMT   = 'img_{:07}.jpg'
+  DATA_NAME_FMT = 'meta_{:07}.json'
+
+
+  MakeDirIfNeeded(args.output_path)
 
   for ii in xrange(1, 10):
-    # img, meta_data = GetImageAndData(ii)
-    LOG.info('Saving image: '  + IMG_NAME_FMT.format(ii))
-    LOG.info('Saving data: '  + DATA_NAME_FMT.format(ii))
+
+    dir_path = os.path.join(args.output_path, '{:04}'.format(ii / 1000))
+    MakeDirIfNeeded(dir_path)
+
+    curr_img_fname = os.path.join(dir_path, IMG_NAME_FMT.format(ii))
+    curr_data_fname = os.path.join(dir_path, DATA_NAME_FMT.format(ii))
+
+    img, meta_data = GetImageAndData(ii)
+    LOG.info('Saving image: '  + curr_img_fname)
+    img.save(curr_img_fname)
+
+    LOG.info('Saving data: '  + curr_data_fname)
+    with open(curr_data_fname, 'w') as f:
+      json.dump(meta_data, f)
+
+
     time.sleep(args.delay)
 
 
