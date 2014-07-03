@@ -126,8 +126,8 @@ def main(argv=None):  # IGNORE:C0111
         logging.basicConfig(level=verbosity, format=LOG_FORMAT_FILE, filename=logfilename, filemode='a')
         print >> sys.stderr, "Logging to %s" % logfilename
 
-  print("Got arguments: ")
-  print(args)
+  LOG.info("Got arguments: ")
+  LOG.info(args)
 
 
 
