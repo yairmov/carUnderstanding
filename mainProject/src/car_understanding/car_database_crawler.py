@@ -98,14 +98,13 @@ def main(argv=None):  # IGNORE:C0111
   program_shortdesc = __import__('__main__').__doc__.split("\n")[1]
   program_license = '''%s
 
-  Created by yair on %s.
   Copyright 2014 Yair Movshovitz-Attias. All rights reserved.
 
   Distributed on an "AS IS" basis without warranties
   or conditions of any kind, either express or implied.
 
   USAGE ??
-  ''' % (program_shortdesc, str(__date__))
+  ''' % (program_shortdesc)
   parser = ArgumentParser(description=program_license,
                           formatter_class=RawDescriptionHelpFormatter)
 
