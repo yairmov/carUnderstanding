@@ -87,6 +87,16 @@ def GetImageAndData(img_id):
     return img, meta_data
 
 
+def RunCrawl(args):
+
+  IMG_NAME_FMT   = os.path.normpath(os.path.join(args.output_path , 'img_{:07}'))
+  DATA_NAME_FMT = os.path.normpath(os.path.join(args.output_path , 'meta_{:07}.json'))
+
+  for ii in xrange(10):
+    # img, meta_data = GetImageAndData(ii)
+    LOG.info('Saving image: '  + IMG_NAME_FMT.format(ii))
+    LOG.info('Saving data: '  + DATA_NAME_FMT.format(ii))
+
 
 
 def main(argv=None):  # IGNORE:C0111
@@ -111,6 +121,8 @@ def main(argv=None):  # IGNORE:C0111
   parser.add_argument(dest="output_path", help="path to save downloaded data." , default=None)
   parser.add_argument("-l", "--logfile", dest="logfile",    default = None, help = "Log to file instead off console [default: %default]" )
   parser.add_argument("-v", action="count", dest="verbosity", default = DEFAULT_VERBOSITY, help = "Verbosity. Add more -v to be more verbose (%s) [default: %%default]" % LOG_HELP)
+  parser.add_argument("-d", "--delay", dest="delay", default = 1, help = "time delay between images in seconds. [default: %default]" )
+
 
 
   # Process arguments
@@ -131,7 +143,7 @@ def main(argv=None):  # IGNORE:C0111
 
 
 
-
+RunCrawl(args)
 
 if __name__ == '__main__':
     main()
