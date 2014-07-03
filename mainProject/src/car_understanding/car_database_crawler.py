@@ -12,6 +12,7 @@ from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import sys
 import os
+import logging
 
 
 #: Glogbal logger instance
@@ -119,12 +120,12 @@ def main(argv=None):  # IGNORE:C0111
   verbosity = LOGLEVEL_DICT.get(int(args.verbosity), DEFAULT_VERBOSITY)
 
   # Set up logging
-    if args.logfile is None:
-        logging.basicConfig(level=verbosity, format=LOG_FORMAT_CONS)
-    else:
-        logfilename = os.path.normpath(args.logfile)
-        logging.basicConfig(level=verbosity, format=LOG_FORMAT_FILE, filename=logfilename, filemode='a')
-        print >> sys.stderr, "Logging to %s" % logfilename
+  if args.logfile is None:
+      logging.basicConfig(level=verbosity, format=LOG_FORMAT_CONS)
+  else:
+      logfilename = os.path.normpath(args.logfile)
+      logging.basicConfig(level=verbosity, format=LOG_FORMAT_FILE, filename=logfilename, filemode='a')
+      print >> sys.stderr, "Logging to %s" % logfilename
 
   LOG.info("Got arguments: ")
   LOG.info(args)
