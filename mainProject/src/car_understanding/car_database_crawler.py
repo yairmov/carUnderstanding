@@ -90,9 +90,9 @@ def GetImageAndData(img_id):
 
 def main(argv=None):  # IGNORE:C0111
   if argv is None:
-        argv = sys.argv
-    else:
-        sys.argv.extend(argv)
+    argv = sys.argv
+  else:
+    sys.argv.extend(argv)
 
   program_shortdesc = __import__('__main__').__doc__.split("\n")[1]
   program_license = '''%s
