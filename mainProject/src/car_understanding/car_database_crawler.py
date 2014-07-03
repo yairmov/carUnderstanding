@@ -92,7 +92,7 @@ def RunCrawl(args):
   IMG_NAME_FMT   = os.path.normpath(os.path.join(args.output_path , 'img_{:07}'))
   DATA_NAME_FMT = os.path.normpath(os.path.join(args.output_path , 'meta_{:07}.json'))
 
-  for ii in xrange(10):
+  for ii in xrange(1, 10):
     # img, meta_data = GetImageAndData(ii)
     LOG.info('Saving image: '  + IMG_NAME_FMT.format(ii))
     LOG.info('Saving data: '  + DATA_NAME_FMT.format(ii))
