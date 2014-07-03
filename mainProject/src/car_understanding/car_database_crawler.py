@@ -96,6 +96,7 @@ def RunCrawl(args):
     # img, meta_data = GetImageAndData(ii)
     LOG.info('Saving image: '  + IMG_NAME_FMT.format(ii))
     LOG.info('Saving data: '  + DATA_NAME_FMT.format(ii))
+    time.sleep(args.delay)
 
 
 
