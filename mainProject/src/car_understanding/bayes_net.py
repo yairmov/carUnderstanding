@@ -22,11 +22,13 @@ from sklearn.externals.joblib import Parallel, delayed
 from sklearn import cross_validation
 from bayesian.bbn import build_bbn
 import copy
+from sklearn.preprocessing import normalize
 
 import Bow as Bow
 from attribute_selector import AttributeSelector
 from conditional_prob_table import CPT
 import util
+from numpy import zeros_like
 
 global_CPT = None
 
@@ -144,53 +146,100 @@ class BayesNet2():
 
   def init_attrib_clf_nodes_CPT(self):
     attrib_clfs = self.attrib_clfs
+    bins = [-np.inf, -1, -0.2, 0.2, 1, np.inf]
+    c = np.zeros(shape=[2, 5], dtype=np.float32)
     
     for clf in attrib_clfs:
       y_true = clf.labels_train
-      y_pred = clf.train_pred_labels
+      p_scores = clf.train_pred_scores[y_true]
+      n_scores = clf.train_pred_scores[np.logical_not(y_true)]
+      c[0,:], b = np.histogram(p_scores, bins)
+      c[1,:], b = np.histogram(n_scores, bins)
+      c[:] += 1
+      normalize(c, axis=1, norm='l1', copy=False)
       
-      n_postive = float(np.sum(y_true))
-      n_negative = y_true.shape[0] - n_postive
-      n_tp = np.sum(np.logical_and(y_pred, y_true))
-      n_fp = np.sum(np.logical_and(y_pred, np.logical_not(y_true)))
-      
-      p_clf_given_attrib =  n_tp / n_postive
-      p_clf_given_not_attrib =  n_fp / n_negative
-      
-      cpt = pd.DataFrame(index=['True', 'False'], columns=['True', 'False'])
-      cpt.index.name = 'Hidden attrib value'
-      cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
-      cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
-      
-#       print 'p({0}_clf|{0})'.format(clf.name)
-#       print cpt
-      
+      cpt = pd.DataFrame(data=c,
+                         index=['True', 'False'], 
+                         columns=['nn', 'n', 'u', 'p', 'pp'],
+                         dtype=np.float32)
+
+      print 'p({0}_clf|{0})'.format(clf.name)
+      print cpt
+
       self.CPT['p({0}_clf|{0})'.format(clf.name)] = cpt
+
+#   def init_attrib_clf_nodes_CPT(self):
+#     attrib_clfs = self.attrib_clfs
+#     
+#     for clf in attrib_clfs:
+#       y_true = clf.labels_train
+#       y_pred = clf.train_pred_labels
+#       
+#       n_postive = float(np.sum(y_true))
+#       n_negative = y_true.shape[0] - n_postive
+#       n_tp = np.sum(np.logical_and(y_pred, y_true))
+#       n_fp = np.sum(np.logical_and(y_pred, np.logical_not(y_true)))
+#       
+#       p_clf_given_attrib =  n_tp / n_postive
+#       p_clf_given_not_attrib =  n_fp / n_negative
+#       
+#       cpt = pd.DataFrame(index=['True', 'False'], columns=['True', 'False'])
+#       cpt.index.name = 'Hidden attrib value'
+#       cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
+#       cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
+#       
+# #       print 'p({0}_clf|{0})'.format(clf.name)
+# #       print cpt
+#       
+#       self.CPT['p({0}_clf|{0})'.format(clf.name)] = cpt
 
 
   def init_multi_class_clf_nodes_CPT(self):
-    
-    for class_id in self.class_inds:
+    scores = self.multi_class_clf.train_pred_scores
+    bins = [-np.inf, -1, -0.2, 0.2, 1, np.inf]
+    c = np.zeros(shape=[2, 5], dtype=np.float32)
+    for ii, class_id in enumerate(self.class_inds):
       y_true = self.multi_class_clf.labels_train == class_id
-      y_pred = self.multi_class_clf.train_pred_labels == class_id
+      p_scores = scores[y_true,ii]
+      n_scores = scores[np.logical_not(y_true),ii]
       
-      n_postive = float(np.sum(y_true))
-      n_negative = y_true.shape[0] - n_postive
-      n_tp = np.sum(np.logical_and(y_pred, y_true))
-      n_fp = np.sum(np.logical_and(y_pred, np.logical_not(y_true)))
+      c[0,:], b = np.histogram(p_scores, bins)
+      c[1,:], b = np.histogram(n_scores, bins)
+      c[:] += 1
+      normalize(c, axis=1, norm='l1', copy=False)
       
-      p_clf_given_attrib =  n_tp / n_postive
-      p_clf_given_not_attrib =  n_fp / n_negative
+      cpt = pd.DataFrame(data=c,
+                         index=['True', 'False'], 
+                         columns=['nn', 'n', 'u', 'p', 'pp'],
+                         dtype=np.float32)
       
-      cpt = pd.DataFrame(index=['True', 'False'], columns=['True', 'False'])
-      cpt.index.name = 'class_id'
-      cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
-      cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
-    
-#       print 'p(m_clf_{0}|{0})'.format(class_id)
-#       print cpt
-      
+      print 'p(m_clf_{0}|{0})'.format(class_id)
+      print cpt
       self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
+
+#   def init_multi_class_clf_nodes_CPT(self):
+#     
+#     for class_id in self.class_inds:
+#       y_true = self.multi_class_clf.labels_train == class_id
+#       y_pred = self.multi_class_clf.train_pred_labels == class_id
+#       
+#       n_postive = float(np.sum(y_true))
+#       n_negative = y_true.shape[0] - n_postive
+#       n_tp = np.sum(np.logical_and(y_pred, y_true))
+#       n_fp = np.sum(np.logical_and(y_pred, np.logical_not(y_true)))
+#       
+#       p_clf_given_attrib =  n_tp / n_postive
+#       p_clf_given_not_attrib =  n_fp / n_negative
+#       
+#       cpt = pd.DataFrame(index=['True', 'False'], columns=['True', 'False'])
+#       cpt.index.name = 'class_id'
+#       cpt.loc['True'] = [p_clf_given_attrib, 1-p_clf_given_attrib]
+#       cpt.loc['False'] = [p_clf_given_not_attrib, 1-p_clf_given_not_attrib]
+#     
+# #       print 'p(m_clf_{0}|{0})'.format(class_id)
+# #       print cpt
+#       
+#       self.CPT['p(m_clf_{0}|{0})'.format(class_id)] = cpt
       
       
   
@@ -199,7 +248,7 @@ class BayesNet2():
     domains = {}
      
     global global_CPT
-    global_CPT = copy.deepcopy(self.CPT)
+    global_CPT = self.CPT
     
     f,d = self.build_functions_for_class_nodes()
     functions.extend(f)
@@ -279,7 +328,7 @@ class BayesNet2():
       curr_f = function_builder(f_str.format(a_name=a_name), 
                                 f_name)
       functions.append(curr_f)
-      domains.update({'clf_' + a_name: ['True', 'False']})
+      domains.update({'clf_' + a_name: ['nn', 'n', 'u', 'p', 'pp']})
     
     return functions, domains
 
@@ -298,7 +347,7 @@ class BayesNet2():
       curr_f = function_builder(f_str.format(class_id=class_id), 
                               f_name)
       functions.append(curr_f)
-      domains.update({'m_' + str(class_id): ['True', 'False']})
+      domains.update({'m_' + str(class_id): ['nn', 'n', 'u', 'p', 'pp']})
     
     return functions, domains
       
@@ -373,14 +422,41 @@ class BayesNet2():
         
         
     # apply multi class classifier on test annos
-    m = self.multi_class_clf.predict(features=features)
-    m_discr = pd.DataFrame(data=np.zeros([m.shape[0], len(class_inds)]), 
-                           index=test_annos.index, 
-                           columns=class_inds, dtype=bool)
-    for ii in range(m.shape[0]):
-      m_discr.iloc[ii][m[ii]] = True
-      
     
+    # (if boolean)
+#     m = self.multi_class_clf.predict(features=features)
+#     m_clf_values = pd.DataFrame(data=np.zeros([m.shape[0], len(class_inds)]), 
+#                            index=test_annos.index, 
+#                            columns=class_inds, dtype=bool)
+#     for ii in range(m.shape[0]):
+#           m_clf_values.iloc[ii][m[ii]] = True
+
+    # (if using score values)
+    m = self.multi_class_clf.decision_function(features=features)
+    mm = np.zeros_like(m, dtype=str)
+
+    mm[m <= -1] = 'nn'
+    mm[np.logical_and(m > -1, m  <= -0.2)] = 'n'
+    mm[np.logical_and(m > -0.2, m  <= 0.2)] = 'u'
+    mm[np.logical_and(m > 0.2, m  <= 1)] = 'p'
+    mm[m > 1] = 'pp'
+    m_clf_values = pd.DataFrame(data=mm, index=test_annos.index, 
+                                columns=class_inds, dtype=str)
+    
+    c = np.array(clf_res[attrib_names])
+    tmp = clf_res['class_index']
+    cc = np.zeros_like(c, dtype=str)
+    cc[c <= -1] = 'nn'
+    cc[np.logical_and(c > -1, c  <= -0.2)] = 'n'
+    cc[np.logical_and(c > -0.2, c  <= 0.2)] = 'u'
+    cc[np.logical_and(c > 0.2, c  <= 1)] = 'p'
+    cc[c > 1] = 'pp'
+    clf_res = pd.DataFrame(data=cc, index=test_annos.index, 
+                                columns=attrib_names, dtype=str)
+    clf_res['class_index'] = tmp
+    
+    
+
     class_prob = pd.DataFrame(np.zeros([n_imgs, 
                                         len(class_inds)]),
                               index=test_annos.index, 
@@ -399,12 +475,13 @@ class BayesNet2():
 #                                                             test_annos.iloc[ii]['class_index'], 
 #                                                             test_annos.iloc[ii]['class_name'])
       if use_gt:
-        discr = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
+        attrib_res = attrib_meta.loc[test_annos.iloc[ii]['class_index']]
       else:
-        discr = clf_res_discrete.iloc[ii]
+#         attrib_res = clf_res_discrete.iloc[ii]
+        attrib_res = clf_res.iloc[ii]
       
-      m_discr_one = m_discr.iloc[ii]
-      (class_prob_ii, attrib_prob_ii) = self.predict_one(discr, m_discr_one)
+      m_clf_values_one = m_clf_values.iloc[ii]
+      (class_prob_ii, attrib_prob_ii) = self.predict_one(attrib_res, m_clf_values_one)
       class_prob.iloc[ii] = class_prob_ii
       attrib_prob.iloc[ii] = attrib_prob_ii
       pbar.animate(ii)
@@ -413,7 +490,7 @@ class BayesNet2():
     return (class_prob, attrib_prob)
   
   
-  def predict_one(self, clf_res_discrete, m_discr_one):
+  def predict_one(self, clf_res_discrete, m_clf_values):
     use_gt = self.use_gt
     
     if use_gt:
@@ -422,10 +499,14 @@ class BayesNet2():
     # build dictionary with all query parameters:
     # parameters are the observed values for the classifiers
     q_params = {}
+    # attrib clfs
     for a_name in self.attrib_names:
       q_params.update({'clf_'+a_name: str(clf_res_discrete.loc[a_name])})
+    # multi class clf
     for c_id in self.class_inds:
-      q_params.update({'m_'+str(c_id): str(m_discr_one.loc[c_id])})
+      q_params.update({'m_'+str(c_id): str(m_clf_values.loc[c_id])})
+      
+    
     
     # Run inference with query parameters
     marginals = self.g.query(**q_params)
@@ -441,12 +522,90 @@ class BayesNet2():
       attrib_probs.loc[a_name] = marginals[('a_' + a_name, 'True')]
 
     return class_probs, attrib_probs
+  
+  def export_to_BIF(self, filename):
+    from lxml import etree
+    # Define preamble
+    preamble = '''\
+<?xml version="1.0"?>
+<!-- DTD for the XMLBIF 0.3 format -->
+<!DOCTYPE BIF [
+        <!ELEMENT BIF ( NETWORK )*>
+              <!ATTLIST BIF VERSION CDATA #REQUIRED>
+        <!ELEMENT NETWORK ( NAME, ( PROPERTY | VARIABLE | DEFINITION )* )>
+        <!ELEMENT NAME (#PCDATA)>
+        <!ELEMENT VARIABLE ( NAME, ( OUTCOME |  PROPERTY )* ) >
+              <!ATTLIST VARIABLE TYPE (nature|decision|utility) "nature">
+        <!ELEMENT OUTCOME (#PCDATA)>
+        <!ELEMENT DEFINITION ( FOR | GIVEN | TABLE | PROPERTY )* >
+        <!ELEMENT FOR (#PCDATA)>
+        <!ELEMENT GIVEN (#PCDATA)>
+        <!ELEMENT TABLE (#PCDATA)>
+        <!ELEMENT PROPERTY (#PCDATA)>
+]>
+
+
+<BIF VERSION="0.3">
+</BIF>'''
+    root = etree.XML(preamble)
+    tree = etree.ElementTree(root)
+    etree.SubElement(root, 'NETWORK')
+    network = root[0]
+    etree.SubElement(network, 'NAME')
+    network[0].text = self.desc
+    
+    node_str = '''
+    <VARIABLE TYPE="nature">
+    <NAME>{name}</NAME>
+    <OUTCOME>{Value1}</OUTCOME>
+    <OUTCOME>{Value2}</OUTCOME>
+    <PROPERTY>position = (0,0)</PROPERTY>
+    </VARIABLE>'''
+    
+    def c_node_maker(name, values):
+      node = etree.Element('VARIABLE', TYPE="nature")
+      NAME = etree.Element('NAME')
+      NAME.text = name
+      node.append(NAME)
+      for v in values:
+        outcome = etree.Element('OUTCOME')
+        outcome.text = v
+        node.append(outcome)
+      p = etree.Element('PROPERTY')
+      p.text = 'position = (0,0)'
+      node.append(p)
+      return node
+    
+    # make XML object for class nodes
+    for c_ind in self.class_inds:
+      n = c_node_maker('c_'+str(c_ind), ['True', 'False'])
+      network.append(n)
+      
+      
+    # make XML object for attribute nodes
+    
+    # make XML object for attribute clf nodes
+    
+    # make XML object for multi class nodes
+    
+    # make XML object for cpts for class nodes
+    
+    # make XML object for cpts for attrib nodes
+    
+    # make XML object for cpts for attrib clf nodes
+    
+    # make XML object for cpts for multiclass clf nodes
+      
+    tree.write(filename, pretty_print=False)
     
     
 def function_builder(f_str, f_name):
 #   print f_str
   exec f_str in globals(), locals()
   return locals()[f_name]
+
+
+
   
 
 #------------------------------------------------------------------------------
@@ -940,8 +1099,7 @@ class BayesNet:
 #     return lambda theta=theta: np.float(cpt.get_value([bool(v) for v in tuple(theta)],'True'))
     return lambda theta=theta: np.float(cpt.get_value([theta[ii]],'True'))
 
-       
-  
+    
   
   @staticmethod      
   def format_attribute_list(attrib_list):

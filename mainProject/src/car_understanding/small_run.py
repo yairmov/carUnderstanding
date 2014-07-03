@@ -10,7 +10,7 @@ import numpy as np
 from sklearn import cross_validation
 # from sklearn import svm
 from sklearn import preprocessing
-from sklearn.externals.joblib import Parallel, delayed, dump, load
+from sklearn.externals.joblib import Parallel, delayed, dump, load, Memory
 import cv2 as cv
 import pandas as pd
 import collections
@@ -430,30 +430,63 @@ def get_args_from_file(fname):
 #   args = args[:K]
   return args
 
+
+def randomly_select_classes_and_attribs(train_annos, test_annos, class_meta, 
+                                        attrib_meta, n_classes, config):
+  
+  R = np.random.RandomState(config.dataset.dev_set.rand_seed)
+  c_inds = R.permutation(class_meta.index)
+  c_inds = c_inds[:n_classes]
+  class_meta = class_meta[class_meta.index.isin(c_inds)]
+  attrib_meta = attrib_meta[attrib_meta.index.isin(c_inds)]
+  train_annos = train_annos[train_annos.class_index.isin(c_inds)]
+  test_annos = test_annos[test_annos.class_index.isin(c_inds)]
+  
+  return  (train_annos, test_annos, class_meta, 
+                                        attrib_meta, config)
+
+# @memory.cache
+def train_m_clf(train_annos, classes, config):
+  m_clf = MultiClassClassifier(train_annos, classes, config)
+  m_clf.fit()
+  return m_clf
+
 def bayes_net_generic(use_gt=False):
-  makes = ['bmw', 'ford']
-  types = ['sedan', 'suv']
-  args = makes + types + ['germany', 'usa']
-
-#   args = get_args_from_file('sorted_attrib_list.txt')
-
   config = get_config()
   (dataset, config) = fgu.get_all_metadata(config)
-  config.attribute.names = args
-
+  memory = Memory(cachedir=config.cache_dir, verbose=config.logging.verbose)
+  train_m_clf_ptr = memory.cache(train_m_clf)
+  
+  
   train_annos = dataset['train_annos']
+  test_annos = dataset['test_annos']
   classes = dataset['class_meta']
   attrib_meta = dataset['attrib_meta']
+  
+  n_classes = 10
+  (train_annos, test_annos, classes, attrib_meta, config) = \
+  randomly_select_classes_and_attribs(train_annos, test_annos, classes,
+                                      attrib_meta, n_classes, config)
+  
+  args = list(np.concatenate([attrib_meta.type.unique(), attrib_meta.make.unique(),
+                         attrib_meta.country.unique()]))
+  
+  
+  # selecting attributes to experiment with
+#   makes = ['bmw', 'ford']
+#   types = ['sedan', 'suv']
+#   args = makes + types + ['germany', 'usa']
+#   args = get_args_from_file('sorted_attrib_list.txt')
+  config.attribute.names = args
 
   # reduce the training set to be only classes with these attributes.
-  classes = select_small_set_for_bayes_net(dataset, makes, types)
-  attrib_meta = attrib_meta.loc[classes.index]
-  train_annos = train_annos[np.array(
-                             train_annos.class_index.isin(classes.class_index))]
-  test_annos = dataset['test_annos']
-  # Select only images from the args "world"
-  test_annos = test_annos[np.array(
-                             test_annos.class_index.isin(classes.class_index))]
+#   classes = select_small_set_for_bayes_net(dataset, makes, types)
+#   attrib_meta = attrib_meta.loc[classes.index]
+#   train_annos = train_annos[np.array(
+#                              train_annos.class_index.isin(classes.class_index))]
+#   # Select only images from the args "world"
+#   test_annos = test_annos[np.array(
+#                              test_annos.class_index.isin(classes.class_index))]
   
 #   print "training attrib classifiers"
 #   run_attrib_training(args, cross_validation=False)
@@ -476,7 +509,8 @@ def bayes_net_generic(use_gt=False):
 
 
   # load multi class classifier
-  m_clf = MultiClassClassifier.load(config.multiclass_classifier.path)
+#   m_clf = MultiClassClassifier.load(config.multiclass_classifier.path)
+  m_clf = train_m_clf_ptr(train_annos, classes, config)
   
   
 #   bnet = bayes_net.BayesNet(config, train_annos, 
@@ -487,8 +521,11 @@ def bayes_net_generic(use_gt=False):
                   classes, attrib_classifiers, attrib_meta, 
                   multi_class_clf=m_clf, desc=str(args), use_gt=use_gt)
   dump({'bnet': bnet}, '../../../output/bnet.dat')
-  bnet.init()    
+  bnet.init()   
   
+  bnet.export_to_BIF('../../../output/bnet.BIF')
+  return
+
   print 'predicting!!!'
 
   (class_probs, attrib_probs) = bnet.predict(test_annos)
