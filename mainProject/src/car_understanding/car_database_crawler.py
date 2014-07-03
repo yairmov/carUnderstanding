@@ -20,7 +20,7 @@ LOG = logging.getLogger(__name__)
 #: Debug level names as a string
 LOG_HELP = ','.join(["%d=%s" % (4-x, logging.getLevelName((x+1)*10)) for x in xrange(5)])
 #: Console LOG format
-LOG_FORMAT_CONS = '%(asctime)s %(name)8s %(levelname)8s %(message)s'
+LOG_FORMAT_CONS = '%(asctime)s %(name)-12s %(levelname)8s %(message)s'
 #: File LOG format
 LOG_FORMAT_FILE = '%(asctime)s %(name)s[%(process)d] %(levelname)10s %(message)s'
 #: Levels of logging translation (count of -v, log level)
