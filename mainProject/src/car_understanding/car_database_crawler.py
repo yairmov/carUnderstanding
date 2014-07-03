@@ -75,6 +75,10 @@ def GetImageAndData(img_id):
 
     # Get the image
     img=soup.findAll('img',{'class':'imageshadow'})
+    if (len(img) == 0): # no image found
+      return None, None
+
+
     img_url = base_website + img[0].get('src')
     img = GetImageFromUrl(img_url)
 
@@ -110,6 +114,10 @@ def RunCrawl(args):
     curr_data_fname = os.path.join(dir_path, DATA_NAME_FMT.format(ii))
 
     img, meta_data = GetImageAndData(ii)
+    if (img is None):
+      LOG.info("Was not able to get page for image: {}".format(ii))
+      continue
+
     LOG.info('Saving image: '  + curr_img_fname)
     img.save(curr_img_fname)
 
