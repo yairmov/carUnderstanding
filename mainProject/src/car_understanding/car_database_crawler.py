@@ -108,8 +108,11 @@ def RunCrawl(args):
   MakeDirIfNeeded(args.output_path)
 
   for ii in xrange(1386, 10000):
-    delay = random.randint(1, 5)
     time.sleep(args.delay)
+
+    if ii % 100 == 0:
+      # sleep for longer
+      time.sleep(60)
 
     dir_path = os.path.join(args.output_path, '{:04}'.format(ii / 1000))
     MakeDirIfNeeded(dir_path)
