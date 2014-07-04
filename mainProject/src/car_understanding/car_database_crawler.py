@@ -105,7 +105,7 @@ def RunCrawl(args):
 
   MakeDirIfNeeded(args.output_path)
 
-  for ii in xrange(1, 10000):
+  for ii in xrange(487, 10000):
 
     dir_path = os.path.join(args.output_path, '{:04}'.format(ii / 1000))
     MakeDirIfNeeded(dir_path)
@@ -152,7 +152,7 @@ def main(argv=None):  # IGNORE:C0111
   parser.add_argument(dest="output_path", help="path to save downloaded data." , default=None)
   parser.add_argument("-l", "--logfile", dest="logfile",    default = None, help = "Log to file instead off console [default: %default]" )
   parser.add_argument("-v", action="count", dest="verbosity", default = DEFAULT_VERBOSITY, help = "Verbosity. Add more -v to be more verbose (%s) [default: %%default]" % LOG_HELP)
-  parser.add_argument("-d", "--delay", dest="delay", default = 1, help = "time delay between images in seconds. [default: %default]" )
+  parser.add_argument("-d", "--delay", dest="delay", default = 2, help = "time delay between images in seconds. [default: %default]" )
 
 
 
