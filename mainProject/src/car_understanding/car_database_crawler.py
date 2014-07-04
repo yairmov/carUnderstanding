@@ -14,6 +14,7 @@ import sys
 import os
 import logging
 from path import path
+import random
 
 
 #: Glogbal logger instance
@@ -62,6 +63,7 @@ def ExtractDataFromString(data_str):
     return {key : value}
 
 
+
 '''
 Queries for a single web page, and extracts the car image, and
 meta data.
@@ -106,6 +108,7 @@ def RunCrawl(args):
   MakeDirIfNeeded(args.output_path)
 
   for ii in xrange(954, 10000):
+    delay = random.randint(1, 5)
     time.sleep(args.delay)
 
     dir_path = os.path.join(args.output_path, '{:04}'.format(ii / 1000))
