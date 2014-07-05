@@ -71,16 +71,17 @@ img, meta_data = GetImageAndData(1)
 def GetImageAndData(img_id):
     base_website = 'http://www.cardatabase.net'
     url = base_website + '/search/photo_search.php?id={:08}&size=large'.format(img_id)
-    page = urllib2.urlopen(url)
-    soup = bs.BeautifulSoup(page)
-
-    # Get the image
-    img=soup.findAll('img',{'class':'imageshadow'})
-    if (len(img) == 0): # no image found
-      return None, None
-
-
     try:
+      page = urllib2.urlopen(url)
+      soup = bs.BeautifulSoup(page)
+
+      # Get the image
+      img=soup.findAll('img',{'class':'imageshadow'})
+      if (len(img) == 0): # no image found
+        return None, None
+
+
+
       img_url = base_website + img[0].get('src')
       img = GetImageFromUrl(img_url)
 
@@ -111,7 +112,7 @@ def RunCrawl(args):
 
   MakeDirIfNeeded(args.output_path)
 
-  for ii in xrange(2040, 10000):
+  for ii in xrange(3406, 10000):
     time.sleep(args.delay)
 
     if ii % 100 == 0:
