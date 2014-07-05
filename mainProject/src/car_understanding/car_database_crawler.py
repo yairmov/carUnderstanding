@@ -14,7 +14,6 @@ import sys
 import os
 import logging
 from path import path
-import random
 
 
 #: Glogbal logger instance
@@ -81,15 +80,20 @@ def GetImageAndData(img_id):
       return None, None
 
 
-    img_url = base_website + img[0].get('src')
-    img = GetImageFromUrl(img_url)
+    try:
+      img_url = base_website + img[0].get('src')
+      img = GetImageFromUrl(img_url)
 
-    # Now Get metadata
-    meta_data = {}
-    links = soup.findAll('a')
-    for l in links:
-        if len(l.contents) > 0 and l.contents[0] == 'More':
-            meta_data.update(ExtractDataFromString(l.attrs[0][1]))
+      # Now Get metadata
+      meta_data = {}
+      links = soup.findAll('a')
+      for l in links:
+          if len(l.contents) > 0 and l.contents[0] == 'More':
+              meta_data.update(ExtractDataFromString(l.attrs[0][1]))
+    except:
+      e = sys.exc_info()[0]
+      LOG.warning("Failed to grab image: {}. Error: {}".format(img_id, e))
+      return None, None
 
     return img, meta_data
 
