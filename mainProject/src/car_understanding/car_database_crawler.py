@@ -112,7 +112,7 @@ def RunCrawl(args):
 
   MakeDirIfNeeded(args.output_path)
 
-  for ii in xrange(4600 , 10000):
+  for ii in xrange(args.start_id , args.end_id):
     time.sleep(args.delay)
 
     if ii % 100 == 0:
@@ -165,6 +165,8 @@ def main(argv=None):  # IGNORE:C0111
   parser.add_argument("-l", "--logfile", dest="logfile",    default = None, help = "Log to file instead off console [default: %default]" )
   parser.add_argument("-v", action="count", dest="verbosity", default = DEFAULT_VERBOSITY, help = "Verbosity. Add more -v to be more verbose (%s) [default: %%default]" % LOG_HELP)
   parser.add_argument("-d", "--delay", dest="delay", default = 2, help = "time delay between images in seconds. [default: %default]" )
+  parser.add_argument("-s", "--start", dest="start_id", default = 1, help = "img id to start from. [default: %default]" )
+  parser.add_argument("-s", "--start", dest="end_id", default = 10, help = "img id to end at. [default: %default]" )
 
 
 
