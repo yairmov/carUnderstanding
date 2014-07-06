@@ -131,7 +131,12 @@ def RunCrawl(args):
       continue
 
     LOG.info('Saving image: '  + curr_img_fname)
-    img.save(curr_img_fname)
+    try:
+      img.save(curr_img_fname)
+    except:
+      e = sys.exc_info()[0]
+      LOG.warning("Failed to save image: {}. Error: {}".format(ii, e))
+      continue
 
     LOG.info('Saving data: '  + curr_data_fname)
     with open(curr_data_fname, 'w') as f:
