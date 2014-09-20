@@ -1,18 +1,19 @@
 import base64
 from PIL import Image
-import tempfile
+import cStringIO as StringIO
+
 
 
 def ImageToBase64(img):
     if type(img) == str:
-      fname= img
+      with open(img, "rb") as img_file:
+        return base64.b64encode(img_file.read())
     else:
-      f = tempfile.NamedTemporaryFile()
-      fname = f.name
-      img.save(f.name, ".jpg")
-
-    with open(fname, "rb") as img_file:
-      return base64.b64encode(img_file.read())
+      in_memory_file = StringIO.StringIO()
+      img.save(in_memory_file, format='png')
+      base64str = base64.b64encode(in_memory_file.getvalue())
+      in_memory_file.close()
+      return base64str
 
 class ImageGridHtmlBuilder(object):
   """docstring for ImageGridHtmlBuilder"""
@@ -265,6 +266,7 @@ kImageTemplate = '''<img src="data:image/jpeg;base64,
 
 if __name__ == '__main__':
   img = '/Users/yair/Downloads/test.jpg'
+  img = Image.open(img)
   builder = ImageGridHtmlBuilder()
   builder.AddBox(img, 'test image 1', meta_dict={'confidence': 1, 'class_name': 2})
   builder.AddBox(img, 'test image 2', meta_dict={'confidence': 2, 'class_name': 1})
