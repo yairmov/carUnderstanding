@@ -3,7 +3,6 @@ from PIL import Image
 import cStringIO as StringIO
 
 
-
 def ImageToBase64(img):
     if type(img) == str:
       with open(img, "rb") as img_file:
@@ -71,6 +70,7 @@ class ImageGridHtmlBuilder(object):
     else:
       # data = data.replace('__SORT_BY__', '')
       data = data.replace('__GET_SORT_DATA__', '')
+      button_str = ''
 
     data = data.replace('__BODY__', self.html_data_ )
     data = data.replace('__BUTTONS__', button_str)
