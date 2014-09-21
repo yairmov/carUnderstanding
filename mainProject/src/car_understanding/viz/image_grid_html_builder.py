@@ -262,7 +262,7 @@ kTableTemplate = '''<div class="box"  {meta}>
 
 kImageTemplate = '''<img src="data:image/jpeg;base64,
 {data}
-"  />'''
+"  width="256" >'''
 
 if __name__ == '__main__':
   img = '/Users/yair/Downloads/test.jpg'
