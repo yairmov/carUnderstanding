@@ -97,7 +97,7 @@ kHtmlTemplate = '''<!doctype html>
     font-size: 11px;
     line-height: 1.4em;
     float: left;
-    max-width: 100px;
+    # max-width: 100px;
     -webkit-border-radius: 5px;
        -moz-border-radius: 5px;
             border-radius: 5px;
