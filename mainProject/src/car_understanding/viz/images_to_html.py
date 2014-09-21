@@ -43,9 +43,6 @@ def main(argv=None):  # IGNORE:C0111
   if args.output_path is None:
     raise Exception('Must provide output path')
 
-  print("Got arguments: ")
-  print(args)
-
   image_files = GetFileList(args.image_files)
   builder = ImageGridHtmlBuilder()
   for img in image_files:
