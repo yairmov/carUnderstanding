@@ -49,6 +49,7 @@ def main(argv=None):  # IGNORE:C0111
     name = basename(img)
     builder.AddBox(img, name)
 
+  builder.SetMaxWidth(256)
   builder.SaveToFile(args.output_path, args.title)
 
 
