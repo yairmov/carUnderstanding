@@ -23,6 +23,7 @@ class ImageGridHtmlBuilder(object):
     self.with_sort_data_ = False
     self.sort_def_ = None
     self.sort_by_dict_ = None
+    self.max_width_ = ''
 
 
   # def AddRuler(self, title=''):
@@ -54,6 +55,9 @@ class ImageGridHtmlBuilder(object):
     self.sort_def_ = get_sort_data
     self.with_sort_data_ = True
 
+  def SetMaxWidth(self, max_width):
+    self.max_width_ = 'img.Image { max-width: ' + str(max_width) + 'px}'
+
 
   def SaveToFile(self, filename, title='Untitled'):
     data = kHtmlTemplate.replace('__TITLE__', title)
@@ -74,6 +78,7 @@ class ImageGridHtmlBuilder(object):
 
     data = data.replace('__BODY__', self.html_data_ )
     data = data.replace('__BUTTONS__', button_str)
+    data = data.replace('__MAX_WIDTH__', self.max_width_)
 
     with open(filename, "wb") as out_file:
       out_file.write(data)
@@ -90,6 +95,9 @@ kHtmlTemplate = '''<!doctype html>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
   <style media="screen" type="text/css">
+
+     __MAX_WIDTH__
+
     .box {
     margin: 5px;
     padding: 5px;
@@ -260,9 +268,9 @@ kTableTemplate = '''<div class="box"  {meta}>
     </div>
       '''
 
-kImageTemplate = '''<img src="data:image/jpeg;base64,
+kImageTemplate = '''<img class="Image" src="data:image/jpeg;base64,
 {data}
-"  width="256" >'''
+"   >'''
 
 if __name__ == '__main__':
   img = '/Users/yair/Downloads/test.jpg'
@@ -275,5 +283,6 @@ if __name__ == '__main__':
   builder.AddBox(img, 'test image 4', meta_dict={'confidence': 4, 'class_name': 2})
 
   builder.AddSortingFunctionality({'confidence' : True, 'class_name': True})
+  builder.SetMaxWidth(256)
 
   builder.SaveToFile('/Users/yair/Downloads/test.html', 'my test html')
