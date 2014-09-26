@@ -68,8 +68,7 @@ Queries for a single web page, and extracts the car image, and
 meta data.
 img, meta_data = GetImageAndData(1)
 '''
-def GetImageAndData(img_id):
-    base_website = 'http://www.cardatabase.net'
+def GetImageAndData(img_id, base_website='http://www.cardatabase.net'):
     url = base_website + '/search/photo_search.php?id={:08}&size=large'.format(img_id)
     try:
       page = urllib2.urlopen(url)
@@ -125,7 +124,7 @@ def RunCrawl(args):
     curr_img_fname = os.path.join(dir_path, IMG_NAME_FMT.format(ii))
     curr_data_fname = os.path.join(dir_path, DATA_NAME_FMT.format(ii))
 
-    img, meta_data = GetImageAndData(ii)
+    img, meta_data = GetImageAndData(ii, args.website)
     if (img is None):
       LOG.info("Was not able to get page for image: {}".format(ii))
       continue
@@ -172,7 +171,7 @@ def main(argv=None):  # IGNORE:C0111
   parser.add_argument("-d", "--delay", dest="delay", default = 2, help = "time delay between images in seconds. [default: %default]" )
   parser.add_argument("-s", "--start", dest="start_id", default = 1, type=int, help = "img id to start from. [default: %default]" )
   parser.add_argument("-e", "--end", dest="end_id", default = 10, type=int, help = "img id to end at. [default: %default]" )
-
+  parser.add_argument("-w", "--website", dest="website", default = "http://www.cardatabase.net", type=str, help = "web site to crawl. [default: %default]" )
 
 
   # Process arguments
@@ -190,8 +189,6 @@ def main(argv=None):  # IGNORE:C0111
 
   LOG.info("Got arguments: ")
   LOG.info(args)
-
-
 
   RunCrawl(args)
 
