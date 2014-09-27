@@ -57,8 +57,8 @@ Takes a string like this: <a href="http://www.myaviation.net/search/search.php?m
 outputs: {'manufacturer' : 'BMW'}
 '''
 def ExtractDataFromString(data_str):
-    (dunmp, key_val) = data_str.split('&')
-    (key, value) = fkey_val.split('=')
+    (dump, key_val) = data_str.split('&')
+    (key, value) = key_val.split('=')
     return {key : value}
 
 
