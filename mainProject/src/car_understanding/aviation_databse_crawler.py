@@ -84,13 +84,13 @@ def GetImageAndData(img_id, base_website='http://www.myaviation.net'):
         src = img[ii].get('src')
         if src is not None and src.endswith('big'):
           img_url = base_website + src
-          print img_url
           break
 
       if img_url is None:
         return None, None
 
       img = GetImageFromUrl(img_url)
+      print 'here'
 
       # Now Get metadata
       meta_data = {}
