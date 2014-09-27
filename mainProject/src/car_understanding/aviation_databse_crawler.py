@@ -81,7 +81,7 @@ def GetImageAndData(img_id, base_website='http://www.myaviation.net'):
 
       img_url = None
       for ii in range(len(img)):
-      src = img[ii].get('src')
+        src = img[ii].get('src')
         if src is not None and src.endswith('big'):
           img_url = base_website + src
           break
