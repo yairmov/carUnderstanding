@@ -57,8 +57,8 @@ Takes a string like this: <a href="http://www.myaviation.net/search/search.php?m
 outputs: {'manufacturer' : 'BMW'}
 '''
 def ExtractDataFromString(data_str):
-    (first, value) = data_str.split('=')
-    (dump, key) = first.split('?')
+    (dunmp, key_val) = data_str.split('&')
+    (key, value) = fkey_val.split('=')
     return {key : value}
 
 
@@ -90,7 +90,6 @@ def GetImageAndData(img_id, base_website='http://www.myaviation.net'):
         return None, None
 
       img = GetImageFromUrl(img_url)
-      print 'here'
 
       # Now Get metadata
       meta_data = {}
