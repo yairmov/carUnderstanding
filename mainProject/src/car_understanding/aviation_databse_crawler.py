@@ -123,7 +123,7 @@ def RunCrawl(args):
 
     if ii % 100 == 0:
       # sleep for longer
-      time.sleep(60)
+      time.sleep(30)
 
     dir_path = os.path.join(args.output_path, '{:04}'.format(ii / 1000))
     MakeDirIfNeeded(dir_path)
